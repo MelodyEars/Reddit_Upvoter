@@ -2,7 +2,7 @@
 This file makes requests to user.
 """
 
-from .color import blue_color, green_color, warning_text
+from .color import blue_color, green_color, warning_text, cyan_color
 
 
 def data_confirmation(massage) -> bool:
@@ -20,3 +20,17 @@ def data_confirmation(massage) -> bool:
     else:
         warning_text(f"Потрібно обрати yes or no")
         return data_confirmation(massage)
+
+
+def indicate_number(text_what_answer):
+    print(cyan_color(f"{text_what_answer}?"))
+    try:
+        number = int(input())
+        if number != 0:
+            return number
+        else:
+            warning_text("Ожидается не 0")
+    except ValueError:
+        warning_text("Нужно указать целочисленный тип")
+
+    return indicate_number(text_what_answer)

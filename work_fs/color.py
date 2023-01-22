@@ -12,6 +12,9 @@ def blue_color(text):
 def green_color(text):
     return Fore.GREEN + str(text) + Style.RESET_ALL
 
+def light_green_color(text):
+    return Fore.LIGHTGREEN_EX + str(text) + Style.RESET_ALL
+
 
 def cyan_color(text):
     return Fore.LIGHTCYAN_EX + str(text) + Style.RESET_ALL

@@ -4,7 +4,7 @@
 """
 
 import json
-
+from .work_with_path import file_exists
 
 def read_json(filename):
     """get items from json"""
@@ -14,12 +14,24 @@ def read_json(filename):
     return dates
 
 
-def getter_file_list(filename) -> list:
+def get_list_file(path_to_file) -> list:
     """
     Get list from file by path.
     """
+    if file_exists(path_to_file):
+        with open(path_to_file, "r", encoding="utf8", errors='ignore') as file:
+            list_from_file = [line.strip() for line in file.readlines() if line != "\n"]
 
-    with open(filename, "r", encoding="utf8", errors='ignore') as file:
-        list_from_file = [line.strip() for line in file.readlines() if line != "\n"]
+        return list_from_file
+    else:
+        raise Exception(f'Not found {path_to_file}')
 
-    return list_from_file
+
+def get_str_file(path_to_file) -> str:
+    if file_exists(path_to_file):
+        with open(path_to_file, "r") as file:
+            content = file.read()
+
+        return content
+    else:
+        raise Exception(f'Not found {path_to_file}')

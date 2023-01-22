@@ -2,8 +2,6 @@ import os
 import shutil
 import tempfile
 
-import undetected_chromedriver as webdriver
-
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.utils import keys_to_typing
 
