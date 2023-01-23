@@ -12,13 +12,9 @@ def get_comments() -> list:
     return content
 
 
-def get_random_comments(count=int) -> list:
+def file_get_random_comments(count=int) -> list:
     # get count and random return count list
     comments = get_comments()
     selects_comments = random.choices(comments, k=int(count))
 
     return selects_comments
-
-
-if __name__ == '__main__':
-    print(get_random_comments())

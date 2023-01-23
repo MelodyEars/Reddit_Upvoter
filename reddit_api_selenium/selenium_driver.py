@@ -40,8 +40,6 @@ class BaseClass:
         options = uc.ChromeOptions()
 
         if proxy is not None:
-
-            print("execute proxy")
             # proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake
             # pass  host, port, user, password
             proxy_extension = ProxyExtension(**proxy)

@@ -1,7 +1,7 @@
 import random
 
 import work_fs
-from .models import Proxy, Cookie, db
+from models import Proxy, Cookie, db
 
 
 def create_db():
@@ -23,24 +23,23 @@ def save_cookie(path_cookie, in_db_proxy):
 
 ####################### for this project #################
 
-def get_db_cookie_proxy():
+def db_get_random_obj_with_0():
     with db:
-        res = random.choice(Cookie.select().where(Cookie.is_work == 0))
-        # print(res.proxy.host)
-        res.delete()
+        random_account = random.choice(Cookie.select().where(Cookie.is_work == 0))
+        return random_account
 
 
-def reset_all_1_on_0():
+def db_reset_all_1_on_0():
     with db:
         Cookie.update(is_work=0).where(Cookie.is_work == 1).execute()
 
 
-def save_by_id(id_cookie):
+def db_save_1_by_id(id_cookie):
     with db:
         Cookie.update(is_work=1).where(Cookie.id == id_cookie).execute()
 
 
-def delete_by_id(id_cookie):
+def db_delete_by_id(id_cookie):
     with db.atomic():
         proxy_for_save = Proxy.get(Proxy(id_cookie))
         # Save as str to file
@@ -52,5 +51,17 @@ def delete_by_id(id_cookie):
         Proxy.delete().where(Proxy.id == id_cookie).execute()
 
 
-if __name__ == '__main__':
-    get_db_cookie_proxy()
+def db_get_cookie_proxy():
+    db_obj = db_get_random_obj_with_0()
+
+    dict_proxy = {
+        "host": db_obj.proxy.host,
+        "port": db_obj.proxy.port,
+        "user": db_obj.proxy.user,
+        "password": db_obj.proxy.password,
+    }
+
+    path_cookie = db_obj.cookie_path
+    id_profile = db_obj.id
+
+    return path_cookie, dict_proxy, id_profile
