@@ -8,20 +8,24 @@ class RedditWork(BaseClass):
     def __init__(self, path_cookie=str, link=str, proxy=None):
 
         super(__class__, self).__init__()
+        self.client_cookie = None
         self.proxy = proxy
         self.link = link
         self.cookie_path = path_cookie
 
     def __enter__(self):
         self.DRIVER = self._driver(proxy=self.proxy)
-
-        self.client_cookie = Cookies(driver=self.DRIVER, url=self.link, path_filename=self.cookie_path)
-        self.client_cookie.preload()
+        
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.client_cookie.save()
         self.DRIVER.quit()
+
+    def attend_link(self):
+        self.client_cookie = Cookies(driver=self.DRIVER, url=self.link, path_filename=self.cookie_path)
+        self.client_cookie.preload()
+        self.DRIVER.get(self.link)
+        self.DRIVER.reconnect()
 
     def popups_pass(self):
         # popups
