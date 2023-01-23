@@ -19,6 +19,9 @@ class RedditWork(BaseClass):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type or exc_val or exc_tb:
+            self.DRIVER.save_screenshot("picture_mistake.png")
+
         self.DRIVER.quit()
 
     def attend_link(self):
@@ -27,14 +30,24 @@ class RedditWork(BaseClass):
         self.DRIVER.get(self.link)
         self.DRIVER.reconnect()
 
-    def popups_pass(self):
-        # popups
+    def baned_account(self):
+        if self.xpath_exists(value='//a[contains(@href, "https://www.reddithelp.com/")]'):
+            return True
+        else:
+            return False
+
+    def prepare_reddit(self):
         self.xpath_exists(value='body', by=By.TAG_NAME)
+        # use Reddit in browser
+        self.click_element(value='//a[contains(text(), "Browse Reddit")]', wait=.5, move_to=True)
+
         # THen content 18+
-        input("Content 18+:")
+        if self.xpath_exists('//h3[contains(text(), "You must be 18+")]', wait=1):
+            self.click_element('//button[contains(text(), "Yes")]', move_to=True)
+
         # asks to continue when you visit a site with a post
         self.click_element('//button[contains(text(), "Continue")]', wait=0.5, move_to=True)
-
+        
     def upvote(self):
         # post
         self.xpath_exists(by=By.ID, value="post-content")

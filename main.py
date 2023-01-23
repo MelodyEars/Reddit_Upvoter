@@ -2,7 +2,8 @@ from multiprocessing import freeze_support
 from loguru import logger
 
 from interface import user_deasire_data
-from db_lib import db_get_cookie_proxy, db_reset_all_1_on_0, db_save_1_by_id, db_delete_by_id
+from db_lib import db_get_cookie_proxy, db_reset_all_1_on_0, db_save_1_by_id, db_delete_by_id, \
+    db_print_cookie_info, db_get_cookie_by_id
 from reddit_api_selenium import RedditWork
 from handl_info import file_get_random_comments
 
@@ -19,21 +20,22 @@ def body_loop(link_reddit, text_comment=str):
     path_cookie, dict_proxy, id_profile = db_get_cookie_proxy()
     # approves and comment on the Reddit
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
-        # TODO if ban delete db and continue
-        # try:
         api_reddit.attend_link()
-        api_reddit.popups_pass()
-        api_reddit.upvote()
-        if text_comment:
-            api_reddit.write_comment(text_comment)
-        api_reddit.client_cookie.save()
-        # except Exception:
-        #     api_reddit.DRIVER.save_screenshot("picture_mistake.png")
-        # finally:
+        if not api_reddit.baned_account():
+            api_reddit.popups_pass()
+            api_reddit.upvote()
+            if text_comment:
+                api_reddit.write_comment(text_comment)
+            api_reddit.client_cookie.save()
+        else:
+            logger.error("Your account banned and delete from data base.")
+            db_print_cookie_info(id_profile)
+            db_delete_by_id(id_profile)
         api_reddit.DRIVER.quit()
 
     # db rewrite 1 is worked profile
     db_save_1_by_id(id_profile)
+    logger.info(f"Successfully {db_get_cookie_by_id(id_profile).cookie_path}")
 
 
 @logger.catch

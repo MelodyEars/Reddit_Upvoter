@@ -39,6 +39,12 @@ def db_save_1_by_id(id_cookie):
         Cookie.update(is_work=1).where(Cookie.id == id_cookie).execute()
 
 
+def db_get_cookie_by_id(id_cookie):
+    with db:
+        db_cookie = Cookie.get(Cookie(id_cookie))
+        return db_cookie
+
+
 def db_delete_by_id(id_cookie):
     with db.atomic():
         proxy_for_save = Proxy.get(Proxy(id_cookie))
@@ -65,3 +71,8 @@ def db_get_cookie_proxy():
     id_profile = db_obj.id
 
     return path_cookie, dict_proxy, id_profile
+
+
+def db_print_cookie_info(id_cookie):
+    obj_cookie = db_get_cookie_by_id(id_cookie)
+    print(work_fs.yellow_color("Cookie path") + work_fs.light_green_color(obj_cookie.cookie_path))
