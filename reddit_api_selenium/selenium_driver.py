@@ -152,13 +152,4 @@ class BaseClass:
 
     def stealth_send_text(self, value, text_or_key, by=By.XPATH, scroll_to=False, wait=60):
         if self.click_element(value, by=by, scroll_to=scroll_to, wait=wait):
-            self.action.send_keys_1by1("See how I type like a normal human being...").perform()
-
-    def save_cookie(self, path_cookie):
-        pickle.dump(self.DRIVER.get_cookies(), open(path_cookie, "wb"))
-
-    def load_cookie(self, path_cookie):
-        cookies = pickle.load(open(path_cookie, "rb"))
-
-        for cookie in cookies:
-            self.DRIVER.add_cookie(cookie)
+            self.action.send_keys_1by1(text_or_key).perform()

@@ -1,3 +1,5 @@
 /cookies/
 /db_lib.db
 /comments.txt
+/db_lib.db-shm
+/db_lib.db-wal

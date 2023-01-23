@@ -1,1 +1,1 @@
-from .comment import get_random_comments
+from .comment import *
