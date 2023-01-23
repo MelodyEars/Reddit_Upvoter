@@ -147,9 +147,13 @@ class BaseClass:
         self.action.move_to_element(element).pause(1).perform()
 
     def scroll_to_elem(self, value):
+
         web_elem = self.xpath_exists(value, return_xpath=True)
         self.DRIVER.execute_script("arguments[0].scrollIntoView();", web_elem)
 
     def stealth_send_text(self, value, text_or_key, by=By.XPATH, scroll_to=False, wait=60):
         if self.click_element(value, by=by, scroll_to=scroll_to, wait=wait):
             self.action.send_keys_1by1(text_or_key).perform()
+
+    def reset_actions(self):
+        self.action.reset_actions()

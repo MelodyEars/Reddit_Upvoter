@@ -1,14 +1,4 @@
-
-import time
-import random
-
-from selenium.webdriver.common.alert import Alert
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException, StaleElementReferenceException
-from selenium.webdriver import ActionChains
 
 from .SupportSelenium import Cookies
 from .selenium_driver import BaseClass
@@ -45,18 +35,31 @@ class RedditWork(BaseClass):
         # post
         self.xpath_exists(by=By.ID, value="post-content")
         # upvote
-        self.click_element('//button[@data-click-id="upvote" and @aria-pressed="false"]', )
-        # wait for
-        if self.xpath_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
-                             wait=3):
-            return
+        if self.click_element('//button[@data-click-id="upvote" and @aria-pressed="false"]', wait=10):
+            # wait for
+            if self.xpath_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
+                                 wait=4):
+                # success
+                return
+            else:
+                self.reset_actions()
+                return self.upvote()
         else:
-            return self.upvote()
+            # account's click exists
+            return
 
-    def send_comment(self, text_comment):
-        '//div[@class="notranslate public-DraftEditor-content"]'
+    def write_comment(self, text_comment):
+        self.send_text_by_elem(value='//div[@class="notranslate public-DraftEditor-content"]',
+                               text_or_key=text_comment,
+                               scroll_to=True)
         # send comment
-        '//button[contains(text(), "Comment")]'
-        # wait 2 before, then click button send
-        '//span[contains(text(), "1 new comment")]'
+        self.click_element('//button[contains(text(), "Comment")]', move_to=True)
 
+        # wait 2 before, then click button send
+        if self.xpath_exists('//span[contains(text(), "1 new comment")]', wait=4):
+            # success
+            return
+
+        else:
+            self.reset_actions()
+            return self.write_comment(text_comment)
