@@ -1,4 +1,5 @@
 from interface import user_deasire_data
+from db_lib import
 
 'https://www.reddit.com/r/drawing/comments/101dlrm/this_got_removed_for_being_nsfw_so_here_is_day/'
 'Looks amazing!!!'
@@ -14,6 +15,7 @@ def main():
 
     # db
     # 4 reset all data in the worked_is
+
 
     ### for 3 list random comment
     # get from db account not worked random choice

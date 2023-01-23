@@ -1,7 +1,7 @@
 import random
 
 import work_fs
-from models import Proxy, Cookie, db
+from .models import Proxy, Cookie, db
 
 
 def create_db():

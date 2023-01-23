@@ -1,18 +1,17 @@
-import os
 import pickle
 from urllib.parse import urlparse
 
-import work_fs
+from work_fs import file_exists, path_near_exefile
 
 
 class Cookies:
     def __init__(self, driver, path_filename, url):
         self.DRIVER = driver
         self.domain = urlparse(url).netloc
-        self.path_filename = work_fs.path_near_exefile(path_filename)
+        self.path_filename = path_near_exefile(path_filename)
 
     def exists(self):
-        return work_fs.file_exists(self.path_filename)
+        return file_exists(self.path_filename)
 
     def preload(self):
         print(f"preload cookies for {self.domain}")

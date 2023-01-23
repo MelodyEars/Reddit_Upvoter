@@ -1,6 +1,5 @@
 """ This file work with Selenium """
 import os
-import pickle
 import time
 import random
 

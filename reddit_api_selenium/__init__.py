@@ -1,1 +1,1 @@
-from .auth_reddit import RedditAuth
+from .reddit_actions import RedditWork
