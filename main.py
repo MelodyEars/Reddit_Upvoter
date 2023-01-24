@@ -18,19 +18,32 @@ from handl_info import file_get_random_comments
 def body_loop(link_reddit, text_comment=str):
     # get from db account not worked random choice
     path_cookie, dict_proxy, id_profile = db_get_cookie_proxy()
+    logger.info(f"ID DB: {id_profile}")
+    logger.info(path_cookie)
+    logger.info(dict_proxy)
     # approves and comment on the Reddit
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
-        api_reddit.attend_link()
-        if not api_reddit.baned_account():
-            api_reddit.prepare_reddit()
-            api_reddit.upvote()
-            if text_comment:
-                api_reddit.write_comment(text_comment)
-            api_reddit.client_cookie.save()
+        if api_reddit.attend_link():
+            if not api_reddit.baned_account():
+                api_reddit.prepare_reddit()
+                api_reddit.upvote()
+                if text_comment:
+                    api_reddit.write_comment(text_comment)
+                api_reddit.client_cookie.save()
+            else:
+                logger.error("Your account banned and delete from data base.")
+                db_print_cookie_info(id_profile)
+                db_delete_by_id(id_profile)
+                path_cookie.unlink()  # delete in folder
+
+                api_reddit.DRIVER.delete_all_cookies()
+                api_reddit.DRIVER.quit()
+                return
         else:
-            logger.error("Your account banned and delete from data base.")
+
+            logger.error("Cookie не работают, нужно перезаписать.")
             db_print_cookie_info(id_profile)
-            db_delete_by_id(id_profile)
+
         api_reddit.DRIVER.quit()
 
     # db rewrite 1 is worked profile
@@ -70,10 +83,7 @@ if __name__ == '__main__':
         rotation="10 MB",
         compression="zip"
     )
-
-    # comment split ###
-    # TODO "get cookies" replase " ", ""
-    # write readme when file band name
-
-    main()
-    
+    try:
+        main()
+    finally:
+        print("Press Enter: ")

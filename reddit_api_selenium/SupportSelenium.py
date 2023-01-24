@@ -1,22 +1,29 @@
 import pickle
+import time
 from urllib.parse import urlparse
 
 from work_fs import file_exists, path_near_exefile
 
 
 class Cookies:
-    def __init__(self, driver, path_filename, url):
+    def __init__(self, driver, path_filename):
         self.DRIVER = driver
-        self.domain = urlparse(url).netloc
-        self.path_filename = path_near_exefile(fr"{path_filename}")
-        print(path_filename)
-        print(self.path_filename)
+        self.path_filename = path_filename
 
-    def exists(self):
-        return file_exists(self.path_filename)
+    def are_valid(self):
+        if file_exists(self.path_filename):
+            near_future = time.time() + 30  # 30s in the future
+            with open(self.path_filename, mode="rb") as f:
+                # check all are still valid in near_future
+                return all(
+                    expiry >= near_future
+                    for cookie in pickle.load(f)
+                    if (expiry := cookie.get("expiry"))
+                )
+        return False
 
     def preload(self):
-        print(f"preload cookies for {self.domain}")
+        # print(f"preload cookies for {self.domain}")
         self.DRIVER.execute_cdp_cmd("Network.enable", {})
         with open(self.path_filename, mode="rb") as f:
             for cookie in pickle.load(f):
@@ -24,7 +31,6 @@ class Cookies:
         self.DRIVER.execute_cdp_cmd("Network.disable", {})
 
     def save(self):
-        print(f"save cookies for {self.domain}")
         with open(self.path_filename, mode="wb") as f:
             pickle.dump(self.DRIVER.get_cookies(), f)
 

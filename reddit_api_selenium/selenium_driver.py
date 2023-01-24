@@ -113,7 +113,7 @@ class BaseClass:
 
     def send_text_by_elem(self, value, text_or_key, by=By.XPATH, scroll_to=False, wait=60):
 
-        if self.click_element(value, by=by, scroll_to=scroll_to, wait=wait):
+        if self.click_element(value, by=by, scroll_to=scroll_to, wait=wait, move_to=True):
             research_xpath = self.DRIVER.find_element(by, value=value)
 
             research_xpath.clear()

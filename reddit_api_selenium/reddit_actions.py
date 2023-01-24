@@ -15,7 +15,7 @@ class RedditWork(BaseClass):
 
     def __enter__(self):
         self.DRIVER = self._driver(proxy=self.proxy)
-        
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -25,10 +25,16 @@ class RedditWork(BaseClass):
         self.DRIVER.quit()
 
     def attend_link(self):
-        self.client_cookie = Cookies(driver=self.DRIVER, url=self.link, path_filename=self.cookie_path)
-        self.client_cookie.preload()
-        self.DRIVER.get(self.link)
-        self.DRIVER.reconnect()
+        # self.DRIVER.delete_all_cookies()
+        self.client_cookie = Cookies(driver=self.DRIVER, path_filename=self.cookie_path)
+
+        if self.client_cookie.are_valid():
+            self.client_cookie.preload()
+            self.DRIVER.get(self.link)
+            self.DRIVER.reconnect()
+            return True
+        else:
+            return False
 
     def baned_account(self):
         if self.xpath_exists(value='//a[contains(@href, "https://www.reddithelp.com/")]'):
@@ -50,19 +56,21 @@ class RedditWork(BaseClass):
         self.xpath_exists(value='body', by=By.TAG_NAME)
         # asks to continue when you visit a site with a post
         self.click_element('//button[contains(text(), "Continue")]', wait=0.1, move_to=True)
-        
+
     def upvote(self):
+        self.reset_actions()
         # post
         self.xpath_exists(by=By.ID, value="post-content")
         # upvote
-        if self.click_element('//button[@data-click-id="upvote" and @aria-pressed="false"]', wait=10):
+        if self.click_element(
+                value='//div[@data-test-id="post-content"]//button[@data-click-id="upvote" and @aria-pressed="false"]',
+                wait=10, move_to=True):
             # wait for
             if self.xpath_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
                                  wait=4):
                 # success
                 return
             else:
-                self.reset_actions()
                 return self.upvote()
         else:
             # account's click exists
@@ -81,5 +89,4 @@ class RedditWork(BaseClass):
             return
 
         else:
-            self.reset_actions()
             return self.write_comment(text_comment)

@@ -41,20 +41,23 @@ def db_save_1_by_id(id_cookie):
 
 def db_get_cookie_by_id(id_cookie):
     with db:
-        db_cookie = Cookie.get(Cookie(id_cookie))
+        # db_cookie = Cookie.get(Cookie.id == id_cookie)
+        db_cookie = Cookie.get_by_id(id_cookie)
         return db_cookie
 
 
 def db_delete_by_id(id_cookie):
     with db.atomic():
-        proxy_for_save = Proxy.get(Proxy(id_cookie))
+        proxy_for_save = Proxy.get_by_id(id_cookie)
         # Save as str to file
         proxy_as_str = f"{proxy_for_save.host}:{proxy_for_save.port}:{proxy_for_save.user}:{proxy_for_save.password}"
         path_filename = work_fs.path_near_exefile("working_proxy_after_ban.txt")
         work_fs.write_line(path_filename, proxy_as_str)
         # delete from tabel
-        Cookie.delete().where(Cookie.id == id_cookie).execute()
-        Proxy.delete().where(Proxy.id == id_cookie).execute()
+        # Cookie.delete().where(Cookie.id == id_cookie).execute()
+        # Proxy.delete().where(Proxy.id == id_cookie).execute()
+        Cookie.delete_by_id(id_cookie)
+        Proxy.delete_by_id(id_cookie)
 
 
 def db_get_cookie_proxy():
@@ -67,7 +70,7 @@ def db_get_cookie_proxy():
         "password": db_obj.proxy.password,
     }
 
-    path_cookie = db_obj.cookie_path
+    path_cookie = work_fs.path_near_exefile(db_obj.cookie_path)
     id_profile = db_obj.id
 
     return path_cookie, dict_proxy, id_profile

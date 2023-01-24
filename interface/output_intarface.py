@@ -6,7 +6,7 @@ from .user_requests import get_user_count_approves, get_user_count_comments, get
 
 def user_deasire_data():
     init()
-    link_reddit = get_user_link()
+    link_reddit = get_user_link().replace(" ", "")
     clear_cmd()
     approves_int = get_user_count_approves()
     clear_cmd()
