@@ -154,3 +154,8 @@ class BaseClass:
 
     def reset_actions(self):
         self.action.reset_actions()
+
+    def close_alert(self, url, wait=0.3):
+        self.DRIVER.execute_script(f"location='{url}'; alert();")
+        self.DRIVER.switch_to.alert.accept()
+        self.DRIVER.reconnect(wait)

@@ -39,14 +39,17 @@ class RedditWork(BaseClass):
     def prepare_reddit(self):
         self.xpath_exists(value='body', by=By.TAG_NAME)
         # use Reddit in browser
-        self.click_element(value='//a[contains(text(), "Browse Reddit")]', wait=.5, move_to=True)
+        self.click_element(value='//a[contains(text(), "Browse Reddit")]', wait=0.1, move_to=True)
 
+        self.xpath_exists(value='body', by=By.TAG_NAME)
         # THen content 18+
-        if self.xpath_exists('//h3[contains(text(), "You must be 18+")]', wait=1):
+        if self.xpath_exists('//h3[contains(text(), "You must be 18+")]', wait=0.1):
+            # access
             self.click_element('//button[contains(text(), "Yes")]', move_to=True)
 
+        self.xpath_exists(value='body', by=By.TAG_NAME)
         # asks to continue when you visit a site with a post
-        self.click_element('//button[contains(text(), "Continue")]', wait=0.5, move_to=True)
+        self.click_element('//button[contains(text(), "Continue")]', wait=0.1, move_to=True)
         
     def upvote(self):
         # post

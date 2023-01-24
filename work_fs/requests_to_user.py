@@ -18,7 +18,7 @@ def data_confirmation(massage) -> bool:
         return False
 
     else:
-        warning_text(f"Потрібно обрати yes or no")
+        warning_text(f"Выбери yes or no")
         return data_confirmation(massage)
 
 

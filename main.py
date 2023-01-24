@@ -22,7 +22,7 @@ def body_loop(link_reddit, text_comment=str):
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
         api_reddit.attend_link()
         if not api_reddit.baned_account():
-            api_reddit.popups_pass()
+            api_reddit.prepare_reddit()
             api_reddit.upvote()
             if text_comment:
                 api_reddit.write_comment(text_comment)
@@ -72,7 +72,8 @@ if __name__ == '__main__':
     )
 
     # comment split ###
-    main()
+    # TODO "get cookies" replase " ", ""
+    # write readme when file band name
 
-# TODO rewrite cookie files? check it empyties
-# ctrl +x get cookies then testing it
+    main()
+    
