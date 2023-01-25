@@ -75,7 +75,3 @@ def db_get_cookie_proxy():
 
     return path_cookie, dict_proxy, id_profile
 
-
-def db_print_cookie_info(id_cookie):
-    obj_cookie = db_get_cookie_by_id(id_cookie)
-    print(work_fs.yellow_color("Cookie path") + work_fs.light_green_color(obj_cookie.cookie_path))

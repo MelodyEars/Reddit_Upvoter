@@ -1,8 +1,7 @@
 import pickle
 import time
-from urllib.parse import urlparse
 
-from work_fs import file_exists, path_near_exefile
+from work_fs import file_exists
 
 
 class Cookies:
@@ -23,11 +22,12 @@ class Cookies:
         return False
 
     def preload(self):
-        # print(f"preload cookies for {self.domain}")
         self.DRIVER.execute_cdp_cmd("Network.enable", {})
+
         with open(self.path_filename, mode="rb") as f:
             for cookie in pickle.load(f):
                 self.DRIVER.execute_cdp_cmd("Network.setCookie", cookie)
+
         self.DRIVER.execute_cdp_cmd("Network.disable", {})
 
     def save(self):
