@@ -81,3 +81,5 @@ if __name__ == '__main__':
         main()
     finally:
         print("Press Enter: ")
+
+'https://www.reddit.com/r/rickandmorty/comments/10jvpcw/cosplay_im_trying_mama_my_oh_mama_rick_cosplay/'
