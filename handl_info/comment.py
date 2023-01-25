@@ -15,6 +15,16 @@ def get_comments() -> list:
 def file_get_random_comments(count=int) -> list:
     # get count and random return count list
     comments = get_comments()
-    selects_comments = random.choices(comments, k=int(count))
 
-    return selects_comments
+    select_comments = []
+
+    while len(select_comments) < count:
+        selection = random.choice(comments)
+        # selection = selection.replace("\n", "")
+        selection = selection.strip()
+        if selection not in select_comments:
+            select_comments.append(selection)
+
+    print(select_comments)
+
+    return select_comments

@@ -83,12 +83,17 @@ class RedditWork(BaseClass):
             return
 
     def write_comment(self, text_comment, reddit_username):
-        self.send_text_by_elem(value='//div[@class="notranslate public-DraftEditor-content"]',
-                               text_or_key=text_comment)
+        print("write_comment: " + text_comment)
+        self.stealth_send_text(value='//div[@class="notranslate public-DraftEditor-content"]',
+                               text_or_key=text_comment,
+                               scroll_to=True)
+
         # send comment
         self.click_element('//button[contains(text(), "Comment")]', move_to=True)
 
-        if self.xpath_exists(f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]',
+        time.sleep(5)
+
+        if self.xpath_exists(value=f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]',
                              wait=10):
             # success
             return

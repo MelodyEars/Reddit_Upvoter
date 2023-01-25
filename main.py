@@ -10,9 +10,9 @@ from handl_info import file_get_random_comments
 def body_loop(link_reddit, text_comment=str):
     # get from db account not worked random choice
     path_cookie, dict_proxy, id_profile = db_get_cookie_proxy()
-    reddit_username = path_cookie.stem
+    reddit_username = path_cookie.stem  # Path to str
 
-    logger.info(f"Work with {reddit_username}")
+    logger.info(f'Work with "{reddit_username}"')
 
     # approves and comment on the Reddit
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
@@ -26,23 +26,23 @@ def body_loop(link_reddit, text_comment=str):
                 api_reddit.client_cookie.save()
 
             else:
-                logger.error(f"Account {reddit_username} banned and delete from data base.")
+                logger.error(f'Account "{reddit_username}" banned and delete from data base.')
 
                 db_delete_by_id(id_profile)
                 path_cookie.unlink()  # delete in folder
-                #
+
                 # api_reddit.DRIVER.delete_all_cookies()
                 api_reddit.DRIVER.quit()
                 return
         else:
 
-            logger.error(f"Cookie аккаунта {reddit_username} не работают, нужно перезаписать.")
+            logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
 
         api_reddit.DRIVER.quit()
 
     # db rewrite 1 is worked profile
     db_save_1_by_id(id_profile)
-    logger.info(f"Successfully {db_get_cookie_by_id(id_profile).cookie_path}")
+    logger.info(f'Successfully completed "{reddit_username}"')
 
 
 @logger.catch
