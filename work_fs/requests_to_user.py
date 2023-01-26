@@ -26,10 +26,7 @@ def indicate_number(text_what_answer):
     print(cyan_color(f"{text_what_answer}?"))
     try:
         number = int(input())
-        if number != 0:
-            return number
-        else:
-            warning_text("Ожидается не 0")
+        return number
     except ValueError:
         warning_text("Нужно указать целочисленный тип")
 

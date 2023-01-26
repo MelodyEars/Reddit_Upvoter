@@ -9,5 +9,13 @@ class RedditException(Exception):
         return f'RedditAPI -> {self.message}'
 
 
-class LegacyProxyException(RedditException):
-    """When your proxy, old"""
+class NotRefrashPageException(RedditException):
+    """Our CDN was unable to reach our servers"""
+
+
+class BanAccountException(RedditException):
+    """Your account banned"""
+
+
+class CookieInvalidException(RedditException):
+    """Cookie invalid"""

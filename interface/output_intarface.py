@@ -4,7 +4,7 @@ from work_fs import clear_cmd
 from .user_requests import get_user_count_approves, get_user_count_comments, get_user_link
 
 
-def user_deasire_data():
+def user_desired_value():
     init()
     link_reddit = get_user_link().replace(" ", "")
     clear_cmd()

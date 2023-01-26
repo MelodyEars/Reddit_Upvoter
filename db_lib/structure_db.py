@@ -39,13 +39,6 @@ def db_save_1_by_id(id_cookie):
         Cookie.update(is_work=1).where(Cookie.id == id_cookie).execute()
 
 
-def db_get_cookie_by_id(id_cookie):
-    with db:
-        # db_cookie = Cookie.get(Cookie.id == id_cookie)
-        db_cookie = Cookie.get_by_id(id_cookie)
-        return db_cookie
-
-
 def db_delete_by_id(id_cookie):
     with db.atomic():
         proxy_for_save = Proxy.get_by_id(id_cookie)
@@ -54,8 +47,6 @@ def db_delete_by_id(id_cookie):
         path_filename = work_fs.path_near_exefile("working_proxy_after_ban.txt")
         work_fs.write_line(path_filename, proxy_as_str)
         # delete from tabel
-        # Cookie.delete().where(Cookie.id == id_cookie).execute()
-        # Proxy.delete().where(Proxy.id == id_cookie).execute()
         Cookie.delete_by_id(id_cookie)
         Proxy.delete_by_id(id_cookie)
 

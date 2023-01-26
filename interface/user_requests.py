@@ -24,7 +24,7 @@ def get_user_count_approves(what_answering="апрувов"):
 
         # if user's answer NO return self func
     else:
-        wf.warning_text("Ождается, что будет указано меньше ровно колличиству аккаунтов!")
+        wf.warning_text("Ождается, что будет указано меньше или равно колличиству аккаунтов!")
 
     return get_user_count_approves()
 
