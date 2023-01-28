@@ -1,6 +1,7 @@
 from peewee import *
 from work_fs import path_near_exefile
 
+
 db = SqliteDatabase(path_near_exefile('db_lib.db'),
                     pragmas={
                         'journal_mode': 'wal',
@@ -25,11 +26,25 @@ class Proxy(BaseModel):
         db_table = 'proxies'
 
 
-class Cookie(BaseModel):
-    proxy = ForeignKeyField(Proxy)
+class Account(BaseModel):
+    proxy = ForeignKeyField(Proxy, backref="proxies")
     cookie_path = CharField()
-    is_work = BooleanField(default=False)  # already work on reddit or no
+    is_selected = BooleanField()
 
     class Meta:
-        db_table = 'cookies'
+        db_table = 'accounts'
 
+
+class RedditLink(BaseModel):
+    link = CharField()
+
+    class Meta:
+        db_table = "reddit links"
+
+
+class WorkAccountWithLink(BaseModel):
+    account = ForeignKeyField(Account, backref='accounts')
+    link = ForeignKeyField(RedditLink, backref='reddit links')
+
+    class Meta:
+        db_table = "work account with link"

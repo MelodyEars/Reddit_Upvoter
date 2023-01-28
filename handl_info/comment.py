@@ -28,3 +28,4 @@ def file_get_random_comments(count=int) -> list:
     print(select_comments)
 
     return select_comments
+

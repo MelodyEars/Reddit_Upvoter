@@ -4,13 +4,7 @@ import work_fs as wf
 from handl_info import get_comments
 
 
-def get_user_link():
-    print(wf.light_green_color("Ссылка на пост:"))
-    post_link = input()
-    return post_link
-
-
-def get_user_count_approves(what_answering="апрувов"):
+def get_user_count_approves(what_answering="апвойтов"):
 
     available_profile = len(os.listdir(str(wf.path_near_exefile('cookies'))))
     print(wf.light_green_color(f"Доступно аккаунтов {available_profile}"))
@@ -18,13 +12,13 @@ def get_user_count_approves(what_answering="апрувов"):
     answer = wf.indicate_number(f"Сколько {what_answering} нужно")  # input
 
     if answer <= available_profile:
-        if wf.data_confirmation(f"Устраивает ли вас колличиство {what_answering} {wf.green_color(answer)}"):
+        if wf.data_confirmation(f"Устраивает ли вас количиство {what_answering} {wf.green_color(answer)}"):
             # exit from this func, if user answers YES
             return answer
 
         # if user's answer NO return self func
     else:
-        wf.warning_text("Ождается, что будет указано меньше или равно колличиству аккаунтов!")
+        wf.warning_text("Ождается, что будет указано меньше или равно количиству аккаунтов!")
 
     return get_user_count_approves()
 
