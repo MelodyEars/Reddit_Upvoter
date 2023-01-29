@@ -6,7 +6,6 @@ from .reddit_actions import RedditWork
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
 
 
-
 def delete_account_db(path_cookie, id_account, reddit_username):
     logger.error(f'Account "{reddit_username}" banned and delete from data base.')
     db_delete_accounts_by_id(id_account)
@@ -29,8 +28,6 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
             return delete_account_db(path_cookie, id_profile, reddit_username)
         except NotRefrashPageException:
             logger.error(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
-            # db rewrite 1 is worked profile
-            return db_save_1_by_id(id_profile)
 
         # put on upvote
         api_reddit.upvote()
@@ -40,8 +37,8 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
             api_reddit.write_comment(text_comment, reddit_username)
 
         api_reddit.client_cookie.save()
-        # db rewrite 1 is worked profile
-        db_save_1_by_id(id_profile)
+
         # close browser
         api_reddit.DRIVER.quit()
+
         logger.info(f'Successfully completed "{reddit_username}"')
