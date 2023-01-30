@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
+from .exceptions import ElementNotClickException
 
 
 class BaseClass:
@@ -93,10 +94,19 @@ class BaseClass:
 
         return exist
 
-    def click_element(self, value, by=By.XPATH, wait=60, move_to=True, scroll_to=False):
+    @staticmethod
+    def _check_type_elem(by, value):
+        if isinstance(value, str):
+            return by, value
+        elif isinstance(value, tuple):
+            return value
+        else:
+            raise ElementNotClickException("Expected tuple or str!")
 
+    def click_element(self, value, by=By.XPATH, wait=60, move_to=True, scroll_to=False):
         try:
-            elem_for_click = WebDriverWait(self.DRIVER, wait).until(EC.element_to_be_clickable((by, value)))
+            for_research_elem = self._check_type_elem(by=by, value=value)
+            elem_for_click = WebDriverWait(self.DRIVER, wait).until(EC.element_to_be_clickable(for_research_elem))
 
             if scroll_to:
                 self.scroll_to_elem(value)

@@ -11,3 +11,7 @@ class BanAccountException(RedditException):
 
 class CookieInvalidException(RedditException):
     """Cookie invalid"""
+
+
+class ElementNotClickException(RedditException):
+    """Expected tuple or str"""

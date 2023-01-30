@@ -21,24 +21,21 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         except CookieInvalidException:
             logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
 
-        # Handling error and close popups
         try:
-            api_reddit.prepare_reddit()
+            # put on upvote
+            api_reddit.upvote()
         except BanAccountException:
             return delete_account_db(path_cookie, id_profile, reddit_username)
         except NotRefrashPageException:
             logger.error(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
-
-        # put on upvote
-        api_reddit.upvote()
 
         # if required to write comments
         if text_comment:
             api_reddit.write_comment(text_comment, reddit_username)
 
         api_reddit.client_cookie.save()
-
-        # close browser
-        api_reddit.DRIVER.quit()
+        #
+        # # close browser
+        # api_reddit.DRIVER.quit()
 
         logger.info(f'Successfully completed "{reddit_username}"')

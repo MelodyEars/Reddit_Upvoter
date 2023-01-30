@@ -1,5 +1,7 @@
+import random
 import time
 
+from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
 from .SupportSelenium import Cookies
@@ -39,8 +41,10 @@ class RedditWork(BaseClass):
             raise CookieInvalidException("Cookie invalid")
 
     def _baned_account(self):
+        self._wait_load_webpage()
         if not self.xpath_exists(value='//a[contains(@href, "https://www.reddithelp.com/")]', wait=1):
             return
+
         else:
             raise BanAccountException("Your account banned")
 
@@ -61,27 +65,37 @@ class RedditWork(BaseClass):
             else:
                 raise NotRefrashPageException("Our CDN was unable to reach our servers")
 
-    def prepare_reddit(self):
-        self._wait_load_webpage()
-        self._baned_account()
+    def _find_popups(self):
         # use Reddit in browser
-        if self.click_element(value='//a[contains(text(), "Browse Reddit")]', wait=0.1, move_to=True):
+        if self.click_element(value='//a[contains(text(), "Browse Reddit")]', wait=0.2):
             self._wait_load_webpage()
 
         # THen content 18+
-        if self.xpath_exists('//h3[contains(text(), "You must be 18+")]', wait=0.1):
-            self.click_element('//button[contains(text(), "Yes")]', move_to=True)
+        if self.xpath_exists('//h3[contains(text(), "You must be 18+")]', wait=0.2):
+            self.click_element('//button[contains(text(), "Yes")]')
             self._wait_load_webpage()
 
         # asks to continue when you visit a site with a post
-        if self.click_element('//button[contains(text(), "Continue")]', wait=0.1, move_to=True):
+        if self.click_element('//button[contains(text(), "Continue")]', wait=0.2):
             self._wait_load_webpage()
 
         # when we watch on the first time on the reddit
-        if self.click_element('//div[@role="dialog"]//header//button[@aria-label="Close"]', wait=0.1, move_to=True):
+        # select interests
+        if self.xpath_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
+            # window dialog
+            self.xpath_exists('//div[@role="dialog"]//button[@role="button"]')
+            # get all button
+            list_interests_button = self.DRIVER.find_elements(By.XPATH, '//div[@role="dialog"]//button[@role="button"]')
+            for _ in range(random.randint(3, 5)):
+                num_selected = random.randint(0, len(list_interests_button))
+                interest_button = list_interests_button.pop(num_selected)
+                print(type(interest_button), "91 line in reddit_actions")
+                self.click_element(value=interest_button, scroll_to=True)
+
+            # watch ellement not fill color
             self._wait_load_webpage()
 
-    def upvote(self):
+    def previously_upvote(self):
         # upvote
         if self.click_element(
                 value='//div[@data-test-id="post-content"]//button[@data-click-id="upvote" and @aria-pressed="false"]',
@@ -97,8 +111,22 @@ class RedditWork(BaseClass):
                 # repeats actions
                 return self.upvote()
         else:
-            # account's click exists
-            return
+            # the upvote has already been made
+            if self.xpath_exists(
+                    value='//div[@data-test-id="post-content"]//button[@data-click-id="upvote" and @aria-pressed="true"]',
+                    wait=1):
+                return
+            else:
+                self._find_popups()
+                self.previously_upvote()
+
+    def upvote(self):
+        try:
+            self._baned_account()
+            self.previously_upvote()
+        except ElementClickInterceptedException:
+            self._find_popups()
+            self.previously_upvote()
 
     def write_comment(self, text_comment, reddit_username):
 
@@ -121,3 +149,4 @@ class RedditWork(BaseClass):
                 return
             else:
                 return self.write_comment(text_comment, reddit_username)
+

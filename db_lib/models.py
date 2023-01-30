@@ -19,7 +19,7 @@ class BaseModel(Model):
 class Proxy(BaseModel):
     host = CharField()
     port = CharField()
-    user = CharField(unique=True)
+    user = CharField()
     password = CharField()
 
     class Meta:
@@ -29,7 +29,7 @@ class Proxy(BaseModel):
 class Account(BaseModel):
     proxy = ForeignKeyField(Proxy, backref="proxies")
     cookie_path = CharField()
-    is_selected = BooleanField()
+    is_selected = BooleanField(default=False)
 
     class Meta:
         db_table = 'accounts'

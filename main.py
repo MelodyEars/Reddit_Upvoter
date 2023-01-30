@@ -1,10 +1,10 @@
 from multiprocessing import freeze_support
 from loguru import logger
 
-from base_exception import RanOutAccountsForLinkException
+from base_exception import ProxyInvalidException
 from interface import user_desired_value
 from db_lib import *
-from handl_info import file_get_random_comments, get_user_link_file
+from handl_info import file_get_random_comments, get_user_link_file, check_proxy
 from reddit_api_selenium import work_with_api_reddit
 
 
@@ -15,7 +15,8 @@ def pick_up_account_to_link(link_from_file):
 
     for _ in range(count):
         account_obj = db_get_random_account_with_0()
-        outcome_created, created_id_work_link_account_obj = db_exist_record_link_account(link_id=link_id, account_id=account_obj.id)
+        outcome_created, created_id_work_link_account_obj = db_exist_record_link_account(link_id=link_id,
+                                                                                         account_id=account_obj.id)
 
         if outcome_created:  # if create record return TRUE
             return link_id, account_obj, created_id_work_link_account_obj
@@ -34,6 +35,9 @@ def body_loop(link_from_file, text_comment):
     try:
         # get from db account not worked random choice
         path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj)
+
+        check_proxy(**dict_proxy)
+
         reddit_username = path_cookie.stem  # Path to str
 
         logger.info(f'Work with "{reddit_username}"')
@@ -70,6 +74,8 @@ def main():
         except RanOutAccountsForLinkException:
             continue
         # if create and exists exception delete record from db
+        except ProxyInvalidException:
+            continue
 
 
 if __name__ == '__main__':

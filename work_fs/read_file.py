@@ -6,6 +6,7 @@
 import json
 from .work_with_path import file_exists
 
+
 def read_json(filename):
     """get items from json"""
     with open(filename, 'r', encoding='UTF-8') as file:
