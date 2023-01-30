@@ -6,6 +6,7 @@ from interface import user_desired_value
 from db_lib import *
 from handl_info import file_get_random_comments, get_user_link_file, check_proxy
 from reddit_api_selenium import work_with_api_reddit
+from reddit_api_selenium.exceptions import CookieInvalidException
 
 
 def pick_up_account_to_link(link_from_file):
@@ -76,19 +77,28 @@ def main():
         # if create and exists exception delete record from db
         except ProxyInvalidException:
             continue
+        except CookieInvalidException as ex:
+            logger.error(ex)
+            continue
+# TODO MODEL db add folder recovered cookies
+# TODO MODEL db add table account
+# TODO MODEL db add shadow ban watch via console (red, yellow)
+# TODO баньі удалять через другое приложение
+# query там где 1 или 0 вьібирать для рандома добавить запрос не с баном ли акк
 
 
 if __name__ == '__main__':
-    freeze_support()
-
-    logger.add(
-        "base_reddit.log",
-        format="{time} {level} {message}",
-        level="ERROR",
-        rotation="10 MB",
-        compression="zip"
-    )
     try:
+        freeze_support()
+
+        logger.add(
+            "base_reddit.log",
+            format="{time} {level} {message}",
+            level="ERROR",
+            rotation="10 MB",
+            compression="zip"
+        )
+
         main()
     finally:
-        print("Press Enter: ")
+        print("Press Enter:")

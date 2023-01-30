@@ -49,7 +49,7 @@ class RedditWork(BaseClass):
             raise BanAccountException("Your account banned")
 
     def _error_cdn_to_server(self):
-        self.xpath_exists(value='body', by=By.TAG_NAME)
+        self.xpath_exists(value='body', by=By.TAG_NAME, wait=500)
         if self.xpath_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
             return True
         else:
@@ -65,6 +65,38 @@ class RedditWork(BaseClass):
             else:
                 raise NotRefrashPageException("Our CDN was unable to reach our servers")
 
+    def _button_continue(self):
+        # asks to continue when you visit a site with a post
+        if self.click_element('//button[contains(text(), "Continue")]', wait=0.2):
+            self._wait_load_webpage()
+
+    def _select_communities(self):
+        self.xpath_exists('//button[contains(text(), "Select All")]')
+        count_communities = len(self.DRIVER.find_elements(By.XPATH, '//button[contains(text(), "Select All")]'))
+
+        for _ in range(random.randint(1, count_communities)):
+            communities_button = f'//button[contains(text(), "Select All")]'
+            self.click_element(value=communities_button, scroll_to=True, wait=1)
+
+        self._button_continue()
+        self._wait_load_webpage()
+
+    def _select_interests(self):
+        if self.xpath_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
+            num = 0
+            for _ in range(random.randint(3, 5)):
+                num_selected = random.randint(1, 3)
+                num += num_selected
+                interest_button = f'//div[@role="dialog"]//button[@role="button"][{num}]'
+                self.click_element(value=interest_button, scroll_to=True, wait=1)
+
+            self._button_continue()
+
+            # watch element not fill color
+            self._wait_load_webpage()
+
+            return self._select_communities()
+
     def _find_popups(self):
         # use Reddit in browser
         if self.click_element(value='//a[contains(text(), "Browse Reddit")]', wait=0.2):
@@ -75,27 +107,13 @@ class RedditWork(BaseClass):
             self.click_element('//button[contains(text(), "Yes")]')
             self._wait_load_webpage()
 
-        # asks to continue when you visit a site with a post
-        if self.click_element('//button[contains(text(), "Continue")]', wait=0.2):
-            self._wait_load_webpage()
-
         # when we watch on the first time on the reddit
-        # select interests
-        if self.xpath_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
-            # window dialog
-            self.xpath_exists('//div[@role="dialog"]//button[@role="button"]')
-            # get all button
-            list_interests_button = self.DRIVER.find_elements(By.XPATH, '//div[@role="dialog"]//button[@role="button"]')
-            for _ in range(random.randint(3, 5)):
-                num_selected = random.randint(0, len(list_interests_button))
-                interest_button = list_interests_button.pop(num_selected)
-                print(type(interest_button), "91 line in reddit_actions")
-                self.click_element(value=interest_button, scroll_to=True)
+        self._select_interests()
 
-            # watch ellement not fill color
-            self._wait_load_webpage()
+        # asks to continue when you visit a site with a post
+        self._button_continue()
 
-    def previously_upvote(self):
+    def _previously_upvote(self):
         # upvote
         if self.click_element(
                 value='//div[@data-test-id="post-content"]//button[@data-click-id="upvote" and @aria-pressed="false"]',
@@ -118,15 +136,15 @@ class RedditWork(BaseClass):
                 return
             else:
                 self._find_popups()
-                self.previously_upvote()
+                self._previously_upvote()
 
     def upvote(self):
         try:
             self._baned_account()
-            self.previously_upvote()
+            self._previously_upvote()
         except ElementClickInterceptedException:
             self._find_popups()
-            self.previously_upvote()
+            self._previously_upvote()
 
     def write_comment(self, text_comment, reddit_username):
 

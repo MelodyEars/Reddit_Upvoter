@@ -1,4 +1,5 @@
 import random
+from typing import List, Any
 
 import work_fs as wf
 
@@ -12,20 +13,23 @@ def get_comments() -> list:
     return content
 
 
-def file_get_random_comments(count=int) -> list:
-    # get count and random return count list
-    comments = get_comments()
+def file_get_random_comments(count=int) -> None | list[Any] | list:
+    if count == 0:
+        return
+    else:
+        # get count and random return count list
+        list_comments = get_comments()
 
-    select_comments = []
+        select_comments = []
+        if count != len(list_comments):
+            for _ in range(count):
+                num = random.randint(0, len(list_comments))
+                comment = list_comments.pop(num)
+                select_comments.append(comment)
+        else:
+            select_comments = list_comments
 
-    while len(select_comments) < count:
-        selection = random.choice(comments)
-        # selection = selection.replace("\n", "")
-        selection = selection.strip()
-        if selection not in select_comments:
-            select_comments.append(selection)
+        print(select_comments)
 
-    print(select_comments)
-
-    return select_comments
+        return select_comments
 
