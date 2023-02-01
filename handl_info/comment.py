@@ -1,5 +1,5 @@
 import random
-from typing import List, Any
+from typing import List, Any, Type
 
 import work_fs as wf
 
@@ -13,9 +13,9 @@ def get_comments() -> list:
     return content
 
 
-def file_get_random_comments(count=int) -> None | list[Any] | list:
+def file_get_random_comments(count=int) -> Type[list] | list[Any] | list:
     if count == 0:
-        return
+        return []
     else:
         # get count and random return count list
         list_comments = get_comments()

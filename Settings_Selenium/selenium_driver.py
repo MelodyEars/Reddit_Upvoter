@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
-from .exceptions import ElementNotClickException
+from reddit_api_selenium.exceptions import ElementNotClickException
 
 
 class BaseClass:

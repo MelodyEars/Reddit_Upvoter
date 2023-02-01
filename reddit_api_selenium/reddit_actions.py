@@ -4,9 +4,9 @@ import time
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
-from .SupportSelenium import Cookies
+from Settings_Selenium.SupportSelenium import Cookies
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
-from .selenium_driver import BaseClass
+from Settings_Selenium.selenium_driver import BaseClass
 
 
 class RedditWork(BaseClass):

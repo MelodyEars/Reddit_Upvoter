@@ -1,3 +1,5 @@
+import time
+
 from loguru import logger
 
 from db_lib import *
@@ -19,23 +21,27 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         try:
             api_reddit.attend_link()
         except CookieInvalidException:
+            api_reddit.DRIVER.quit()
             logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
+            return
 
         try:
             # put on upvote
             api_reddit.upvote()
         except BanAccountException:
+            api_reddit.DRIVER.quit()
             return delete_account_db(path_cookie, id_profile, reddit_username)
+
         except NotRefrashPageException:
+            api_reddit.DRIVER.quit()
             logger.error(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
+            return
 
         # if required to write comments
         if text_comment:
             api_reddit.write_comment(text_comment, reddit_username)
 
         api_reddit.client_cookie.save()
-        #
-        # # close browser
-        # api_reddit.DRIVER.quit()
-
         logger.info(f'Successfully completed "{reddit_username}"')
+        time.sleep(0.5)
+        api_reddit.DRIVER.quit()
