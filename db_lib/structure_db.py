@@ -1,10 +1,36 @@
 import random
 
-import work_fs
+from work_fs import write_line, path_near_exefile
 
 from base_exception import RanOutAccountsForLinkException
 
 from .models import Proxy, RedditLink, Account, WorkAccountWithLink, db
+
+
+def create_db():
+    with db:
+        db.create_tables([Proxy, WorkAccountWithLink, Account, RedditLink])
+
+
+def db_create_proxy(proxy):
+    with db:
+        in_db_proxy = Proxy.create(**proxy)
+
+    return in_db_proxy
+
+
+def db_create_cookie(path_cookie, in_db_proxy):
+    with db:
+        Account.create(cookie_path=path_cookie, proxy=in_db_proxy)
+
+
+def db_save_proxy_cookie(proxy_from_api, cookie_path):
+    if len(Account.select().where(Account.cookie_path == cookie_path)) == 0:
+        proxy_in_db = db_create_proxy(proxy_from_api)
+        db_create_cookie(cookie_path, proxy_in_db)
+    else:
+        write_line("proxies.txt", ":".join((proxy_from_api['host'], proxy_from_api['port'],
+                                            proxy_from_api['user'], proxy_from_api['password'])))
 
 
 def db_get_link_id(link_from_file):
@@ -43,8 +69,8 @@ def db_delete_accounts_by_id(id_account):
         proxy_for_save = Proxy.get_by_id(id_account)
         # Save as str to file
         proxy_as_str = f"{proxy_for_save.host}:{proxy_for_save.port}:{proxy_for_save.user}:{proxy_for_save.password}"
-        path_filename = work_fs.path_near_exefile("working_proxy_after_ban.txt")
-        work_fs.write_line(path_filename, proxy_as_str)
+        path_filename = path_near_exefile("working_proxy_after_ban.txt")
+        write_line(path_filename, proxy_as_str)
 
         # delete all by index from account
         WorkAccountWithLink.delete().where(WorkAccountWithLink.account == id_account)
@@ -63,7 +89,7 @@ def db_get_cookie_proxy(account_obj):
         "password": account_obj.proxy.password,
     }
 
-    path_cookie = work_fs.path_near_exefile(account_obj.cookie_path)
+    path_cookie = path_near_exefile(account_obj.cookie_path)
     id_account = account_obj.id
 
     return path_cookie, dict_proxy, id_account
