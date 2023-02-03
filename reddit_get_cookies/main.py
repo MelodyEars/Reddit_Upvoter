@@ -5,12 +5,12 @@ from loguru import logger
 from reddit_api_selenium import RedditAuth
 from handl_info import get_account, get_proxy
 from work_fs import file_exists, path_near_exefile, write_list_to_file
-from db_lib import create_db, db_save_proxy_cookie
+from database import create_db, db_save_proxy_cookie
 
 
 @logger.catch
 def main():
-    if not file_exists(path_near_exefile('db_lib.db')):
+    if not file_exists(path_near_exefile('database.db')):
         create_db()
 
     for account in get_account():

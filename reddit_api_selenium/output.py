@@ -2,7 +2,7 @@ import time
 
 from loguru import logger
 
-from db_lib import *
+from database import *
 
 from .reddit_actions import RedditWork
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
@@ -21,7 +21,7 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         try:
             api_reddit.attend_link()
         except CookieInvalidException:
-            api_reddit.DRIVER.quit()
+            api_reddit.DRIVER.close()
             logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
             return
 
@@ -29,11 +29,11 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
             # put on upvote
             api_reddit.upvote()
         except BanAccountException:
-            api_reddit.DRIVER.quit()
+            api_reddit.DRIVER.close()
             return delete_account_db(path_cookie, id_profile, reddit_username)
 
         except NotRefrashPageException:
-            api_reddit.DRIVER.quit()
+            api_reddit.DRIVER.close()
             logger.error(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
             return
 
@@ -44,4 +44,4 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         api_reddit.client_cookie.save()
         logger.info(f'Successfully completed "{reddit_username}"')
         time.sleep(0.5)
-        api_reddit.DRIVER.quit()
+        api_reddit.DRIVER.close()

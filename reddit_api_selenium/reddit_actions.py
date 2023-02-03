@@ -4,9 +4,9 @@ import time
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
-from Settings_Selenium.SupportSelenium import Cookies
+from Settings_Selenium import Cookies
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
-from Settings_Selenium.selenium_driver import BaseClass
+from Settings_Selenium import BaseClass
 
 
 class RedditWork(BaseClass):
@@ -50,6 +50,7 @@ class RedditWork(BaseClass):
 
     def _error_cdn_to_server(self):
         self.xpath_exists(value='body', by=By.TAG_NAME, wait=500)
+        self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3)
         if self.xpath_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
             return True
         else:
@@ -113,11 +114,11 @@ class RedditWork(BaseClass):
         # asks to continue when you visit a site with a post
         self._button_continue()
 
-    def _previously_upvote(self):
+    def _previously_upvote(self, wait=4):
         # upvote
         if self.click_element(
                 value='//div[@data-test-id="post-content"]//button[@data-click-id="upvote" and @aria-pressed="false"]',
-                wait=4, move_to=True):
+                wait=wait, move_to=True):
 
             time.sleep(5)
             # wait for
@@ -144,7 +145,7 @@ class RedditWork(BaseClass):
             self._previously_upvote()
         except ElementClickInterceptedException:
             self._find_popups()
-            self._previously_upvote()
+            self._previously_upvote(wait=120)
 
     def write_comment(self, text_comment, reddit_username):
 

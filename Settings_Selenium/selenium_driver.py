@@ -67,7 +67,6 @@ class BaseClass:
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)
 
-
         # if you need download to your folder
         if download_path == "default":
             return self.DRIVER

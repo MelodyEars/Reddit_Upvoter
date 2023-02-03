@@ -6,7 +6,7 @@ import work_fs
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
-from .selenium_driver import BaseClass
+from Settings_Selenium import BaseClass, Cookies
 
 
 class RedditAuth(BaseClass):
@@ -53,7 +53,8 @@ class RedditAuth(BaseClass):
 
     def get_path_cookie(self, login):
         path_cookie = work_fs.auto_create(work_fs.path_near_exefile('cookies'), _type='dir') / f'{login}.pkl'
-        self.save_cookie(path_cookie)
+        cookie = Cookies(driver=self.DRIVER, path_filename=path_cookie)
+        cookie.save()
 
         db_cookie_path = f"cookies/{login}.pkl"
         return db_cookie_path, self.proxy

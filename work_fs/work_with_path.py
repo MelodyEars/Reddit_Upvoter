@@ -35,7 +35,7 @@ def dir_exists(path_to_dir) -> bool:
         return False
 
 
-def path_near_exefile(filename=""):
+def path_near_exefile(filename: str = "") -> Path:
     """
     create=visible :create folder or file is visible for users
     create=hidden :create folder or file is hidden for users
