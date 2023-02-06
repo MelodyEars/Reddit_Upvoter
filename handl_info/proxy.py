@@ -3,6 +3,7 @@ import requests
 from loguru import logger
 
 import work_fs as wf
+from base_exception import ProxyInvalidException
 
 
 def check_proxy(host, port, user, password):
@@ -14,4 +15,4 @@ def check_proxy(host, port, user, password):
     except Exception as ex:
         logger.error(ex)
         wf.write_line("proxy_invalid.txt", ":".join((host, port, user, password)))
-        raise ProxyInvalid
+        raise ProxyInvalidException

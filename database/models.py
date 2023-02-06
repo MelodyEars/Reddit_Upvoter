@@ -27,12 +27,22 @@ class Proxy(BaseModel):
 
 
 class Account(BaseModel):
-    proxy = ForeignKeyField(Proxy, backref="proxies")
-    cookie_path = CharField()
-    is_selected = BooleanField(default=False)
+    login = CharField()
+    password = CharField()
 
     class Meta:
         db_table = 'accounts'
+
+
+class Cookie(BaseModel):
+    account = ForeignKeyField(Account, backref="accounts")
+    proxy = ForeignKeyField(Proxy, backref="proxies")
+    cookie_path = CharField()
+    is_selected = BooleanField(default=False)
+    ban = BooleanField(default=False)
+
+    class Meta:
+        db_table = 'cookies'
 
 
 class RedditLink(BaseModel):

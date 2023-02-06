@@ -33,5 +33,3 @@ class Cookies:
     def save(self):
         with open(self.path_filename, mode="wb") as f:
             pickle.dump(self.DRIVER.get_cookies(), f)
-
-'//div[contains(text(), "Incorrect username or password")]'

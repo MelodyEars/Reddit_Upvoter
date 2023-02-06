@@ -13,7 +13,7 @@ class RedditWork(BaseClass):
     def __init__(self, path_cookie=str, link=str, proxy=None):
 
         super(__class__, self).__init__()
-        self.client_cookie = None
+        self.client_cookie = Cookies
         self.proxy = proxy
         self.link = link
         self.cookie_path = path_cookie

@@ -22,7 +22,7 @@ def data_confirmation(massage) -> bool:
         return data_confirmation(massage)
 
 
-def indicate_number(text_what_answer):
+def indicate_number(text_what_answer: str):
     print(cyan_color(f"{text_what_answer}?"))
     try:
         number = int(input())

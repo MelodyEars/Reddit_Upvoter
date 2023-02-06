@@ -4,12 +4,12 @@ from work_fs import write_line, path_near_exefile
 
 from base_exception import RanOutAccountsForLinkException
 
-from .models import Proxy, RedditLink, Account, WorkAccountWithLink, db
+from .models import Proxy, RedditLink, Cookie, WorkAccountWithLink, Account, db
 
 
 def create_db():
     with db:
-        db.create_tables([Proxy, WorkAccountWithLink, Account, RedditLink])
+        db.create_tables([Proxy, WorkAccountWithLink, Cookie, RedditLink, Account])
 
 
 def create_proxy(proxy):
@@ -21,11 +21,11 @@ def create_proxy(proxy):
 
 def create_cookie(path_cookie, in_db_proxy):
     with db:
-        Account.create(cookie_path=path_cookie, proxy=in_db_proxy)
+        Cookie.create(cookie_path=path_cookie, proxy=in_db_proxy)
 
 
 def db_save_proxy_cookie(proxy_from_api, cookie_path):
-    if len(Account.select().where(Account.cookie_path == cookie_path)) == 0:
+    if len(Cookie.select().where(Cookie.cookie_path == cookie_path)) == 0:
         proxy_in_db = create_proxy(proxy_from_api)
         create_cookie(cookie_path, proxy_in_db)
     else:
@@ -77,13 +77,13 @@ def db_delete_accounts_by_id(id_account):
         WorkAccountWithLink.delete().where(WorkAccountWithLink.account == id_account)
 
         # delete from tabel
-        Account.delete_by_id(id_account)
+        Cookie.delete_by_id(id_account)
         Proxy.delete_by_id(id_account)
 
 
 def db_get_cookie_proxy(account_obj):
 
-    dict_proxy: dict[str, Account] = {
+    dict_proxy: dict[str, Cookie] = {
         "host": account_obj.proxy.host,
         "port": account_obj.proxy.port,
         "user": account_obj.proxy.user,
@@ -98,18 +98,18 @@ def db_get_cookie_proxy(account_obj):
 
 def db_number_of_records_account() -> int:
     with db:
-        return len(Account.select())
+        return len(Cookie.select())
 
 
 def db_reset_work_all_accounts_1_on_0():
     with db:
-        Account.update(is_selected=0).where(Account.is_selected == 1).execute()
+        Cookie.update(is_selected=0).where(Cookie.is_selected == 1).execute()
 
 
-def db_get_random_account_with_0() -> Account:
+def db_get_random_account_with_0() -> Cookie:
     with db:
         try:
-            account_obj = random.choice(Account.select().where(Account.is_selected == 0))
+            account_obj = random.choice(Cookie.select().where(Cookie.is_selected == 0))
         except IndexError:
             raise RanOutAccountsForLinkException
     return account_obj
@@ -117,7 +117,14 @@ def db_get_random_account_with_0() -> Account:
 
 def db_save_1_by_id(id_account):
     with db:
-        Account.update(is_selected=1).where(Account.id == id_account).execute()
+        Cookie.update(is_selected=1).where(Cookie.id == id_account).execute()
+
+
+def get_proxy_by_cookies(path_cookie):
+    acc_obj: Cookie = Cookie.get(cookie_path=path_cookie)
+    path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj=acc_obj)
+
+    return dict_proxy, id_account
 
 
 __all__ = [
@@ -134,5 +141,5 @@ __all__ = [
     "db_get_random_account_with_0",
     "db_get_random_account_with_0",
     "db_save_1_by_id",
-    "db_get_all_accounts",
+    "get_proxy_by_cookies"
 ]
