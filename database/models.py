@@ -25,24 +25,24 @@ class Proxy(BaseModel):
     class Meta:
         db_table = 'proxies'
 
-
-class Account(BaseModel):
-    login = CharField()
-    password = CharField()
-
-    class Meta:
-        db_table = 'accounts'
+#
+# class Account(BaseModel):
+#     login = CharField()
+#     password = CharField()
+#
+#     class Meta:
+#         db_table = 'accounts'
 
 
 class Cookie(BaseModel):
-    account = ForeignKeyField(Account, backref="accounts")
+    # account = ForeignKeyField(Account, backref="accounts")
     proxy = ForeignKeyField(Proxy, backref="proxies")
     cookie_path = CharField()
     is_selected = BooleanField(default=False)
-    ban = BooleanField(default=False)
+    # ban = BooleanField(default=False)
 
     class Meta:
-        db_table = 'cookies'
+        db_table = 'accounts'  # TODO cookies
 
 
 class RedditLink(BaseModel):
@@ -53,7 +53,7 @@ class RedditLink(BaseModel):
 
 
 class WorkAccountWithLink(BaseModel):
-    account = ForeignKeyField(Account, backref='accounts')
+    account = ForeignKeyField(Cookie, backref='accounts')  # TODO "cookies"
     link = ForeignKeyField(RedditLink, backref='reddit links')
 
     class Meta:

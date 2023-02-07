@@ -27,9 +27,11 @@ class Cookies:
         with open(self.path_filename, mode="rb") as f:
             for cookie in pickle.load(f):
                 self.DRIVER.execute_cdp_cmd("Network.setCookie", cookie)
-
+            f.close()
+            
         self.DRIVER.execute_cdp_cmd("Network.disable", {})
 
     def save(self):
         with open(self.path_filename, mode="wb") as f:
             pickle.dump(self.DRIVER.get_cookies(), f)
+            f.close()

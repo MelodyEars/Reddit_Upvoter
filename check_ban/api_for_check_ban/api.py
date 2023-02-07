@@ -35,7 +35,6 @@ async def run_browser(path_cookies):
 	async with async_playwright() as playwright:
 		browser = await playwright.chromium.launch(headless=False, channel="chrome")
 		context = await browser.new_context()
-		await context.new_page()
 
 		await asyncio.wait(
 			[asyncio.create_task(open_page(context, path_cookie)) for path_cookie in path_cookies],

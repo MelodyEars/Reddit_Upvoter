@@ -35,7 +35,7 @@ def unpack_info(list_acc_cond: list, list_selected_acc: list):
 
 
 def user_response(list_acc_cond: list, list_selected_acc: list):
-	# clear_cmd()
+	clear_cmd()
 
 	init()  # <-color
 	print(blue_color("Обери аккаунт"))

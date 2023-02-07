@@ -11,7 +11,7 @@ from reddit_api_selenium.exceptions import CookieInvalidException
 
 def pick_up_account_to_link(link_from_file):
 
-    count = db_number_of_records_account()
+    count = db_get_number_of_records_account()
     link_id = db_get_link_id(link_from_file)
 
     for _ in range(count):
