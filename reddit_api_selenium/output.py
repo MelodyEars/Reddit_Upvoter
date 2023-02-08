@@ -1,16 +1,15 @@
 import time
 
-from loguru import logger
-
 from database import *
+from auth_reddit import get_cookies
 
 from .reddit_actions import RedditWork
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
 
 
-def delete_account_db(path_cookie, id_account, reddit_username):
+def delete_account_db(path_cookie, id_cookie, reddit_username):
     logger.error(f'Account "{reddit_username}" banned and delete from data base.')
-    db_delete_accounts_by_id(id_account)
+    db_delete_cookie_by_id(id_cookie)
     path_cookie.unlink()  # delete in folder
 
 
@@ -23,7 +22,9 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         except CookieInvalidException:
             api_reddit.DRIVER.close()
             logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
-            return
+            account_dict = db_get_account_by_id(id_profile)
+            get_cookies(account=account_dict, proxy_for_api=dict_proxy)
+            raise CookieInvalidException
 
         try:
             # put on upvote

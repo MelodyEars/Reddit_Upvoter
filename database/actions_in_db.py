@@ -2,7 +2,7 @@ import random
 
 from base_exception import RanOutAccountsForLinkException
 
-from .models import Proxy, RedditLink, WorkAccountWithLink, db, Cookie
+from .models import WorkAccountWithLink, db, Cookie
 
 
 def db_exist_record_link_account(link_id, account_id):

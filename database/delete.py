@@ -1,6 +1,6 @@
 from work_fs import write_line, path_near_exefile
 
-from .models import db, WorkAccountWithLink, Proxy, Cookie
+from .models import db, WorkAccountWithLink, Proxy, Cookie, Account
 
 
 def db_delete_record_work_account_with_link(id_record):
@@ -9,17 +9,12 @@ def db_delete_record_work_account_with_link(id_record):
         WorkAccountWithLink.delete_by_id(id_record)
 
 
-def db_delete_accounts_by_id(id_account):
+def db_delete_cookie_by_id(id_cookie):
     with db.atomic():
-        proxy_for_save = Proxy.get_by_id(id_account)
-        # Save as str to file
-        proxy_as_str = f"{proxy_for_save.host}:{proxy_for_save.port}:{proxy_for_save.user}:{proxy_for_save.password}"
-        path_filename = path_near_exefile("working_proxy_after_ban.txt")
-        write_line(path_filename, proxy_as_str)
-
         # delete all by index from account
-        WorkAccountWithLink.delete().where(WorkAccountWithLink.account == id_account)
+        WorkAccountWithLink.delete().where(WorkAccountWithLink.account == id_cookie)
 
         # delete from tabel
-        Cookie.delete_by_id(id_account)
-        Proxy.delete_by_id(id_account)
+        Cookie.delete_by_id(id_cookie)
+        Proxy.delete_by_id(id_cookie)
+        Account.delete_by_id(id_cookie)

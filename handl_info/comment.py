@@ -1,5 +1,5 @@
 import random
-from typing import List, Any, Type
+from typing import Any, Type
 
 import work_fs as wf
 

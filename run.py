@@ -1,5 +1,4 @@
 from multiprocessing import freeze_support
-from loguru import logger
 
 from base_exception import ProxyInvalidException
 from interface import user_desired_value
@@ -7,6 +6,7 @@ from database import *
 from handl_info import file_get_random_comments, get_user_link_file, check_proxy
 from reddit_api_selenium import work_with_api_reddit
 from reddit_api_selenium.exceptions import CookieInvalidException
+from auth_reddit import check_new_acc
 
 
 def pick_up_account_to_link(link_from_file):
@@ -21,17 +21,15 @@ def pick_up_account_to_link(link_from_file):
 
         if outcome_created:  # if create record return TRUE
             return link_id, account_obj, created_id_work_link_account_obj
-
         else:
-            db_save_1_by_id(id_account=account_obj.id)
-
+            db_save_1_by_id(id_cookie=account_obj.id)
     else:
         # This exception will be earlier in db_get_random_account_with_0
         raise RanOutAccountsForLinkException
 
 
 def body_loop(link_from_file, text_comment):
-    link_id, account_obj, created_id_work_link_account_obj = pick_up_account_to_link(link_from_file)
+    link_id, account_obj, created_id_work_link_account_obj = pick_up_account_to_link(link_from_file) # TODO rewrite ban
 
     try:
         # get from db account not worked random choice
@@ -46,8 +44,8 @@ def body_loop(link_from_file, text_comment):
 
     except Exception as ex:
         db_delete_record_work_account_with_link(created_id_work_link_account_obj)
-        raise ex
-
+        # Todo write exception to file
+        return
 
 @logger.catch
 def main():
@@ -56,6 +54,8 @@ def main():
 
     # approves - comment = count for for 2
     remaining_upvote = upvote_int - comments_int
+
+    check_new_acc()
 
     for link_from_file in get_user_link_file():
         db_reset_work_all_accounts_1_on_0()
@@ -82,9 +82,6 @@ def main():
             continue
 
 # TODO MODEL db add folder recovered cookies
-# TODO MODEL db add table account
-# TODO MODEL db add shadow ban watch via console (red, yellow)
-# TODO баньі удалять через другое приложение
 # query там где 1 или 0 вьібирать для рандома добавить запрос не с баном ли акк
 
 

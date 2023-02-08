@@ -1,5 +1,5 @@
 from work_fs import path_near_exefile
-from .models import RedditLink, db, Cookie
+from .models import RedditLink, db, Cookie, Account
 
 
 def db_get_link_id(link_from_file) -> RedditLink:
@@ -45,3 +45,7 @@ def db_get_proxy_by_cookies(path_cookie):
 
     return dict_proxy, id_account
 
+
+def db_get_account_by_id(id_cookies) -> Account:
+    acc_obj: Account = Account.get_by_id(id_cookies)
+    return acc_obj
