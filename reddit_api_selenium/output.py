@@ -24,7 +24,7 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
             logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
             account_dict = db_get_account_by_id(id_profile)
             get_cookies(account=account_dict, proxy_for_api=dict_proxy)
-            raise CookieInvalidException
+            api_reddit.attend_link()
 
         try:
             # put on upvote

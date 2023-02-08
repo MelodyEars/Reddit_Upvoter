@@ -45,7 +45,6 @@ async def run_browser(path_cookies):
 
 
 def check_ban(path_cookies, count_page: int):
-	path_cookies = list(path_cookies)
 	num = count_page
 	next_paths = path_cookies[:num]
 

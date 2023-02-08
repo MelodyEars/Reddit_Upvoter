@@ -13,7 +13,8 @@ from check_ban.api_for_check_ban import for_user_open_browser
 def main():
 	count_page = thread_for_api()
 	LIST_SELECTED_ACC = []
-	path_cookies = path_near_exefile("cookies").glob("*")
+	path_cookies = list(path_near_exefile("cookies").glob("*"))
+	path_cookies.sort()
 	list_path_ban = check_ban(path_cookies, count_page)
 
 	while list_path_ban:

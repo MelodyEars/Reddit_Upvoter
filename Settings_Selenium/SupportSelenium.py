@@ -14,11 +14,16 @@ class Cookies:
             near_future = time.time() + 30  # 30s in the future
             with open(self.path_filename, mode="rb") as f:
                 # check all are still valid in near_future
-                return all(
-                    expiry >= near_future
-                    for cookie in pickle.load(f)
-                    if (expiry := cookie.get("expiry"))
-                )
+                try:
+                    exists = all(
+                        expiry >= near_future
+                        for cookie in pickle.load(f)
+                        if (expiry := cookie.get("expiry"))
+                    )
+                except EOFError:
+                    exists = True
+                return exists
+
         return False
 
     def preload(self):
