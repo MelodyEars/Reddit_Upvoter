@@ -6,9 +6,9 @@ def create_db():
         db.create_tables([Proxy, WorkAccountWithLink, RedditLink, Cookie, Account])
 
 
-def create_proxy(proxy: dict):
+def create_proxy(host, port, user, password):
     with db:
-        in_db_proxy = Proxy.create(**proxy)
+        in_db_proxy: Proxy = Proxy.create(host=host, port=port, user=user, password=password)
 
     return in_db_proxy
 
@@ -18,8 +18,8 @@ def create_cookie(path_cookie, proxy_obj: Proxy, account_obj: Account):
         Cookie.create(cookie_path=path_cookie, proxy=proxy_obj, account=account_obj)
 
 
-def create_account(account: dict):
+def create_account(login, password):
     with db:
-        account_obj = Account.create(**account)
+        account_obj: Account = Account.create(login=login, password=password)
 
     return account_obj

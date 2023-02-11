@@ -11,7 +11,7 @@ from Settings_Selenium import BaseClass, Cookies
 
 class RedditAuth(BaseClass):
 
-    def __init__(self, proxy=None):
+    def __init__(self, proxy: dict):
 
         super(__class__, self).__init__()
         self.proxy = proxy
@@ -20,7 +20,7 @@ class RedditAuth(BaseClass):
         self.DRIVER = self._driver(proxy=self.proxy)
         self.act = ActionChains(self.DRIVER)
         self.DRIVER.get('https://www.reddit.com/')
-        self.DRIVER.reconnect(.3)
+        self.DRIVER.reconnect(0.3)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

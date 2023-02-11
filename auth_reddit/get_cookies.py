@@ -9,15 +9,16 @@ from .auth_reddit_api_selenium import RedditAuth
 
 def get_cookies(account: dict, proxy_for_api: dict):
     logger.info("auth begin")
+
     with RedditAuth(proxy_for_api) as api:
         api.goto_login_form()
         api.fill_login_form(**account)
         api.skip_popups()
-        cookie_path, proxy_from_api = api.get_path_cookie(account['login'])
+        cookie_path, proxy_for_api = api.get_path_cookie(account['login'])
         api.DRIVER.close()
     logger.info("write data")
 
-    return cookie_path, proxy_from_api
+    return cookie_path, proxy_for_api
 
 
 def check_new_acc():
@@ -29,10 +30,10 @@ def check_new_acc():
         proxy_for_api, list_proxies, path_proxies_file = file_get_proxy()
 
         # work_api
-        proxy_from_api, cookie_path = get_cookies(proxy_for_api=proxy_for_api, account=account)
+        cookie_path, proxy_for_api = get_cookies(proxy_for_api=proxy_for_api, account=account)
 
         # save to db
-        db_save_proxy_cookie(proxy_from_api, cookie_path, account)
+        db_save_proxy_cookie(proxy_from_api=proxy_for_api, cookie_path=cookie_path, account=account)
 
         # rewrite file without current proxy
         write_list_to_file(path_proxies_file, list_proxies)

@@ -27,7 +27,7 @@ class Proxy(BaseModel):
 
 
 class Account(BaseModel):
-    login = CharField()
+    login = CharField(unique=True)
     password = CharField()
 
     class Meta:

@@ -22,7 +22,8 @@ def db_reset_work_all_accounts_1_on_0():
 def db_get_random_account_with_0() -> Cookie:
     with db:
         try:
-            account_obj = random.choice(Cookie.select().where(Cookie.is_selected == 0)) # add without ban
+            account_obj = random.choice(Cookie.select().where(Cookie.is_selected == 0, Cookie.ban == 0))
         except IndexError:
             raise RanOutAccountsForLinkException
+
     return account_obj

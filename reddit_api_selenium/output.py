@@ -34,6 +34,7 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
             return delete_account_db(path_cookie, id_profile, reddit_username)
 
         except NotRefrashPageException:
+            api_reddit.client_cookie.save()
             api_reddit.DRIVER.close()
             logger.error(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
             return
@@ -44,5 +45,5 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
 
         api_reddit.client_cookie.save()
         logger.info(f'Successfully completed "{reddit_username}"')
-        time.sleep(0.5)
+        time.sleep(0.2)
         api_reddit.DRIVER.close()

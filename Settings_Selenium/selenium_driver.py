@@ -11,7 +11,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
-from reddit_api_selenium.exceptions import ElementNotClickException
 
 
 class BaseClass:
@@ -62,7 +61,7 @@ class BaseClass:
         your_options["browser_executable_path"] = browser_executable_path
 
         # if not profile or user_data_dir == incognito
-        self.DRIVER = uc.Chrome(**your_options)
+        self.DRIVER = uc.Chrome(**your_options, )
 
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)
