@@ -46,8 +46,8 @@ class BaseClass:
             options.add_argument(f"--load-extension={proxy_extension.directory}")
 
         # need for working on the backgrounding
-        options.add_argument("--disable-renderer-backgrounding")
-        options.add_argument("--disable-backgrounding-occluded-windows")
+        # options.add_argument("--disable-renderer-backgrounding")
+        # options.add_argument("--disable-backgrounding-occluded-windows")
 
         if user_data_dir is not None:
             your_options["user_data_dir"] = user_data_dir

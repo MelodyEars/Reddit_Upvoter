@@ -5,14 +5,14 @@ from playwright.async_api import async_playwright, BrowserContext
 from playwright_stealth import stealth_async
 
 
-LIST_ACC_COND = []
+LIST_ACC_BAN = []
 
 
-async def check_and_add_ban(page, path_cookie):
+async def check_and_add_ban(page, path_cookie: Path):
 	if await page.get_by_role("img", name="User Avatar").is_visible(timeout=1000):
-		LIST_ACC_COND.append((path_cookie, False))
+		return
 	else:
-		LIST_ACC_COND.append((path_cookie, True))
+		LIST_ACC_BAN.append(f'cookies/{path_cookie.name}')
 
 
 async def open_page(context: BrowserContext, path_cookie: Path):
@@ -55,4 +55,6 @@ def check_ban(path_cookies, count_page: int):
 		num += count_page
 		next_paths = path_cookies[resent_num:num]
 
-	return LIST_ACC_COND
+	return LIST_ACC_BAN
+
+

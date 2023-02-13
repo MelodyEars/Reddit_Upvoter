@@ -13,16 +13,19 @@ def check_proxy(host, port, user, password):
     url = 'http://httpbin.org/ip'
     try:
         resp = requests.get(url, proxies=proxies)
-        print(resp.text)
+        check_ip = resp.text.split('"')[3]
+        logger.info(check_ip)
     except ProxyError:
         logger.error("ProxyError: Invalid proxy")
         return False
 
-    if resp.text.split('"')[3] == host:
+    if check_ip == host:
         working = True
     else:
-        logger.error(f"""Match ip addresses!!! 
-        Local IP {resp.text.split('"')[3]} Proxy: {host}:{port}:{user}:{password}.""")
+        logger.error(
+            f"""Match ip addresses!!! 
+            Local IP {resp.text.split('"')[3]} Proxy: {host}:{port}:{user}:{password}."""
+        )
 
         write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
         working = False

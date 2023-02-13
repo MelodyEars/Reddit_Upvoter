@@ -49,3 +49,8 @@ def db_get_proxy_by_cookies(path_cookie):
 def db_get_account_by_id(id_cookies) -> Account:
     acc_obj: Account = Account.get_by_id(id_cookies)
     return acc_obj
+
+
+def db_get_cookie_objs() -> list:
+    with db:
+        return Cookie.select()

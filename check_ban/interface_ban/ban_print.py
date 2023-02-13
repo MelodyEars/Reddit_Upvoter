@@ -2,7 +2,8 @@ from pathlib import Path
 
 from colorama import Fore, Style, Back, init, deinit
 
-from work_fs import green_color, cyan_color, blue_color, indicate_number, clear_cmd
+from database import Cookie
+from work_fs import green_color, cyan_color, blue_color, indicate_number, clear_cmd, path_near_exefile
 
 
 def shadow_ban(text):
@@ -15,35 +16,39 @@ def opened_shadow_ban(text):
 	return returning_text
 
 
-def print_info(count: int, path_cookies: Path, ban: bool, list_selected_acc: list):
+def print_info(count: int, cookie_obj: Cookie, selected_cookie_objs: list):
+	ban = cookie_obj.ban
+	cookie_name: str = cookie_obj.cookie_path.split("/")[1]
 	if not ban:  # if ban not exists
-		account_print = green_color(path_cookies.stem)
+		account_print = green_color(cookie_name)
 
 	else:
-		if path_cookies not in list_selected_acc:
-			account_print = shadow_ban(path_cookies.stem)
+		if cookie_obj not in selected_cookie_objs:
+			account_print = shadow_ban(cookie_name)
 
 		else:
-			account_print = opened_shadow_ban(path_cookies.stem)
+			account_print = opened_shadow_ban(cookie_name)
 
 	print(f"{cyan_color(count)} : {account_print}")
 
 
-def unpack_info(list_acc_cond: list, list_selected_acc: list):
-	for count, info in enumerate(list_acc_cond, start=1):
-		print_info(count=count, path_cookies=info[0], ban=info[1], list_selected_acc=list_selected_acc)
+def unpack_info(cookies_objs, selected_cookie_objs: list):
+	for count, acc_obj in enumerate(cookies_objs, start=1):
+		print_info(count=count, cookie_obj=acc_obj, selected_cookie_objs=selected_cookie_objs)
 
 
-def user_response(list_acc_cond: list, list_selected_acc: list):
+def user_response(cookies_objs, selected_cookie_objs: list):
 	clear_cmd()
 
 	init()  # <-color
 	print(blue_color("Обери аккаунт"))
-	unpack_info(list_acc_cond, list_selected_acc)
+
+	unpack_info(cookies_objs, selected_cookie_objs)
 	user_int: int = indicate_number("Вкажи число: ") - 1
 	deinit()  # <-color
-	# TODO replace list_selected_acc on second value in list_acc_cond
-	selected_cookie: Path = list_acc_cond[user_int][0]
-	list_selected_acc.append(selected_cookie)
 
-	return selected_cookie, list_selected_acc
+	cookies_select = cookies_objs[user_int]
+	selected_cookie: Path = path_near_exefile(cookies_select)
+	selected_cookie_objs.append(cookies_select)
+
+	return selected_cookie, selected_cookie_objs

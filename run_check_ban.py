@@ -5,22 +5,27 @@ from selenium.common import NoSuchWindowException
 
 from check_ban.api_for_check_ban import check_ban
 from work_fs import path_near_exefile
-from check_ban.interface_ban import user_response, thread_for_api
+from check_ban.interface_ban import user_response, thread_for_api, if_need_check
 from check_ban.api_for_check_ban import for_user_open_browser
+from database import *
 
 
 @logger.catch
 def main():
-	count_page = thread_for_api()
-	LIST_SELECTED_ACC = []
-	path_cookies = list(path_near_exefile("cookies").glob("*"))
-	path_cookies.sort()
-	list_path_ban = check_ban(path_cookies, count_page)
+	selected_cookie_objs = []
+	answer = if_need_check()
+	if answer:  # print interface
+		count_page = thread_for_api()
+		path_cookies = sorted(path_near_exefile("cookies").glob("*"))
+		list_acc_ban = check_ban(path_cookies, count_page)  # api playwright
+		db_ban_add(list_acc_ban)  # update db
 
-	while list_path_ban:
-		path_selected_cookie, LIST_SELECTED_ACC = user_response(list_path_ban, LIST_SELECTED_ACC)
+	cookies_objs = list(db_get_cookie_objs())
+
+	while cookies_objs:
+		selected_cookie, selected_cookie_objs = user_response(cookies_objs, selected_cookie_objs)
 		try:
-			for_user_open_browser(path_selected_cookie)
+			for_user_open_browser(selected_cookie)
 		except NoSuchWindowException:
 			continue
 
@@ -31,7 +36,7 @@ if __name__ == '__main__':
 	logger.add(
 		"check_ban.log",
 		format="{time} {level} {message}",
-		level="ERROR",
+		level="DEBUG",
 		rotation="10 MB",
 		compression="zip"
 	)

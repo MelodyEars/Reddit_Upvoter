@@ -27,3 +27,9 @@ def db_get_random_account_with_0() -> Cookie:
             raise RanOutAccountsForLinkException
 
     return account_obj
+
+
+def db_ban_add(list_acc_ban: list):
+    with db.atomic():
+        for acc_path_cookie in list_acc_ban:
+            Cookie.update(ban=True).where(Cookie.cookie_path == acc_path_cookie).execute()

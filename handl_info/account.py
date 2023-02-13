@@ -6,7 +6,7 @@ from loguru import logger
 def get_account_file():
     path_account_file = path_near_exefile('accounts.txt')
 
-    while list_accounts := get_list_file(path_account_file):
+    while list_accounts := sorted(get_list_file(path_account_file), reverse=True):
         account_line = list_accounts.pop()
         list_line_content = account_line.replace(" ", "").split(':')
 

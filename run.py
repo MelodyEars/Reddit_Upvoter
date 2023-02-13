@@ -67,7 +67,6 @@ def main():
             except Exception as ex:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
                 logger.error(ex)
-                # TODO write to file level loguru
                 continue
 
         # remaining upvote after comment
@@ -77,7 +76,6 @@ def main():
             except Exception as ex:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
                 logger.error(ex)
-                # TODO write to file level loguru
                 continue
 
 
@@ -96,3 +94,5 @@ if __name__ == '__main__':
         main()
     finally:
         input("Press Enter:")
+
+# TODO not write to jurnal trucback
