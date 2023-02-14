@@ -47,8 +47,7 @@ def user_response(cookies_objs, selected_cookie_objs: list):
 	user_int: int = indicate_number("Вкажи число: ") - 1
 	deinit()  # <-color
 
-	cookies_select = cookies_objs[user_int]
-	selected_cookie: Path = path_near_exefile(cookies_select)
-	selected_cookie_objs.append(cookies_select)
+	selected_cookie = cookies_objs[user_int]
+	selected_cookie_objs.append(selected_cookie)
 
 	return selected_cookie, selected_cookie_objs

@@ -39,13 +39,6 @@ def db_get_number_of_records_account() -> int:
         return len(Cookie.select())
 
 
-def db_get_proxy_by_cookies(path_cookie):
-    acc_obj: Cookie = Cookie.get(cookie_path=path_cookie)
-    path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj=acc_obj)
-
-    return dict_proxy, id_account
-
-
 def db_get_account_by_id(id_cookies) -> Account:
     acc_obj: Account = Account.get_by_id(id_cookies)
     return acc_obj
@@ -53,4 +46,4 @@ def db_get_account_by_id(id_cookies) -> Account:
 
 def db_get_cookie_objs() -> list:
     with db:
-        return Cookie.select()
+        return Cookie.select().order_by(Cookie.cookie_path)

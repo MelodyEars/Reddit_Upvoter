@@ -1,10 +1,8 @@
 from multiprocessing import freeze_support
 
-from loguru import logger
 from selenium.common import NoSuchWindowException
 
 from check_ban.api_for_check_ban import check_ban
-from work_fs import path_near_exefile
 from check_ban.interface_ban import user_response, thread_for_api, if_need_check
 from check_ban.api_for_check_ban import for_user_open_browser
 from database import *
