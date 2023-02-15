@@ -157,15 +157,16 @@ class RedditWork(BaseClass):
                                    text_or_key=str(text_comment),
                                    scroll_to=True)
 
-            # send comment
-            self.click_element('//button[contains(text(), "Comment")]', move_to=True)
-            time.sleep(5)
+            if not self.xpath_exists("""//*[contains(text(),
+            "Looks like you've been doing that a lot. Take a break for 2 minutes before trying again.")]""", wait=1):
+                # send comment
+                self.click_element('//button[contains(text(), "Comment")]', move_to=True)
+                time.sleep(5)
 
-            # check username's comment exists
-            if self.xpath_exists(
-                    f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=10):
-                # success
-                return
-            else:
-                return self.write_comment(text_comment, reddit_username)
-
+                # check username's comment exists
+                if self.xpath_exists(
+                        f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=10):
+                    # success
+                    return
+                else:
+                    return self.write_comment(text_comment, reddit_username)

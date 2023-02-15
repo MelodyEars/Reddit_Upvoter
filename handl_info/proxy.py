@@ -13,8 +13,8 @@ def check_proxy(host, port, user, password):
     url = 'http://httpbin.org/ip'
     try:
         resp = requests.get(url, proxies=proxies)
+        logger.info(resp.content)
         check_ip = resp.text.split('"')[3]
-        logger.info(check_ip)
     except ProxyError:
         logger.error("ProxyError: Invalid proxy")
         return False
@@ -24,7 +24,7 @@ def check_proxy(host, port, user, password):
     else:
         logger.error(
             f"""Match ip addresses!!! 
-            Local IP {resp.text.split('"')[3]} Proxy: {host}:{port}:{user}:{password}."""
+            Local IP {check_ip} Proxy: {host}:{port}:{user}:{password}."""
         )
 
         write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
@@ -54,3 +54,7 @@ def file_get_proxy():
     else:
         write_list_to_file(path_proxies_file, list_proxies)
         return file_get_proxy()
+
+
+if __name__ == '__main__':
+    check_proxy("107.152.214.128", "8705", "thnunzms", "qtj315njindp")

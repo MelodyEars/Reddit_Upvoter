@@ -21,40 +21,24 @@ def pick_up_account_to_link(link_from_file):
 
         if outcome_created:  # if create record return TRUE
             return link_id, account_obj, created_id_work_link_account_obj
-
+        else:
+            continue
     else:
         # This exception will be earlier in db_get_random_account_with_0
         raise RanOutAccountsForLinkException
 
 
 def body_loop(link_from_file, text_comment):
-    try:
-        link_id, account_obj, created_id_work_link_account_obj = pick_up_account_to_link(link_from_file)
-    except Exception as ex:
-        logger.error(ex)
-        raise ex
-    try:
-        # get from db account not worked random choice
-        path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj)
-    except Exception as ex:
-        logger.error(ex)
-        raise ex
-    try:
-        check_proxy(**dict_proxy)
-    except Exception as ex:
-        logger.error(ex)
-        raise ex
-    try:
-        reddit_username = path_cookie.stem  # Path to str
-    except Exception as ex:
-        logger.error(ex)
-        raise ex
-    try:
-        logger.info(f'Work with "{reddit_username}"')
-        work_with_api_reddit(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
-    except Exception as ex:
-        logger.error(ex)
-        raise ex
+
+    link_id, account_obj, created_id_work_link_account_obj = pick_up_account_to_link(link_from_file)
+    # get from db account not worked random choice
+    path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj)
+
+    check_proxy(**dict_proxy)
+    reddit_username = path_cookie.stem  # Path to str
+
+    logger.info(f'Work with "{reddit_username}"')
+    work_with_api_reddit(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
 
     return created_id_work_link_account_obj
 
