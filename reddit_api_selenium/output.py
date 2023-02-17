@@ -31,7 +31,8 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
             api_reddit.upvote()
         except BanAccountException:
             api_reddit.DRIVER.close()
-            return delete_account_db(path_cookie, id_profile, reddit_username)
+
+            # return delete_account_db(path_cookie, id_profile, reddit_username)
 
         except NotRefrashPageException:
             api_reddit.client_cookie.save()

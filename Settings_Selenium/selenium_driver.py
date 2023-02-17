@@ -20,7 +20,7 @@ class BaseClass:
 
     def __set_new_download_path(self, download_path):
 
-        # Defines autodownload and download PATH
+        # Defines auto download and download PATH
         params = {
             "behavior": "allow",
             "downloadPath": download_path
@@ -38,16 +38,17 @@ class BaseClass:
 
         your_options = {}
         options = uc.ChromeOptions()
+        # options.add_argument("--disable-dev-shm-usage")
+        # options.add_argument("--no-sandbox")
+        # need for working on the backgrounding
+        options.add_argument("--disable-renderer-backgrounding")
+        options.add_argument("--disable-backgrounding-occluded-windows")
 
         if proxy is not None:
             # proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake
             # pass  host, port, user, password
             proxy_extension = ProxyExtension(**proxy)
             options.add_argument(f"--load-extension={proxy_extension.directory}")
-
-        # need for working on the backgrounding
-        # options.add_argument("--disable-renderer-backgrounding")
-        # options.add_argument("--disable-backgrounding-occluded-windows")
 
         if user_data_dir is not None:
             your_options["user_data_dir"] = user_data_dir
