@@ -53,7 +53,7 @@ class RedditLink(BaseModel):
 
 
 class WorkAccountWithLink(BaseModel):
-    account = ForeignKeyField(Cookie, backref='cookies')
+    account = ForeignKeyField(Cookie, backref='cookies')  # not account_id, cookie_id
     link = ForeignKeyField(RedditLink, backref='reddit links')
 
     class Meta:

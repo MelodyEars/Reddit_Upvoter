@@ -29,7 +29,8 @@ class RedditWork(BaseClass):
 
         self.DRIVER.quit()
 
-    def attend_link(self) -> None:
+    def attend_link(self):
+
         # self.DRIVER.delete_all_cookies()
         self.client_cookie = Cookies(driver=self.DRIVER, path_filename=self.cookie_path)
 

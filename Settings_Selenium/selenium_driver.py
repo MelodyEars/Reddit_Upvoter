@@ -30,7 +30,7 @@ class BaseClass:
         return self.DRIVER
 
     def _driver(self, profile=None,
-                browser_executable_path=None,
+                browser_executable_path=r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe',
                 user_data_dir=None,
                 download_path="default",
                 proxy=None

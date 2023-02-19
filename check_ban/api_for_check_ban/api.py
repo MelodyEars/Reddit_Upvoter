@@ -33,18 +33,19 @@ async def open_page(context: BrowserContext, path_cookie: Path):
 
 async def run_browser(path_cookies):
 	async with async_playwright() as playwright:
-		browser = await playwright.chromium.launch(headless=False, channel="chrome")
+		browser = await playwright.chromium.launch(headless=False, channel="brave")
 		context = await browser.new_context()
-
+		print("Працюю...")
 		await asyncio.wait(
 			[asyncio.create_task(open_page(context, path_cookie)) for path_cookie in path_cookies],
 			return_when=asyncio.ALL_COMPLETED,
 		)
-		await context.close()
+
 		await browser.close()
+		print("Закінчив працювати.")
 
 
-def check_ban(path_cookies, count_page: int):
+def check_ban(path_cookies: str, count_page: int):
 	num = count_page
 	next_paths = path_cookies[:num]
 
