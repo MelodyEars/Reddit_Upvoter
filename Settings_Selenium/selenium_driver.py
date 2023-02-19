@@ -12,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
 
+executable_path = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
+# executable_path = r'C:\Users\Administrator\AppData\Local\Chromium\Application\chrome.exe'
 
 class BaseClass:
 
@@ -30,7 +32,7 @@ class BaseClass:
         return self.DRIVER
 
     def _driver(self, profile=None,
-                browser_executable_path=r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe',
+                browser_executable_path=executable_path,
                 user_data_dir=None,
                 download_path="default",
                 proxy=None
@@ -38,8 +40,10 @@ class BaseClass:
 
         your_options = {}
         options = uc.ChromeOptions()
-        # options.add_argument("--disable-dev-shm-usage")
-        # options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-setuid-sandbox")
+        options.add_argument("--disable-software-rasterizer")
+
         # need for working on the backgrounding
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
