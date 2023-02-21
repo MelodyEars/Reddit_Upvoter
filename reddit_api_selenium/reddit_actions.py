@@ -1,6 +1,7 @@
 import random
 import time
 
+from loguru import logger
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
@@ -43,16 +44,16 @@ class RedditWork(BaseClass):
 
     def _baned_account(self):
         self._wait_load_webpage()
-        if not self.xpath_exists(value='//a[contains(@href, "https://www.reddithelp.com/")]', wait=1):
+        if not self.elem_exists(value='//a[contains(@href, "https://www.reddithelp.com/")]', wait=1):
             return
 
         else:
             raise BanAccountException("Your account banned")
 
     def _error_cdn_to_server(self):
-        self.xpath_exists(value='body', by=By.TAG_NAME, wait=500)
+        self.elem_exists(value='body', by=By.TAG_NAME, wait=500)
         self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3)
-        if self.xpath_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
+        if self.elem_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
             return True
         else:
             return False
@@ -73,7 +74,7 @@ class RedditWork(BaseClass):
             self._wait_load_webpage()
 
     def _select_communities(self):
-        self.xpath_exists('//button[contains(text(), "Select All")]')
+        self.elem_exists('//button[contains(text(), "Select All")]')
         count_communities = len(self.DRIVER.find_elements(By.XPATH, '//button[contains(text(), "Select All")]'))
 
         for _ in range(random.randint(1, count_communities)):
@@ -84,7 +85,7 @@ class RedditWork(BaseClass):
         self._wait_load_webpage()
 
     def _select_interests(self):
-        if self.xpath_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
+        if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
             num = 0
             for _ in range(random.randint(3, 5)):
                 num_selected = random.randint(1, 3)
@@ -105,7 +106,7 @@ class RedditWork(BaseClass):
             self._wait_load_webpage()
 
         # THen content 18+
-        if self.xpath_exists('//h3[contains(text(), "You must be 18+")]', wait=0.2):
+        if self.elem_exists('//h3[contains(text(), "You must be 18+")]', wait=0.2):
             self.click_element('//button[contains(text(), "Yes")]')
             self._wait_load_webpage()
 
@@ -123,8 +124,8 @@ class RedditWork(BaseClass):
 
             time.sleep(5)
             # wait for
-            if self.xpath_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
-                                 wait=4):
+            if self.elem_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
+                                wait=4):
                 # success
                 return
             else:
@@ -132,7 +133,7 @@ class RedditWork(BaseClass):
                 return self.upvote()
         else:
             # the upvote has already been made
-            if self.xpath_exists(
+            if self.elem_exists(
                     value='//div[@data-test-id="post-content"]//button[@data-click-id="upvote" and @aria-pressed="true"]',
                     wait=1):
                 return
@@ -150,24 +151,39 @@ class RedditWork(BaseClass):
 
     def write_comment(self, text_comment, reddit_username):
 
-        if not self.xpath_exists(
-                value=f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]',
-                wait=2):
+        if not self.elem_exists(
+                value=f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=2):
 
             self.stealth_send_text(value='//div[@class="notranslate public-DraftEditor-content"]',
                                    text_or_key=str(text_comment),
                                    scroll_to=True)
 
-            if not self.xpath_exists("""//*[contains(text(),
+            if not self.elem_exists("""//*[contains(text(),
             "Looks like you've been doing that a lot. Take a break for 2 minutes before trying again.")]""", wait=1):
                 # send comment
                 self.click_element('//button[contains(text(), "Comment")]', move_to=True)
                 time.sleep(5)
 
                 # check username's comment exists
-                if self.xpath_exists(
+                if self.elem_exists(
                         f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=10):
                     # success
                     return
                 else:
                     return self.write_comment(text_comment, reddit_username)
+
+    ####################################### subscribe ###################################
+    def subscribing(self):
+        # while not exists button
+        if self.elem_exists('//button[contains(text(), "Join")]', wait=1):
+            while not self.elem_exists(
+                    '//button[descendant::span[contains(text(), "Joined")] or descendant::span[contains(text(), "Leave")]]'):
+                self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]')
+                time.sleep(random.uniform(3, 5))
+
+        elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
+            while not self.elem_exists('//button[contains(text(), "Unfollow")]'):
+                self.click_element('//button[contains(text(), "Follow")]')
+                time.sleep(random.uniform (3, 5))
+        else:
+            logger.trace("Підписки не було зроблено. Можливо вона вже оформлена.")

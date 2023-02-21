@@ -27,7 +27,7 @@ class RedditAuth(BaseClass):
         self.DRIVER.quit()
 
     def goto_login_form(self):
-        self.xpath_exists("//body")
+        self.elem_exists("//body")
         # self.DRIVER.current_url() <- url
 
         self.click_element('//header//a[@role="button"]')  # attend wbpage for log in
@@ -42,7 +42,7 @@ class RedditAuth(BaseClass):
         self.click_element('//button[contains(text(), "Log In")]')
 
     def skip_popups(self):
-        self.xpath_exists('//body')
+        self.elem_exists('//body')
         self.click_element('//button[@aria-label="Close"]', wait=3)
         num = 1
         for i in range(random.randint(1, 3)):

@@ -14,10 +14,11 @@ def check_proxy(host, port, user, password):
     try:
         resp = requests.get(url, proxies=proxies)
         logger.info(resp.content)
-        check_ip = resp.text.split('"')[3]
     except ProxyError:
         logger.error("ProxyError: Invalid proxy")
         return False
+
+    check_ip = resp.text.split('"')[3]
 
     if check_ip == host:
         working = True

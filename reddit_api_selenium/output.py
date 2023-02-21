@@ -32,8 +32,6 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         except BanAccountException:
             api_reddit.DRIVER.close()
 
-            # return delete_account_db(path_cookie, id_profile, reddit_username)
-
         except NotRefrashPageException:
             api_reddit.client_cookie.save()
             api_reddit.DRIVER.close()
@@ -43,6 +41,9 @@ def work_with_api_reddit(link_reddit, dict_proxy, path_cookie, reddit_username, 
         # if required to write comments
         if text_comment:
             api_reddit.write_comment(text_comment, reddit_username)
+
+        # follow model or join to community
+        api_reddit.subscribing()
 
         api_reddit.client_cookie.save()
         logger.info(f'Successfully completed "{reddit_username}"')

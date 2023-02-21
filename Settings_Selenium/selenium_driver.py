@@ -78,7 +78,7 @@ class BaseClass:
         else:
             return self.__set_new_download_path(download_path)
 
-    def xpath_exists(self, value, by=By.XPATH, wait=30, return_xpath=False):
+    def elem_exists(self, value, by=By.XPATH, wait=30, return_xpath=False):
         try:
             ignored_exceptions = (NoSuchElementException, StaleElementReferenceException)
             take_xpath = WebDriverWait(self.DRIVER,
@@ -147,7 +147,7 @@ class BaseClass:
 
     def scroll_to_elem(self, value):
 
-        web_elem = self.xpath_exists(value, return_xpath=True)
+        web_elem = self.elem_exists(value, return_xpath=True)
         self.DRIVER.execute_script("arguments[0].scrollIntoView();", web_elem)
 
     def stealth_send_text(self, value, text_or_key, by=By.XPATH, scroll_to=False, wait=60):
