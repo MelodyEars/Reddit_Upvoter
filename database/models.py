@@ -39,7 +39,7 @@ class Cookie(BaseModel):
     proxy = ForeignKeyField(Proxy, backref="proxies")
     cookie_path = CharField()
     is_selected = BooleanField(default=False)
-    ban = BooleanField(default=False)
+    ban = CharField(null=True, default=None)
 
     class Meta:
         db_table = 'cookies'

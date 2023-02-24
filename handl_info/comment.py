@@ -26,7 +26,8 @@ def file_get_random_comments(count=int) -> Type[list] | list[Any] | list:
 
         if count != length_list_comment:
             for _ in range(count):
-                num = random.randint(0, length_list_comment - 1)
+                length_list_comment = len(list_comments) - 1
+                num = random.randint(0, length_list_comment)
                 comment: str = list_comments.pop(num)
                 upd_comment = comment.replace('\n', '')
                 select_comments.append(upd_comment)

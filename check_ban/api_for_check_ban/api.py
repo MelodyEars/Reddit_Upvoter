@@ -1,19 +1,26 @@
 import asyncio
 from pathlib import Path
 
-from playwright.async_api import async_playwright, BrowserContext, Browser
+from playwright.async_api import async_playwright, Browser
 from playwright_stealth import stealth_async
 
-
-LIST_ACC_BAN = []
+DICT_ACC_BAN = {}
+EXECUTABLE_PATH = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
 
 
 async def check_and_add_ban(page, path_cookie: Path):
+	# permanent ban
+	if await (page.get_by_role("heading", name="This account has been suspended .").is_visible(timeout=3000)):
+		DICT_ACC_BAN[f"cookies/{path_cookie.name}"] = "permanent"
 
-	if await page.get_by_role("img", name="User Avatar").is_visible(timeout=10000):
-		return
+	# shadow ban
+	elif await page.get_by_role(
+			"heading", name="Sorry, nobody on Reddit goes by that name.", exact=True).is_visible(timeout=3000):
+		DICT_ACC_BAN[f"cookies/{path_cookie.name}"] = "shadow"
+
+	# without ban
 	else:
-		LIST_ACC_BAN.append(f'cookies/{path_cookie.name}')
+		DICT_ACC_BAN[f"cookies/{path_cookie.name}"] = None
 
 
 async def open_page(browser: Browser, path_cookie: Path):
@@ -37,7 +44,12 @@ async def open_page(browser: Browser, path_cookie: Path):
 
 async def run_browser(path_cookies):
 	async with async_playwright() as playwright:
-		browser = await playwright.chromium.launch(headless=False, executable_path=r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe')
+		# browser = await playwright.chromium.launch(
+		# 	headless=False, executable_path=r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
+		# )
+		browser = await playwright.chromium.launch(
+			headless=False,
+			executable_path=EXECUTABLE_PATH)
 		print("Працюю...")
 		await asyncio.wait(
 			[asyncio.create_task(open_page(browser, path_cookie)) for path_cookie in path_cookies],
@@ -48,7 +60,7 @@ async def run_browser(path_cookies):
 		print("Закінчив працювати.")
 
 
-def check_ban(path_cookies: str, count_page: int):
+def check_ban(path_cookies: list, count_page: int):
 	num = count_page
 	next_paths = path_cookies[:num]
 
@@ -59,6 +71,4 @@ def check_ban(path_cookies: str, count_page: int):
 		num += count_page
 		next_paths = path_cookies[resent_num:num]
 
-	return LIST_ACC_BAN
-
-
+	return DICT_ACC_BAN

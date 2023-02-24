@@ -67,7 +67,7 @@ def main():
                 id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=text_comment)
             except Exception as ex:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.error(ex)
+                logger.critical(ex)
                 continue
 
         # remaining upvote after comment
@@ -76,7 +76,7 @@ def main():
                 id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=False)
             except Exception as ex:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.error(ex)
+                logger.critical(ex)
                 continue
 
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     logger.add(
         path_near_exefile("base_reddit.log"),
         format="{time} {level} {message}",
-        level="DEBUG",
+        level="INFO",
         rotation="10 MB",
         compression="zip"
     )

@@ -12,8 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
 
-executable_path = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
-# executable_path = r'C:\Users\Administrator\AppData\Local\Chromium\Application\chrome.exe'
+# executable_path = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
+executable_path = None  # default chrome
+
 
 class BaseClass:
 

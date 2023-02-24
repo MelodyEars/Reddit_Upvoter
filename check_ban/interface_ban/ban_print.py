@@ -4,6 +4,29 @@ from database import Cookie
 from work_fs import green_color, cyan_color, blue_color, clear_cmd, magenta_color, warning_text
 
 
+############################## color ####################################
+def permanent_ban(text):
+	returning_text = Back.RED + Fore.WHITE + str(
+		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <-permanent ban!" + Style.RESET_ALL
+
+	return returning_text
+
+
+def opened_account(text):
+	returning_text = Back.YELLOW + Fore.WHITE + str(
+		text) + Style.RESET_ALL + Fore.RED + " <- already opened!" + Style.RESET_ALL
+
+	return returning_text
+
+
+def shadow_ban(text):
+	returning_text = Back.LIGHTMAGENTA_EX + Fore.WHITE + str(
+		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <-shadow ban!" + Style.RESET_ALL
+
+	return returning_text
+
+
+########################### answered user ##########################
 def indicate_number(text_what_answer: str):
 	print(cyan_color(f"{text_what_answer}?"))
 	list_number_cmd = input().split(":")
@@ -26,29 +49,25 @@ def indicate_number(text_what_answer: str):
 			return indicate_number(text_what_answer)
 
 
-def shadow_ban(text):
-	returning_text = Back.RED + Fore.WHITE + str(text) + Style.RESET_ALL + Fore.RED + " <-ban!" + Style.RESET_ALL
-	return returning_text
-
-
-def opened_shadow_ban(text):
-	returning_text = Back.YELLOW + Fore.WHITE + str(
-		text) + Style.RESET_ALL + Fore.RED + " <- already opened!" + Style.RESET_ALL
-	return returning_text
-
-
+################################ print ################################
 def print_info(count: int, cookie_obj: Cookie, selected_cookie_objs: list):
 	ban = cookie_obj.ban
 	cookie_name: str = cookie_obj.cookie_path.split("/")[1]
-	if not ban:  # if ban not exists
+	if ban is None:  # if ban not exists
 		account_print = green_color(cookie_name)
 
-	else:
+	elif ban == "shadow":
 		if cookie_obj not in selected_cookie_objs:
 			account_print = shadow_ban(cookie_name)
 
 		else:
-			account_print = opened_shadow_ban(cookie_name)
+			account_print = opened_account(cookie_name)
+	else:
+		if cookie_obj not in selected_cookie_objs:
+			account_print = permanent_ban(cookie_name)
+
+		else:
+			account_print = opened_account(cookie_name)
 
 	print(f"{cyan_color(count)} : {account_print}")
 
@@ -58,7 +77,7 @@ def unpack_info(cookies_objs, selected_cookie_objs: list):
 		print_info(count=count, cookie_obj=acc_obj, selected_cookie_objs=selected_cookie_objs)
 
 
-def user_response(cookies_objs, selected_cookie_objs: list):
+def user_response(cookies_objs, list_selected_cookie_objs: list):
 	clear_cmd()
 
 	init()  # <-color
@@ -66,12 +85,12 @@ def user_response(cookies_objs, selected_cookie_objs: list):
 	print(magenta_color("del") + blue_color(' - пропиши через ":" якщо хочеш видалити аккаунт з бд'))
 	print('Наприклад: "1:del"')
 
-	unpack_info(cookies_objs, selected_cookie_objs)
+	unpack_info(cookies_objs, list_selected_cookie_objs)
 	is_del_db: bool  # is True then del by number from db
 	user_int: int
 	user_int, is_del_db = indicate_number("Вкажи число: ")
 	deinit()  # <-color
 	selected_cookie = cookies_objs[user_int]
-	selected_cookie_objs.append(selected_cookie)
+	list_selected_cookie_objs.append(selected_cookie)
 
-	return selected_cookie, selected_cookie_objs, is_del_db
+	return selected_cookie, list_selected_cookie_objs, is_del_db

@@ -1,6 +1,9 @@
 import time
 import random
 
+from loguru import logger
+from selenium.common import ElementClickInterceptedException
+
 import work_fs
 
 from selenium.webdriver import ActionChains
@@ -26,11 +29,20 @@ class RedditAuth(BaseClass):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.DRIVER.quit()
 
+    def __button_login(self):
+        try:
+            self.click_element('//header//a[@role="button"]')
+        except ElementClickInterceptedException:
+            logger.debug("Клік був перехоплений.")
+            time.sleep(random.uniform(1, 3))
+            self.reset_actions()
+            return self.__button_login()
+
     def goto_login_form(self):
         self.elem_exists("//body")
         # self.DRIVER.current_url() <- url
 
-        self.click_element('//header//a[@role="button"]')  # attend wbpage for log in
+        self.__button_login()  # attend wbpage for log in
 
         # go to iframe
         self.switch_iframe_xpath('//iframe[contains(@src, "https://www.reddit.com/login/")]')

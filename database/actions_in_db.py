@@ -23,8 +23,8 @@ def db_reset_work_all_accounts_1_on_0():
 def db_get_random_account_with_0() -> Cookie:
     with db:
         try:
-            account_obj = random.choice(Cookie.select().where(Cookie.is_selected == 0,
-                                                              Cookie.ban == 0,
+            account_obj = random.choice(Cookie.select().where(Cookie.is_selected == 0 &
+                                                              Cookie.ban.is_null() &
                                                               Cookie.cookie_path != "cookies/kirillorlovmae.pkl"))
         except IndexError:
             raise RanOutAccountsForLinkException
@@ -32,7 +32,11 @@ def db_get_random_account_with_0() -> Cookie:
     return account_obj
 
 
-def db_ban_add(list_acc_ban: list):
+def db_ban_add(DICT_ACC_BAN: dict):
     with db.atomic():
-        for acc_path_cookie in list_acc_ban:
-            Cookie.update(ban=True).where(Cookie.cookie_path == acc_path_cookie).execute()
+        for acc_path_cookie, ban_cond in DICT_ACC_BAN.items():
+            if ban_cond is not None:
+                Cookie.update(ban=ban_cond).where(Cookie.cookie_path == acc_path_cookie).execute()
+            else:
+                # without ban
+                Cookie.update(ban=None).where(Cookie.cookie_path == acc_path_cookie).execute()
