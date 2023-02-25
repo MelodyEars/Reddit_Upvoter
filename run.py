@@ -1,3 +1,4 @@
+import traceback
 from multiprocessing import freeze_support
 
 from base_exception import ProxyInvalidException
@@ -65,18 +66,18 @@ def main():
         for text_comment in list_comment:
             try:
                 id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=text_comment)
-            except Exception as ex:
+            except Exception:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.critical(ex)
+                logger.critical(traceback.format_exc())
                 continue
 
         # remaining upvote after comment
         for _ in range(remaining_upvote):
             try:
                 id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=False)
-            except Exception as ex:
+            except Exception:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.critical(ex)
+                logger.critical(traceback.format_exc())
                 continue
 
 
@@ -95,4 +96,3 @@ if __name__ == '__main__':
         main()
     finally:
         input("Press Enter:")
-

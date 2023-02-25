@@ -7,7 +7,7 @@ from work_fs import green_color, cyan_color, blue_color, clear_cmd, magenta_colo
 ############################## color ####################################
 def permanent_ban(text):
 	returning_text = Back.RED + Fore.WHITE + str(
-		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <-permanent ban!" + Style.RESET_ALL
+		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <- permanent ban!" + Style.RESET_ALL
 
 	return returning_text
 
@@ -21,7 +21,7 @@ def opened_account(text):
 
 def shadow_ban(text):
 	returning_text = Back.LIGHTMAGENTA_EX + Fore.WHITE + str(
-		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <-shadow ban!" + Style.RESET_ALL
+		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <- shadow ban!" + Style.RESET_ALL
 
 	return returning_text
 
@@ -82,7 +82,7 @@ def user_response(cookies_objs, list_selected_cookie_objs: list):
 
 	init()  # <-color
 	print(blue_color("Обери аккаунт, для цього обери цифру."))
-	print(magenta_color("del") + blue_color(' - пропиши через ":" якщо хочеш видалити аккаунт з бд'))
+	print(magenta_color("del") + cyan_color(' - пропиши через ":" якщо хочеш видалити аккаунт з бд'))
 	print('Наприклад: "1:del"')
 
 	unpack_info(cookies_objs, list_selected_cookie_objs)

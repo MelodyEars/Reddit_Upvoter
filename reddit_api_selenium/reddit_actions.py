@@ -51,12 +51,15 @@ class RedditWork(BaseClass):
             raise BanAccountException("Your account banned")
 
     def _error_cdn_to_server(self):
-        self.elem_exists(value='body', by=By.TAG_NAME, wait=500)
-        self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3)
-        if self.elem_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
-            return True
+        if self.elem_exists(value='body', by=By.TAG_NAME, wait=60):
+            self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3)
+            if self.elem_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
+                return True
+            else:
+                return False
         else:
-            return False
+            logger.warning("Сторінка не завантажилась, беру наступну задачу.")
+            return True
 
     def _wait_load_webpage(self):
         if not self._error_cdn_to_server():
@@ -170,20 +173,32 @@ class RedditWork(BaseClass):
                     # success
                     return
                 else:
-                    return self.write_comment(text_comment, reddit_username)
+                    logger.warning("Виникла помилка при написанні коментаря! =(")
+                #     if self.elem_exists('//*[contains("Something went wrong")]'):
+                #         logger.warning('З\'явлось алерт при написанні коментаря "Something went wrong"')
+                #         return
+                #     else:
+                #         return self.write_comment(text_comment, reddit_username)
 
     ####################################### subscribe ###################################
     def subscribing(self):
         # while not exists button
         if self.elem_exists('//button[contains(text(), "Join")]', wait=1):
-            while not self.elem_exists(
-                    '//button[descendant::span[contains(text(), "Joined")] or descendant::span[contains(text(), "Leave")]]'):
-                self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]')
-                time.sleep(random.uniform(3, 5))
+            wait = 0.1
+            while not self.elem_exists('''//button[descendant::span[contains(text(), "Joined")] 
+            or descendant::span[contains(text(), "Leave")]]''', wait=wait):
+                self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1)
+                wait = 10
+                logger.debug("Чекаємо підписки!")
+            else:
+                logger.debug("Підписка оформлена!!!")
 
         elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
-            while not self.elem_exists('//button[contains(text(), "Unfollow")]'):
-                self.click_element('//button[contains(text(), "Follow")]')
-                time.sleep(random.uniform (3, 5))
+            wait = 0.1
+            while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
+                self.click_element('//button[contains(text(), "Follow")]', wait=1)
+                wait = 10
+            else:
+                logger.debug("Підписка оформлена")
         else:
-            logger.trace("Підписки не було зроблено. Можливо вона вже оформлена.")
+            logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
