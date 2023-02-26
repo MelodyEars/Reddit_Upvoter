@@ -5,7 +5,7 @@ from loguru import logger
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
-from Settings_Selenium import Cookies
+from Settings_Selenium import CookiesBrowser
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
 from Settings_Selenium import BaseClass
 
@@ -14,7 +14,7 @@ class RedditWork(BaseClass):
     def __init__(self, path_cookie=str, link=str, proxy=None):
 
         super(__class__, self).__init__()
-        self.client_cookie = Cookies
+        self.client_cookie = CookiesBrowser
         self.proxy = proxy
         self.link = link
         self.cookie_path = path_cookie
@@ -33,7 +33,7 @@ class RedditWork(BaseClass):
     def attend_link(self):
 
         # self.DRIVER.delete_all_cookies()
-        self.client_cookie = Cookies(driver=self.DRIVER, path_filename=self.cookie_path)
+        self.client_cookie = CookiesBrowser(driver=self.DRIVER, path_filename=self.cookie_path)
 
         if self.client_cookie.are_valid():
             self.client_cookie.preload()

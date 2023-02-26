@@ -1,33 +1,35 @@
+
 import time
 import random
+import undetected_chromedriver as uc
 
 from loguru import logger
 from selenium.common import ElementClickInterceptedException
+from selenium.webdriver.common.by import By
 
 import work_fs
 
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
-
-from Settings_Selenium import BaseClass, Cookies
+from Settings_Selenium import BaseClass, CookiesBrowser
 
 
 class RedditAuth(BaseClass):
 
-    def __init__(self, proxy: dict):
+    def __init__(self, driver: uc.Chrome):
 
         super(__class__, self).__init__()
-        self.proxy = proxy
+        self.DRIVER = driver
 
     def __enter__(self):
-        self.DRIVER = self.run_driver(proxy=self.proxy)
-        self.act = ActionChains(self.DRIVER)
-        self.DRIVER.get('https://www.reddit.com/')
-        self.DRIVER.reconnect(0.3)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.DRIVER.quit()
+        if exc_type or exc_val or exc_tb:
+            self.DRIVER.save_screenshot("Error_GetCookie.png")
+            self.DRIVER.quit()
+
+    def __reddit_main_page(self):
+        self.DRIVER.get('https://www.reddit.com/')
+        self.DRIVER.reconnect(0.3)
 
     def __button_login(self):
         try:
@@ -39,6 +41,7 @@ class RedditAuth(BaseClass):
             return self.__button_login()
 
     def goto_login_form(self):
+        self.__reddit_main_page()
         self.elem_exists("//body")
         # self.DRIVER.current_url() <- url
 
@@ -65,10 +68,7 @@ class RedditAuth(BaseClass):
 
     def get_path_cookie(self, login):
         path_cookie = work_fs.auto_create(work_fs.path_near_exefile('cookies'), _type='dir') / f'{login}.pkl'
-        cookie = Cookies(driver=self.DRIVER, path_filename=path_cookie)
+        cookie = CookiesBrowser(driver=self.DRIVER, path_filename=path_cookie)
         cookie.save()
 
-        db_cookie_path = f"cookies/{login}.pkl"
-        return db_cookie_path, self.proxy
-
-
+        return cookie

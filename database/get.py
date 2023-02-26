@@ -39,7 +39,7 @@ def db_get_number_of_records_account() -> int:
         return len(Cookie.select())
 
 
-def db_get_account_by_id(id_cookies) -> dict:
+def db_get_account_by_id(id_cookies: Cookie) -> dict:
     acc_obj: Account = Account.get_by_id(id_cookies)
 
     account_dict = {

@@ -3,9 +3,9 @@ from pathlib import Path
 import undetected_chromedriver as uc
 from loguru import logger
 
-from Settings_Selenium import EnhancedActionChains, Cookies, ProxyExtension
+from Settings_Selenium import EnhancedActionChains, CookiesBrowser, ProxyExtension
 from auth_reddit import get_cookies
-from database import db_get_account_by_id
+from database import db_get_account_by_id, Cookie
 from reddit_api_selenium.exceptions import CookieInvalidException
 
 executable_path = None
@@ -22,7 +22,7 @@ def set_new_download_path(driver: uc.Chrome, download_path):
 	return driver
 
 
-def run_driver(profile=None, browser_executable_path=executable_path, user_data_dir=None,
+def driver_run(profile=None, browser_executable_path=executable_path, user_data_dir=None,
                download_path="default", proxy=None) -> uc.Chrome:
 	your_options = {}
 
@@ -64,22 +64,26 @@ def run_driver(profile=None, browser_executable_path=executable_path, user_data_
 		return driver
 
 	else:
-		return set_new_download_path(download_path)
+		return set_new_download_path(driver, download_path)
 
 
-def run_reddit(cookie_path: Path, id_profile, dict_proxy):
-	driver: uc.Chrome = run_driver()
-	# self.DRIVER.delete_all_cookies()
-	client_cookie = Cookies(driver=driver, path_filename=cookie_path)
+def reddit_run(cookie_path: Path, id_profile: Cookie, dict_proxy: dict):
+	driver: uc.Chrome = driver_run(proxy=dict_proxy)
+	client_cookie = CookiesBrowser(driver=driver, path_filename=cookie_path)
 
 	if client_cookie.are_valid():
 		client_cookie.preload()
 		driver.get('https://www.reddit.com/')
 		driver.reconnect()
 	else:
-		logger.error(f'Cookie аккаунта "{cookie_path.stem}" не работают, нужно перезаписать.')
+		logger.error(f'Cookie акаунта "{cookie_path.stem}" не працюють, перезаписую!')
 		account_dict = db_get_account_by_id(id_profile)
-		get_cookies(account=account_dict, proxy_for_api=dict_proxy)
+		client_cookie = get_cookies(driver=driver, account=account_dict)
+		logger.info(f'Cookie аккаунта "{cookie_path.stem}" перезаписані.')
 
-	return {client_cookie: driver}
+	return client_cookie
 
+
+
+def run_browser():
+	pass
