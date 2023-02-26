@@ -29,7 +29,7 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 		finally:
 			input("Press Enter, если работа с браузером окончена: ")
 			api_reddit.client_cookie.save()
-			api_reddit.DRIVER.close()
+			api_reddit.DRIVER.quite()
 
 
 def for_user_open_browser(cookie_obj: Cookie) -> None:

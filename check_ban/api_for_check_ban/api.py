@@ -6,6 +6,7 @@ from playwright_stealth import stealth_async
 
 DICT_ACC_BAN = {}
 EXECUTABLE_PATH = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
+# EXECUTABLE_PATH = r'C:\Users\Username\PycharmProjects\Reddit_comment_apruv\0  \chromium-1045\chrome-win\chrome.exe'
 
 
 async def check_and_add_ban(page, path_cookie: Path):

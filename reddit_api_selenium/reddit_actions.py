@@ -20,7 +20,7 @@ class RedditWork(BaseClass):
         self.cookie_path = path_cookie
 
     def __enter__(self):
-        self.DRIVER = self._driver(proxy=self.proxy)
+        self.DRIVER = self.run_driver(proxy=self.proxy)
 
         return self
 
@@ -189,16 +189,18 @@ class RedditWork(BaseClass):
             or descendant::span[contains(text(), "Leave")]]''', wait=wait):
                 self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1)
                 wait = 10
+                time.sleep(2)
                 logger.debug("Чекаємо підписки!")
             else:
                 logger.debug("Підписка оформлена!!!")
 
-        elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
-            wait = 0.1
-            while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
-                self.click_element('//button[contains(text(), "Follow")]', wait=1)
-                wait = 10
-            else:
-                logger.debug("Підписка оформлена")
+        # elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
+        #     wait = 0.1
+        #     while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
+        #         self.click_element('//button[contains(text(), "Follow")]', wait=1)
+        #         wait = 10
+        #         time.sleep(2)
+        #     else:
+        #         logger.debug("Підписка оформлена")
         else:
             logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")

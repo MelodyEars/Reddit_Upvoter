@@ -19,6 +19,7 @@ executable_path = None  # default chrome
 class BaseClass:
 
     def __init__(self):
+        self.action = None
         self.DRIVER = uc.Chrome
 
     def __set_new_download_path(self, download_path):
@@ -32,12 +33,8 @@ class BaseClass:
 
         return self.DRIVER
 
-    def _driver(self, profile=None,
-                browser_executable_path=executable_path,
-                user_data_dir=None,
-                download_path="default",
-                proxy=None
-                ):
+    def run_driver(self, profile=None, browser_executable_path=executable_path, user_data_dir=None,
+                   download_path="default", proxy=None):
 
         your_options = {}
         options = uc.ChromeOptions()
@@ -45,9 +42,10 @@ class BaseClass:
         --disable-dev-shm-usage
         --disable-setuid-sandbox
         --disable-software-rasterizer
+        --disable-notifications
         --disable-renderer-backgrounding
-         --disable-backgrounding-occluded-windows
-         """)  # 2 arg in  the end need for working on the backgrounding
+        --disable-backgrounding-occluded-windows
+        """)  # 2 arg in  the end need for working on the backgrounding
 
         if proxy is not None:
             # proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake

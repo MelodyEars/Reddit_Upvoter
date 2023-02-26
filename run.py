@@ -5,7 +5,7 @@ from base_exception import ProxyInvalidException
 from interface import user_desired_value
 from database import *
 from handl_info import file_get_random_comments, get_user_link_file, check_proxy
-from reddit_api_selenium import work_with_api_reddit
+from reddit_api_selenium import run_browser
 from auth_reddit import check_new_acc
 
 
@@ -39,7 +39,7 @@ def body_loop(link_from_file, text_comment):
     reddit_username = path_cookie.stem  # Path to str
 
     logger.info(f'Work with "{reddit_username}"')
-    work_with_api_reddit(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
+    run_browser(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
 
     return created_id_work_link_account_obj
 
@@ -68,7 +68,7 @@ def main():
                 id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=text_comment)
             except Exception:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.critical(traceback.format_exc())
+                logger.error(traceback.format_exc())
                 continue
 
         # remaining upvote after comment
@@ -77,7 +77,7 @@ def main():
                 id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=False)
             except Exception:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.critical(traceback.format_exc())
+                logger.error(traceback.format_exc())
                 continue
 
 

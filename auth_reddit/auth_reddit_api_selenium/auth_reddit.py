@@ -20,7 +20,7 @@ class RedditAuth(BaseClass):
         self.proxy = proxy
 
     def __enter__(self):
-        self.DRIVER = self._driver(proxy=self.proxy)
+        self.DRIVER = self.run_driver(proxy=self.proxy)
         self.act = ActionChains(self.DRIVER)
         self.DRIVER.get('https://www.reddit.com/')
         self.DRIVER.reconnect(0.3)

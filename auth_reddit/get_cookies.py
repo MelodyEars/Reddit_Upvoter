@@ -15,7 +15,7 @@ def get_cookies(account: dict, proxy_for_api: dict):
         api.fill_login_form(**account)
         api.skip_popups()
         cookie_path, proxy_for_api = api.get_path_cookie(account['login'])
-        api.DRIVER.close()
+        api.DRIVER.quit()
     logger.info("write data")
 
     return cookie_path, proxy_for_api
