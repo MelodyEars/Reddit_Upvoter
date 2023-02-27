@@ -18,7 +18,7 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 			api_reddit.attend_link()
 
 		except CookieInvalidException:
-			api_reddit.DRIVER.close()
+			api_reddit.DRIVER.quit()
 			logger.error(f'Cookie аккаунта "{name_account}" не работают, нужно перезаписать.')
 			account_dict = db_get_account_by_id(id_account)
 			return getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_account)
@@ -29,7 +29,7 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 		finally:
 			input("Press Enter, если работа с браузером окончена: ")
 			api_reddit.client_cookie.save()
-			api_reddit.DRIVER.quite()
+			api_reddit.DRIVER.quit()
 
 
 def for_user_open_browser(cookie_obj: Cookie) -> None:

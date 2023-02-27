@@ -16,7 +16,6 @@ def httpbin_resp(proxies):
         logger.error("ProxyError: Invalid proxy")
         return False
 
-
 def check_proxy(host, port, user, password):
     proxies = {"http": f"http://{user}:{password}@{host}:{port}"}
 

@@ -3,11 +3,9 @@ from pathlib import Path
 import undetected_chromedriver as uc
 from loguru import logger
 
-from Settings_Selenium import EnhancedActionChains, CookiesBrowser, ProxyExtension
+from Settings_Selenium import CookiesBrowser, ProxyExtension
 from auth_reddit import get_cookies
 from database import db_get_account_by_id, Cookie
-from reddit_api_selenium.exceptions import CookieInvalidException
-
 executable_path = None
 
 
@@ -22,19 +20,13 @@ def set_new_download_path(driver: uc.Chrome, download_path):
 	return driver
 
 
-def driver_run(profile=None, browser_executable_path=executable_path, user_data_dir=None,
-               download_path="default", proxy=None) -> uc.Chrome:
+def driver_run(profile=None, browser_executable_path=executable_path, user_data_dir=None, download_path="default", proxy=None) -> uc.Chrome:
 	your_options = {}
 
 	options = uc.ChromeOptions()
-	options.add_argument("""
-	--disable-dev-shm-usage
-	 --disable-setuid-sandbox
-	  --disable-software-rasterizer
-	   --disable-notifications
-	    --disable-renderer-backgrounding
-	     --disable-backgrounding-occluded-windows
-	     """)  # 2 arg in  the end need for working on the backgrounding
+	options.add_argument("""--disable-dev-shm-usage --disable-setuid-sandbox --disable-software-rasterizer 
+	--disable-notifications --disable-renderer-backgrounding --disable-backgrounding-occluded-windows
+	""")  # 2 arg in  the end need for working on the backgrounding
 
 	if proxy is not None:
 		# proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake
@@ -84,6 +76,17 @@ def reddit_run(cookie_path: Path, id_profile: Cookie, dict_proxy: dict):
 	return client_cookie
 
 
+def run_browser(thread):
+	drivers = []
+	for _ in range(thread):
+		drivers.append(driver_run())
 
-def run_browser():
-	pass
+	return drivers
+
+
+def get_browser(drivers):
+	for driver in drivers:
+		try:
+			yield driver
+		finally:
+			driver.quit()

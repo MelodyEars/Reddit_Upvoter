@@ -2,50 +2,51 @@ import traceback
 from multiprocessing import freeze_support
 
 from base_exception import ProxyInvalidException
-from interface import user_desired_value
+from interface import user_desired_value, thread_for_api
 from database import *
 from handl_info import file_get_random_comments, get_user_link_file, check_proxy
 from reddit_api_selenium import run_browser
 from auth_reddit import check_new_acc
 
 
-def pick_up_account_to_link(link_from_file):
+def get_fata_from_db(cookie_obj):
 
-    count = db_get_number_of_records_account()
-    link_id = db_get_link_id(link_from_file)
-
-    for _ in range(count):
-        account_obj = db_get_random_account_with_0()
-        outcome_created, created_id_work_link_account_obj = db_exist_record_link_account(link_id=link_id,
-                                                                                         account_id=account_obj.id)
-        db_save_1_by_id(id_cookie=account_obj.id)  # update record in the db about this acc selected
-
-        if outcome_created:  # if create record return TRUE
-            return link_id, account_obj, created_id_work_link_account_obj
-        else:
-            continue
-    else:
-        # This exception will be earlier in db_get_random_account_with_0
-        raise RanOutAccountsForLinkException
-
-
-def body_loop(link_from_file, text_comment):
-
-    link_id, account_obj, created_id_work_link_account_obj = pick_up_account_to_link(link_from_file)
     # get from db account not worked random choice
-    path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj)
+    path_cookie, dict_proxy, id_account = db_get_cookie_proxy(cookie_obj)
 
     check_proxy(**dict_proxy)
-    reddit_username = path_cookie.stem  # Path to str
 
-    logger.info(f'Work with "{reddit_username}"')
-    run_browser(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
+    return path_cookie, dict_proxy, id_account
 
-    return created_id_work_link_account_obj
+def pick_up_accounts_to_link(upvote_int: int):
+    dict_link_value = {}
 
+    for link_from_file in get_user_link_file():
+        list_cookies_objs: list = db_get_cookie_objs()
+        random.shuffle(list_cookies_objs)
+
+        link_id = db_get_link_id(link_from_file)
+
+        for _ in range(upvote_int):
+            try:
+                cookie_obj: Cookie = list_cookies_objs.pop()
+            except IndexError:
+                break
+
+            outcome_created, id_work_link_account_obj = db_exist_record_link_account(
+                link_id=link_id, account_id=cookie_obj.id
+            )
+
+            if outcome_created:  # if create record return TRUE
+                path_cookie, dict_proxy, id_account = get_fata_from_db(cookie_obj)
+                # Add info to file
+                dict_link_value[link_from_file] = path_cookie, dict_proxy, id_account, id_work_link_account_obj
+
+    return dict_link_value
 
 @logger.catch
 def main():
+    user_thread = thread_for_api()
     try:
         check_new_acc()
     except ProxyInvalidException:
@@ -57,15 +58,14 @@ def main():
     # approves - comment = count for for 2
     remaining_upvote = upvote_int - comments_int
 
-    for link_from_file in get_user_link_file():
-        id_work_link_account_obj = WorkAccountWithLink
-        db_reset_work_all_accounts_1_on_0()
-
+    dict_link_value = pick_up_accounts_to_link(upvote_int)
         # get random comment from txt
         list_comment = file_get_random_comments(comments_int)
         for text_comment in list_comment:
             try:
-                id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=text_comment)
+                logger.info(f'Work with "{reddit_username}"')
+                run_browser(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
+
             except Exception:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
                 logger.error(traceback.format_exc())
@@ -74,7 +74,9 @@ def main():
         # remaining upvote after comment
         for _ in range(remaining_upvote):
             try:
-                id_work_link_account_obj = body_loop(link_from_file=link_from_file, text_comment=False)
+                logger.info(f'Work with "{reddit_username}"')
+                run_browser(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
+
             except Exception:
                 db_delete_record_work_account_with_link(id_work_link_account_obj)
                 logger.error(traceback.format_exc())

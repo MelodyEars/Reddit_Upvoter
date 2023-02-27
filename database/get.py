@@ -19,24 +19,19 @@ def db_get_text_link_by_id(link_id) -> str:
     return link_obj.link
 
 
-def db_get_cookie_proxy(account_obj):
+def db_get_cookie_proxy(cookie_obj: Cookie):
 
     dict_proxy: dict[str, Cookie] = {
-        "host": account_obj.proxy.host,
-        "port": account_obj.proxy.port,
-        "user": account_obj.proxy.user,
-        "password": account_obj.proxy.password,
+        "host": cookie_obj.proxy.host,
+        "port": cookie_obj.proxy.port,
+        "user": cookie_obj.proxy.user,
+        "password": cookie_obj.proxy.password,
     }
 
-    path_cookie = path_near_exefile(account_obj.cookie_path)
-    id_account = account_obj.id
+    path_cookie = path_near_exefile(cookie_obj.cookie_path)
+    id_account = cookie_obj.id
 
     return path_cookie, dict_proxy, id_account
-
-
-def db_get_number_of_records_account() -> int:
-    with db:
-        return len(Cookie.select())
 
 
 def db_get_account_by_id(id_cookies: Cookie) -> dict:
@@ -51,4 +46,4 @@ def db_get_account_by_id(id_cookies: Cookie) -> dict:
 
 def db_get_cookie_objs() -> list:
     with db:
-        return Cookie.select().order_by(Cookie.cookie_path)
+        return list(Cookie.select())
