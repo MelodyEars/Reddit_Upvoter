@@ -6,25 +6,32 @@ from loguru import logger
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
-from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
-from Settings_Selenium import BaseClass, CookiesBrowser
+from .exceptions import NotRefrashPageException, BanAccountException
+from Settings_Selenium import BaseClass, CookiesBrowser, EnhancedActionChains
 
 
 class RedditWork(BaseClass):
-    def __init__(self, client_cookie: CookiesBrowser):
+    def __init__(self, client_cookie: CookiesBrowser, comment=False):
         super(__class__, self).__init__()
         self.client_cookie = client_cookie
+        self.comment = comment
         self.DRIVER: uc.Chrome = client_cookie.DRIVER
+        self.action = EnhancedActionChains(self.DRIVER)
 
     def __enter__(self):
-        self.DRIVER.get(self.client_cookie.link_from_file)
+        link_sub_reddit = "/".join(self.client_cookie.link_from_file.split("/")[:5])
+        self.DRIVER.get(link_sub_reddit)
         self.DRIVER.reconnect()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type or exc_val or exc_tb:
-            self.DRIVER.save_screenshot("picture_mistake.png")
-            self.DRIVER.quit()
+            self.DRIVER.save_screenshot(f"picture_mistake_{self.client_cookie.username}.png")
+            self.client_cookie.is_work = False
+
+    def attend_link(self):
+        self.DRIVER.get(self.client_cookie.link_from_file)
+        self.DRIVER.reconnect()
 
     def _baned_account(self):
         self._wait_load_webpage()
@@ -136,34 +143,34 @@ class RedditWork(BaseClass):
             self._find_popups()
             self._previously_upvote(wait=120)
 
-    def write_comment(self, text_comment):
+    def write_comment(self):
+        if self.comment:
+            if not self.elem_exists(
+                    value=f'//a[contains(text(), "{self.client_cookie.username}") and @data-testid="comment_author_link"]',
+                    wait=2):
 
-        if not self.elem_exists(
-                value=f'//a[contains(text(), "{self.client_cookie.username}") and @data-testid="comment_author_link"]',
-                wait=2):
+                self.stealth_send_text(value='//div[@class="notranslate public-DraftEditor-content"]',
+                                       text_or_key=str(self.comment),
+                                       scroll_to=True)
 
-            self.stealth_send_text(value='//div[@class="notranslate public-DraftEditor-content"]',
-                                   text_or_key=str(text_comment),
-                                   scroll_to=True)
+                if not self.elem_exists("""//*[contains(text(),
+                "Looks like you've been doing that a lot. Take a break for 2 minutes before trying again.")]""", wait=1):
+                    # send comment
+                    self.click_element('//button[contains(text(), "Comment")]', move_to=True)
+                    time.sleep(5)
 
-            if not self.elem_exists("""//*[contains(text(),
-            "Looks like you've been doing that a lot. Take a break for 2 minutes before trying again.")]""", wait=1):
-                # send comment
-                self.click_element('//button[contains(text(), "Comment")]', move_to=True)
-                time.sleep(5)
-
-                # check username's comment exists
-                if self.elem_exists(
-                        f'//a[contains(text(), "{self.client_cookie.username}") and @data-testid="comment_author_link"]', wait=10):
-                    # success
-                    return
-                else:
-                    logger.warning("Виникла помилка при написанні коментаря! =(")
-                #     if self.elem_exists('//*[contains("Something went wrong")]'):
-                #         logger.warning('З\'явлось алерт при написанні коментаря "Something went wrong"')
-                #         return
-                #     else:
-                #         return self.write_comment(text_comment, reddit_username)
+                    # check username's comment exists
+                    if self.elem_exists(
+                            f'//a[contains(text(), "{self.client_cookie.username}") and @data-testid="comment_author_link"]', wait=10):
+                        # success
+                        return True
+                    else:
+                        logger.warning("Виникла помилка при написанні коментаря! =(")
+                    #     if self.elem_exists('//*[contains("Something went wrong")]'):
+                    #         logger.warning('З\'явлось алерт при написанні коментаря "Something went wrong"')
+                    #         return
+                    #     else:
+                    #         return self.write_comment(text_comment, reddit_username)
 
     ####################################### subscribe ###################################
     def subscribing(self):

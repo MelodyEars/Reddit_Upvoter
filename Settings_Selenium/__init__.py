@@ -1,4 +1,4 @@
-from .selenium_driver import BaseClass
+from .base_controller import BaseClass
 from .SeleniumExtension import ProxyExtension, EnhancedActionChains
 from .SupportSelenium import CookiesBrowser
-from .multi_driver import run_browser, driver_run
+from .core import driver_run, close_all_browser, get_reddit_api

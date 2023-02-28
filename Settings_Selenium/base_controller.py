@@ -13,69 +13,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
 
 # executable_path = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
-executable_path = None  # default chrome
 
 
 class BaseClass:
 
     def __init__(self):
-        self.action = None
         self.DRIVER = uc.Chrome
-
-    def __set_new_download_path(self, download_path):
-
-        # Defines auto download and download PATH
-        params = {
-            "behavior": "allow",
-            "downloadPath": download_path
-        }
-        self.DRIVER.execute_cdp_cmd("Page.setDownloadBehavior", params)
-
-        return self.DRIVER
-
-    def run_driver(self, profile=None, browser_executable_path=executable_path, user_data_dir=None,
-                   download_path="default", proxy=None):
-
-        your_options = {}
-        options = uc.ChromeOptions()
-        options.add_argument("""
-        --disable-dev-shm-usage
-        --disable-setuid-sandbox
-        --disable-software-rasterizer
-        --disable-notifications
-        --disable-renderer-backgrounding
-        --disable-backgrounding-occluded-windows
-        """)  # 2 arg in  the end need for working on the backgrounding
-
-        if proxy is not None:
-            # proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake
-            # pass  host, port, user, password
-            proxy_extension = ProxyExtension(**proxy)
-            options.add_argument(f"--load-extension={proxy_extension.directory}")
-
-        # if user_data_dir is not None:
-        #     your_options["user_data_dir"] = user_data_dir
-        #
-        # elif profile is not None:
-        #     # match on windows 10
-        #     options.add_argument(fr"--user-data-dir={os.environ['USERPROFILE']}\AppData\Local\Google\Chrome\User Data")
-        #     options.add_argument(f"--profile-directory={profile}")
-
-        your_options["options"] = options
-        your_options["browser_executable_path"] = browser_executable_path
-
-        # if not profile or user_data_dir == incognito
-        self.DRIVER = uc.Chrome(**your_options)
-
-        self.DRIVER.maximize_window()
-        self.action = EnhancedActionChains(self.DRIVER)
-
-        # if you need download to your folder
-        if download_path == "default":
-            return self.DRIVER
-
-        else:
-            return self.__set_new_download_path(download_path)
+        self.action = None
 
     def elem_exists(self, value, by=By.XPATH, wait=30, return_xpath=False):
         try:

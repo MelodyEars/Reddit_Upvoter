@@ -12,6 +12,7 @@ class CookiesBrowser:
         self.link_from_file = link_from_file
         self.id_work_link_account_obj = id_work_link_account_obj
         self.username = username
+        self.is_work = True
 
     def are_valid(self):
         if file_exists(self.path_cookie):
