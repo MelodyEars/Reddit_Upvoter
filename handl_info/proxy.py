@@ -6,15 +6,17 @@ from requests.exceptions import ProxyError
 from base_exception import ProxyInvalidException
 from work_fs import write_line, path_near_exefile, get_list_file, write_list_to_file
 
+
 def httpbin_resp(proxies):
     url = 'http://httpbin.org/ip'
     try:
-        resp = requests.get(url, proxies=proxies)
+        resp = requests.get(url, proxies=proxies, timeout=10)
         logger.info(resp.content)
         return resp
     except ProxyError:
         logger.error("ProxyError: Invalid proxy")
         return False
+
 
 def check_proxy(host, port, user, password):
     proxies = {"http": f"http://{user}:{password}@{host}:{port}"}

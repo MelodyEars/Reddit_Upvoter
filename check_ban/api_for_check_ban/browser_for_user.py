@@ -13,7 +13,7 @@ def getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_a
 
 
 def work_api(url, dict_proxy, path_cookie, name_account, id_account):
-	with RedditWork(link=url, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
+	with RedditWork() as api_reddit:
 		try:
 			api_reddit.attend_link()
 

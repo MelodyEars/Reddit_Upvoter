@@ -1,25 +1,17 @@
 import traceback
 from multiprocessing import freeze_support
 
+from Settings_Selenium import CookiesBrowser, run_browser
 from base_exception import ProxyInvalidException
 from interface import user_desired_value, thread_for_api
 from database import *
-from handl_info import file_get_random_comments, get_user_link_file, check_proxy
-from reddit_api_selenium import run_browser
+from handl_info import file_get_random_comments, get_user_link_file
 from auth_reddit import check_new_acc
+from reddit_api_selenium.output import work_with_api_reddit
 
-
-def get_fata_from_db(cookie_obj):
-
-    # get from db account not worked random choice
-    path_cookie, dict_proxy, id_account = db_get_cookie_proxy(cookie_obj)
-
-    check_proxy(**dict_proxy)
-
-    return path_cookie, dict_proxy, id_account
 
 def pick_up_accounts_to_link(upvote_int: int):
-    dict_link_value = {}
+    list_link_acc = []
 
     for link_from_file in get_user_link_file():
         list_cookies_objs: list = db_get_cookie_objs()
@@ -38,11 +30,30 @@ def pick_up_accounts_to_link(upvote_int: int):
             )
 
             if outcome_created:  # if create record return TRUE
-                path_cookie, dict_proxy, id_account = get_fata_from_db(cookie_obj)
-                # Add info to file
-                dict_link_value[link_from_file] = path_cookie, dict_proxy, id_account, id_work_link_account_obj
+                path_cookie, dict_proxy, id_cookie = db_get_cookie_proxy(cookie_obj)
 
-    return dict_link_value
+                # Add info to file
+                list_link_acc.append((link_from_file, path_cookie, dict_proxy, id_cookie, id_work_link_account_obj))
+
+    return list_link_acc
+
+
+def body_loop(client_cookies: list[CookiesBrowser], list_comment: list[str]):
+    for cl_cookie in client_cookies:
+        logger.info(f'Work with "{cl_cookie.username}"')
+
+        try:
+            if list_comment:
+                comment: str = list_comment.pop()
+                work_with_api_reddit(cl_cookie, comment)
+            else:
+                work_with_api_reddit(cl_cookie)
+
+        except Exception:
+            db_delete_record_work_account_with_link(cl_cookie.id_work_link_account_obj)
+            logger.error(traceback.format_exc())
+            continue
+
 
 @logger.catch
 def main():
@@ -56,31 +67,25 @@ def main():
     upvote_int, comments_int = user_desired_value()
 
     # approves - comment = count for for 2
-    remaining_upvote = upvote_int - comments_int
+    # remaining_upvote = upvote_int - comments_int. it's no longer needed, because body loop get
+    # get list comment while not end then it gets integer number remaining upvote
 
-    dict_link_value = pick_up_accounts_to_link(upvote_int)
-        # get random comment from txt
-        list_comment = file_get_random_comments(comments_int)
-        for text_comment in list_comment:
-            try:
-                logger.info(f'Work with "{reddit_username}"')
-                run_browser(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
+    list_link_acc = pick_up_accounts_to_link(upvote_int)  # get info
 
-            except Exception:
-                db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.error(traceback.format_exc())
-                continue
+    # get random comment from txt
+    list_comment = file_get_random_comments(comments_int)
 
-        # remaining upvote after comment
-        for _ in range(remaining_upvote):
-            try:
-                logger.info(f'Work with "{reddit_username}"')
-                run_browser(link_from_file, dict_proxy, path_cookie, reddit_username, id_account, text_comment)
+    # navigator
+    num = user_thread
+    next_links = list_link_acc[:num]
 
-            except Exception:
-                db_delete_record_work_account_with_link(id_work_link_account_obj)
-                logger.error(traceback.format_exc())
-                continue
+    while next_links:
+        client_cookies: list[CookiesBrowser] = run_browser(list_link_acc=next_links)
+        body_loop(client_cookies, list_comment)
+
+        resent_num = num
+        num += user_thread
+        next_links = list_link_acc[resent_num:num]
 
 
 if __name__ == '__main__':

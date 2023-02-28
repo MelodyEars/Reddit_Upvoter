@@ -1,46 +1,30 @@
 import random
 import time
+import undetected_chromedriver as uc
 
 from loguru import logger
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
-from Settings_Selenium import CookiesBrowser
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
-from Settings_Selenium import BaseClass
+from Settings_Selenium import BaseClass, CookiesBrowser
 
 
 class RedditWork(BaseClass):
-    def __init__(self, path_cookie=str, link=str, proxy=None):
-
+    def __init__(self, client_cookie: CookiesBrowser):
         super(__class__, self).__init__()
-        self.client_cookie = CookiesBrowser
-        self.proxy = proxy
-        self.link = link
-        self.cookie_path = path_cookie
+        self.client_cookie = client_cookie
+        self.DRIVER: uc.Chrome = client_cookie.DRIVER
 
     def __enter__(self):
-        self.DRIVER = self.run_driver(proxy=self.proxy)
-
+        self.DRIVER.get(self.client_cookie.link_from_file)
+        self.DRIVER.reconnect()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type or exc_val or exc_tb:
             self.DRIVER.save_screenshot("picture_mistake.png")
-
-        self.DRIVER.quit()
-
-    def attend_link(self):
-
-        # self.DRIVER.delete_all_cookies()
-        self.client_cookie = CookiesBrowser(driver=self.DRIVER, path_filename=self.cookie_path)
-
-        if self.client_cookie.are_valid():
-            self.client_cookie.preload()
-            self.DRIVER.get(self.link)
-            self.DRIVER.reconnect()
-        else:
-            raise CookieInvalidException("Cookie invalid")
+            self.DRIVER.quit()
 
     def _baned_account(self):
         self._wait_load_webpage()
@@ -152,10 +136,11 @@ class RedditWork(BaseClass):
             self._find_popups()
             self._previously_upvote(wait=120)
 
-    def write_comment(self, text_comment, reddit_username):
+    def write_comment(self, text_comment):
 
         if not self.elem_exists(
-                value=f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=2):
+                value=f'//a[contains(text(), "{self.client_cookie.username}") and @data-testid="comment_author_link"]',
+                wait=2):
 
             self.stealth_send_text(value='//div[@class="notranslate public-DraftEditor-content"]',
                                    text_or_key=str(text_comment),
@@ -169,7 +154,7 @@ class RedditWork(BaseClass):
 
                 # check username's comment exists
                 if self.elem_exists(
-                        f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=10):
+                        f'//a[contains(text(), "{self.client_cookie.username}") and @data-testid="comment_author_link"]', wait=10):
                     # success
                     return
                 else:
