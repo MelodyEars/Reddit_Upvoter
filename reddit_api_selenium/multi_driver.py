@@ -20,8 +20,6 @@ def reddit_run(link_from_file: str, path_cookie: Path, dict_proxy: dict, id_cook
 	if client_cookie.are_valid():
 		client_cookie.preload()
 		driver.get('https://www.reddit.com/')
-		driver.reconnect()
-
 	else:
 		logger.error(f'Cookie акаунта "{username}" не працюють, перезаписую!')
 		account_dict = db_get_account_by_id(id_cookie)
@@ -42,8 +40,8 @@ def run_browser(list_link_acc: list) -> list[CookiesBrowser]:
 		try:
 			client_cookie = reddit_run(*tuple_obj)
 		except Exception:
-			db_delete_record_work_account_with_link(id_work_link_account_obj)
 			logger.error(traceback.format_exc())
+			db_delete_record_work_account_with_link(id_work_link_account_obj)
 
 		client_cookies.append(client_cookie)
 

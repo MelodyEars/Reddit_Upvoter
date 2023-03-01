@@ -34,7 +34,7 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 
 def for_user_open_browser(cookie_obj: Cookie) -> None:
 
-	path_cookie, dict_proxy, id_account = db_get_cookie_proxy(cookie_obj)
+	working_proxy, path_cookie, dict_proxy, id_account = db_get_cookie_proxy(cookie_obj)
 	name_account = path_cookie.stem
 	url = f"https://www.reddit.com/user/{name_account}"
 	return work_api(url, dict_proxy, path_cookie, name_account, id_account)

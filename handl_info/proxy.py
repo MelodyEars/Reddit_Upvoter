@@ -1,3 +1,5 @@
+import traceback
+
 import requests
 
 from loguru import logger
@@ -10,7 +12,7 @@ from work_fs import write_line, path_near_exefile, get_list_file, write_list_to_
 def httpbin_resp(proxies):
     url = 'http://httpbin.org/ip'
     try:
-        resp = requests.get(url, proxies=proxies, timeout=10)
+        resp = requests.get(url, proxies=proxies, timeout=30)
         logger.info(resp.content)
         return resp
     except ProxyError:
@@ -20,19 +22,27 @@ def httpbin_resp(proxies):
 
 def check_proxy(host, port, user, password):
     proxies = {"http": f"http://{user}:{password}@{host}:{port}"}
+    try:
+        logger.debug("Перевіряю проксі.")
+        resp_httpbin = httpbin_resp(proxies)
+        logger.debug("Закінчив перевірку.")
 
-    resp_httpbin = httpbin_resp(proxies)
-    check_ip = resp_httpbin.text.split('"')[3]
+        check_ip = resp_httpbin.text.split('"')[3]
 
-    if check_ip == host:
-        working = True
-    else:
-        logger.error(
-            f"""Match ip addresses!!! 
-            Local IP {check_ip} Proxy: {host}:{port}:{user}:{password}."""
-        )
+        if check_ip == host:
+            working = True
+        else:
+            logger.error(
+                f"""Match ip addresses!!! 
+                Local IP {check_ip} Proxy: {host}:{port}:{user}:{password}."""
+            )
 
-        write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
+            write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
+            working = False
+
+    except Exception:
+        print("Мабуть знов щось не те з проксі.")
+        logger.error(traceback.format_exc())
         working = False
 
     return working

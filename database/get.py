@@ -28,12 +28,12 @@ def db_get_cookie_proxy(cookie_obj: Cookie):
         "user": cookie_obj.proxy.user,
         "password": cookie_obj.proxy.password,
     }
-    check_proxy(**dict_proxy)
+    working_proxy = check_proxy(**dict_proxy)
 
     path_cookie = path_near_exefile(cookie_obj.cookie_path)
     id_account = cookie_obj.id
 
-    return path_cookie, dict_proxy, id_account
+    return working_proxy, path_cookie, dict_proxy, id_account
 
 
 def db_get_account_by_id(id_cookies: Cookie) -> dict:

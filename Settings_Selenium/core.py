@@ -5,7 +5,6 @@ from loguru import logger
 
 from Settings_Selenium import ProxyExtension, CookiesBrowser
 from database import db_delete_record_work_account_with_link
-from reddit_api_selenium import RedditWork
 
 executable_path = None
 
@@ -60,7 +59,7 @@ def driver_run(profile=None, browser_executable_path=executable_path, user_data_
 		return set_new_download_path(driver, download_path)
 
 
-def get_reddit_api(list_reddit_api: list[RedditWork]):
+def get_reddit_api(list_reddit_api: list):
 	for reddit_api in list_reddit_api:
 		if reddit_api.client_cookie.is_work:
 			try:

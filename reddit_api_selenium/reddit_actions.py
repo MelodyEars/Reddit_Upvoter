@@ -30,6 +30,7 @@ class RedditWork(BaseClass):
             self.client_cookie.is_work = False
 
     def attend_link(self):
+        logger.debug(f"Go to {self.client_cookie.link_from_file}")
         self.DRIVER.get(self.client_cookie.link_from_file)
         self.DRIVER.reconnect()
 

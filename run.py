@@ -1,12 +1,16 @@
+import random
 from multiprocessing import freeze_support
+
+from loguru import logger
 
 from Settings_Selenium import CookiesBrowser
 from base_exception import ProxyInvalidException
 from interface import user_desired_value, thread_for_api
-from database import *
-from handl_info import file_get_random_comments, pick_up_accounts_to_link
+from database import pick_up_accounts_to_link
+from handl_info import file_get_random_comments
 from auth_reddit import check_new_acc
 from reddit_api_selenium import work_in_browser, run_browser
+from work_fs import path_near_exefile
 
 
 @logger.catch
@@ -19,10 +23,6 @@ def main():
 
     # interface
     upvote_int, comments_int = user_desired_value()
-
-    # approves - comment = count for for 2
-    # remaining_upvote = upvote_int - comments_int. it's no longer needed, because body loop get
-    # get list comment while not end then it gets integer number remaining upvote
 
     list_link_acc = pick_up_accounts_to_link(upvote_int)  # get info
     random.shuffle(list_link_acc)
