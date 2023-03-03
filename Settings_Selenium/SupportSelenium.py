@@ -6,13 +6,15 @@ from work_fs import file_exists
 
 
 class CookiesBrowser:
-    def __init__(self, driver, link_from_file=None, path_cookie=Path, id_work_link_account_obj=None, username=None):
+    def __init__(self, driver, link_from_file=None, path_cookie=Path,
+                 id_work_link_account_obj=None, username=None, is_work=True):
+
         self.DRIVER = driver
         self.path_cookie = path_cookie
         self.link_from_file = link_from_file
         self.id_work_link_account_obj = id_work_link_account_obj
         self.username = username
-        self.is_work = True
+        self.is_work = is_work
 
     def are_valid(self):
         if file_exists(self.path_cookie):

@@ -23,6 +23,7 @@ def create_api_cls(client_cookies: list[CookiesBrowser], list_comment: list[str]
                 with RedditWork(cl_cookie) as api_reddit:
                     list_reddit_api.append(api_reddit)
                     logger.info(f'Взято на облік "{cl_cookie.username}"')
+
         except Exception:
             logger.error(traceback.format_exc())
             db_delete_record_work_account_with_link(cl_cookie.id_work_link_account_obj)

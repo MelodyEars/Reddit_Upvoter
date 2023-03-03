@@ -14,18 +14,22 @@ from Settings_Selenium import BaseClass, CookiesBrowser
 
 class RedditAuth(BaseClass):
 
-    def __init__(self, driver: uc.Chrome):
+    def __init__(self, driver: uc.Chrome, client_cookie: CookiesBrowser | None):
 
         super(__class__, self).__init__()
         self.DRIVER = driver
+        self.client_cookie = client_cookie
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type or exc_val or exc_tb:
-            self.DRIVER.save_screenshot("Error_GetCookie.png")
-            self.DRIVER.quit()
+            if self.client_cookie:
+                self.client_cookie.is_work = False
+                self.DRIVER.save_screenshot(f"Error_GetCookie_{self.client_cookie.username}.png")
+            else:
+                self.DRIVER.save_screenshot("Error_GetCookie.png")
 
     def __reddit_main_page(self):
         self.DRIVER.get('https://www.reddit.com/')
@@ -66,9 +70,13 @@ class RedditAuth(BaseClass):
 
         time.sleep(random.uniform(1, 3))
 
-    def get_path_cookie(self, login):
+    def get_path_cookie(self, login, client_cookie: CookiesBrowser | None):
         path_cookie = work_fs.auto_create(work_fs.path_near_exefile('cookies'), _type='dir') / f'{login}.pkl'
-        cookie = CookiesBrowser(driver=self.DRIVER, path_cookie=path_cookie)
-        cookie.save()
 
-        return cookie
+        if client_cookie is None:
+            self.client_cookie = CookiesBrowser(driver=self.DRIVER, path_cookie=path_cookie)
+
+        else:
+            self.client_cookie = CookiesBrowser(**client_cookie.__dict__)
+
+        return self.client_cookie

@@ -23,7 +23,7 @@ def reddit_run(link_from_file: str, path_cookie: Path, dict_proxy: dict, id_cook
 	else:
 		logger.error(f'Cookie акаунта "{username}" не працюють, перезаписую!')
 		account_dict = db_get_account_by_id(id_cookie)
-		client_cookie = get_cookies(driver=driver, account=account_dict)
+		client_cookie = get_cookies(driver=driver, account=account_dict, client_cookie=client_cookie)
 		logger.info(f'Cookie аккаунта "{username}" перезаписані.')
 
 	return client_cookie

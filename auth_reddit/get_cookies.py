@@ -1,3 +1,5 @@
+import traceback
+
 import undetected_chromedriver as uc
 
 from loguru import logger
@@ -10,14 +12,15 @@ from database import create_db, db_save_proxy_cookie
 from .auth_reddit_api_selenium import RedditAuth
 
 
-def get_cookies(driver: uc.Chrome, account: dict):
+def get_cookies(driver: uc.Chrome, account: dict, client_cookie=None):
     logger.info("auth begin")
 
-    with RedditAuth(driver) as api:
+    with RedditAuth(driver, client_cookie) as api:
         api.goto_login_form()
         api.fill_login_form(**account)
         api.skip_popups()
-        cookie: CookiesBrowser = api.get_path_cookie(account['login'])
+
+        cookie: CookiesBrowser = api.get_path_cookie(account['login'], client_cookie)
 
         logger.info("write data")
         cookie.save()
@@ -32,15 +35,16 @@ def check_new_acc():
         create_db()
 
     for account in get_account_file():
-        # get working proxy
-        proxy_for_api, list_proxies, path_proxies_file = file_get_proxy()
-
         try:
+            # get working proxy
+            proxy_for_api, list_proxies, path_proxies_file = file_get_proxy()
+
             driver: uc.Chrome = driver_run(proxy=proxy_for_api)
             # work_api
             get_cookies(driver=driver, account=account)
         except Exception as ex:
             raise ex
+
         finally:
             driver.quit()
 

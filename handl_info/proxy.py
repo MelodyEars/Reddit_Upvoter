@@ -1,5 +1,4 @@
 import traceback
-
 import requests
 
 from loguru import logger
@@ -9,39 +8,46 @@ from base_exception import ProxyInvalidException
 from work_fs import write_line, path_near_exefile, get_list_file, write_list_to_file
 
 
-def httpbin_resp(proxies):
+def httpbin_resp(proxies) -> str:
     url = 'http://httpbin.org/ip'
+    # url = 'https://httpbin.org/anything'
+    logger.info(proxies)
     try:
-        resp = requests.get(url, proxies=proxies, timeout=30)
-        logger.info(resp.content)
-        return resp
+        resp = requests.get(url, proxies=proxies, timeout=150)
+        resp_text = resp.text
+        logger.info(resp_text)
+        return resp_text
     except ProxyError:
         logger.error("ProxyError: Invalid proxy")
-        return False
+        return ""
 
 
 def check_proxy(host, port, user, password):
     proxies = {"http": f"http://{user}:{password}@{host}:{port}"}
     try:
         logger.debug("Перевіряю проксі.")
-        resp_httpbin = httpbin_resp(proxies)
+        resp_text: str = httpbin_resp(proxies)
         logger.debug("Закінчив перевірку.")
 
-        check_ip = resp_httpbin.text.split('"')[3]
+        if resp_text:
+            check_ip = resp_text.split('"')[3]
 
-        if check_ip == host:
-            working = True
+            if check_ip == host:
+                working = True
+            else:
+                logger.error(
+                    f"""Match ip addresses!!! 
+                    Local IP {check_ip} Proxy: {host}:{port}:{user}:{password}."""
+                )
+
+                write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
+                working = False
         else:
-            logger.error(
-                f"""Match ip addresses!!! 
-                Local IP {check_ip} Proxy: {host}:{port}:{user}:{password}."""
-            )
-
-            write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
+            logger.error(f'Proxy: {host}:{port}:{user}:{password} не працює, Виникла помилка "ProxyError"')
             working = False
 
     except Exception:
-        print("Мабуть знов щось не те з проксі.")
+        print(f"Мабуть знов щось не те з Proxy: {host}:{port}:{user}:{password}")
         logger.error(traceback.format_exc())
         working = False
 
@@ -72,4 +78,4 @@ def file_get_proxy():
 
 
 if __name__ == '__main__':
-    check_proxy("107.152.214.128", "8705", "thnunzms", "qtj315njindp")
+    print(check_proxy("104.144.51.159", "7690", "spspwufzjq", "2ekek42xu75r"))

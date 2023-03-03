@@ -24,7 +24,10 @@ def main():
     # interface
     upvote_int, comments_int = user_desired_value()
 
+    logger.info("Підбираю акаунти до посилання")
     list_link_acc = pick_up_accounts_to_link(upvote_int)  # get info
+    logger.info("Закінчив підбирати акаунти до посилання")
+
     random.shuffle(list_link_acc)
 
     # get random comment from txt
@@ -58,3 +61,4 @@ if __name__ == '__main__':
         main()
     finally:
         input("Press Enter:")
+
