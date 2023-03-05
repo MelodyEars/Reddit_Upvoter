@@ -3,13 +3,15 @@ from multiprocessing import Process
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
+
 from loguru import logger
 
-from TG_bot.messages import MESSAGES
-from TG_bot.markups import mainMenu, returnMain
-from TG_bot.utils import RunBotStates
-from TG_bot.config import bot, dp
 from main_Reddit import main_Reddit
+
+from .messages import MESSAGES
+from .markups import mainMenu, returnMain
+from .utils import RunBotStates
+from .config import bot, dp
 
 
 @dp.message_handler(commands="start")
@@ -84,6 +86,7 @@ async def answer_comment(message: types.Message, state: FSMContext):
 	async with state.proxy() as data:  # save result to dict FSM state
 		logger.info("Process starting")
 		Process(target=main_Reddit, args=(data['link'], data['vote_int'], data['comments_int'],)).start()
+
 		logger.info(f"Process did started on the {data['link']}")
 
 	await state.finish()

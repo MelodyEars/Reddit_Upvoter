@@ -4,7 +4,7 @@ from loguru import logger
 from requests.exceptions import ProxyError
 
 from base_exception import ProxyInvalidException
-from work_fs import write_line, path_near_exefile, get_list_file, write_list_to_file
+from work_fs import path_near_exefile, get_list_file, write_list_to_file
 
 
 def check_proxy(host, port, user, password):

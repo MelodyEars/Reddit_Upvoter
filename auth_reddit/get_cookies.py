@@ -19,6 +19,7 @@ def get_cookies(account: dict, proxy_for_api: dict):
         api.skip_popups()
         cookie_path, proxy_for_api = api.get_path_cookie(account['login'])
         api.DRIVER.quit()
+
     logger.info("write data")
 
     return cookie_path, proxy_for_api
@@ -46,15 +47,3 @@ def check_new_acc():
         logger.error("Недостатньо проксі!")
 
 
-if __name__ == '__main__':
-    freeze_support()
-
-    logger.add(
-        path_near_exefile("GetCookie.log"),
-        format="{time} {level} {message}",
-        level="INFO",
-        rotation="10 MB",
-        compression="zip"
-    )
-
-    check_new_acc()
