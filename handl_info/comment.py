@@ -1,6 +1,6 @@
 import random
 from pathlib import Path
-from typing import Any, Type
+from typing import Type
 
 import work_fs as wf
 
@@ -14,23 +14,16 @@ def get_comments() -> list:
     return content
 
 
-def file_get_random_comments(count=int) -> Type[list] | list[Any] | list:
+def file_get_random_comments(count=int) -> Type[list] | list[str] | list:
     if count == 0:
         return []
     else:
         # get count and random return count list
         list_comments = get_comments()
+        random.shuffle(list_comments)
 
-        select_comments = []
-        length_list_comment = len(list_comments)
-
-        if count != length_list_comment:
-            for _ in range(count):
-                length_list_comment = len(list_comments) - 1
-                num = random.randint(0, length_list_comment)
-                comment: str = list_comments.pop(num)
-                upd_comment = comment.replace('\n', '')
-                select_comments.append(upd_comment)
+        if count != len(list_comments):
+            select_comments = [list_comments.pop() for _ in range(count)]
         else:
             select_comments = list_comments
 

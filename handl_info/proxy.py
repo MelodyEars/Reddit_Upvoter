@@ -6,35 +6,17 @@ from requests.exceptions import ProxyError
 from base_exception import ProxyInvalidException
 from work_fs import write_line, path_near_exefile, get_list_file, write_list_to_file
 
-def httpbin_resp(proxies):
-    url = 'http://httpbin.org/ip'
-    try:
-        resp = requests.get(url, proxies=proxies)
-        logger.info(resp.content)
-        return resp
-    except ProxyError:
-        logger.error("ProxyError: Invalid proxy")
-        return False
-
 
 def check_proxy(host, port, user, password):
     proxies = {"http": f"http://{user}:{password}@{host}:{port}"}
+    url = 'http://httpbin.org/ip'
 
-    resp_httpbin = httpbin_resp(proxies)
-    check_ip = resp_httpbin.text.split('"')[3]
-
-    if check_ip == host:
-        working = True
-    else:
-        logger.error(
-            f"""Match ip addresses!!! 
-            Local IP {check_ip} Proxy: {host}:{port}:{user}:{password}."""
-        )
-
-        write_line(path_near_exefile("proxy_invalid.txt"), ":".join((host, port, user, password)))
-        working = False
-
-    return working
+    try:
+        requests.get(url, proxies=proxies, timeout=10)
+        logger.info(f"Successfully connect to {host}:{port}:{user}:{password}")
+    except ProxyError:
+        logger.error(f"Щось з проксі {host}:{port}:{user}:{password}! НЕ  відправляє данні на сайт.")
+        raise ProxyInvalidException("ProxyError: Invalid proxy ")
 
 
 def file_get_proxy():
@@ -53,9 +35,10 @@ def file_get_proxy():
         'password': list_line_content[3]
     }
 
-    if check_proxy(**proxy_for_api):
+    try:
+        check_proxy(**proxy_for_api)
         return proxy_for_api, list_proxies, path_proxies_file
-    else:
+    except ProxyInvalidException:
         write_list_to_file(path_proxies_file, list_proxies)
         return file_get_proxy()
 

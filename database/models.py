@@ -1,12 +1,7 @@
-from peewee import *
-from work_fs import path_near_exefile
+from peewee import PostgresqlDatabase, Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField, IntegerField
+from SETTINGS import set_database
 
-
-db = SqliteDatabase(path_near_exefile('db_lib.db'),
-                    pragmas={
-                        'journal_mode': 'wal',
-                        'cache_size': -1024 * 64
-                    })
+db = PostgresqlDatabase(**set_database)
 
 
 class BaseModel(Model):
