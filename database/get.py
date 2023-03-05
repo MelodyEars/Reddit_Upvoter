@@ -51,4 +51,4 @@ def db_get_account_by_id(id_cookies) -> dict:
 
 def db_get_cookie_objs() -> list:
     with db:
-        return Cookie.select().order_by(Cookie.cookie_path)
+        return Cookie.select().order_by(Cookie.id)

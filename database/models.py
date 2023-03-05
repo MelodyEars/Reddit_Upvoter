@@ -53,8 +53,15 @@ class RedditLink(BaseModel):
 
 
 class WorkAccountWithLink(BaseModel):
-    account = ForeignKeyField(Cookie, backref='cookies')  # not account_id, cookie_id
+    cookie = ForeignKeyField(Cookie, backref='cookies')
     link = ForeignKeyField(RedditLink, backref='reddit links')
 
     class Meta:
         db_table = "work account with link"
+
+
+class UserTG(BaseModel):
+    user = IntegerField()
+    # nickname = CharField(null=True)
+    # timesub = DateField() # time when user was bought tair
+    # signup = CharField()# єтапьі регистрации пользователя
