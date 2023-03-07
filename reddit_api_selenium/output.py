@@ -41,7 +41,7 @@ def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, red
             logger.info(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
 
         # if required to write comments
-        if comment:
+        if len(comment) != 0:
             api_reddit.write_comment(comment, reddit_username)
 
         api_reddit.client_cookie.save()

@@ -23,7 +23,7 @@ def file_get_random_comments(count=int) -> Type[list] | list[str] | list:
         random.shuffle(list_comments)
 
         if count != len(list_comments):
-            select_comments = [list_comments.pop() for _ in range(count)]
+            select_comments = [list_comments.pop().strip() for _ in range(count)]
         else:
             select_comments = list_comments
 

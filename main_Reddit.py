@@ -31,7 +31,7 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
     list_comments = file_get_random_comments(comments_int)
 
     for text_comment in range(upvote_int):
-        comment = str
+        comment = ""
 
         if list_comments:
             comment = list_comments.pop()
