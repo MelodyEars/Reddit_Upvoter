@@ -6,7 +6,7 @@ from check_ban.api_for_check_ban import for_user_open_browser
 from database import *
 
 
-def delete_account_db(cookie_obj: Cookie):
+def delete_account(cookie_obj: Cookie):
     db_delete_cookie_by_id(cookie_obj.id)
     path_cookie = path_near_exefile(cookie_obj.cookie_path)
     path_cookie.unlink()  # delete in folder
@@ -19,8 +19,8 @@ def main():
 
     answer = if_need_check()
     if answer:  # print interface
-        count_page = thread_for_api()
-        list_path_cookies = list(path_near_exefile("cookies").glob("*"))
+        count_page = thread_for_api()  # interface
+        list_path_cookies = list(path_near_exefile("cookies").glob("*"))  # in folder
         DICT_ACC_BAN = check_ban(list_path_cookies, count_page)  # api playwright
         db_ban_add(DICT_ACC_BAN)  # update db
 
@@ -31,7 +31,7 @@ def main():
         if not is_del_db:
             for_user_open_browser(selected_cookie)
         else:
-            delete_account_db(selected_cookie)
+            delete_account(selected_cookie)
 
 
 if __name__ == '__main__':
