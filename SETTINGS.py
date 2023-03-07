@@ -10,3 +10,4 @@ set_database = {"database": 'database',
                 "port": 5432,
                 }
 
+tuple_admins_id = (487950394, 6238496977)

@@ -56,7 +56,7 @@ class WorkAccountWithLink(BaseModel):
 
 
 class UserTG(BaseModel):
-    user = IntegerField()
-    # nickname = CharField(null=True)
-    # timesub = DateField() # time when user was bought tair
-    # signup = CharField()# єтапьі регистрации пользователя
+    user_id = IntegerField()
+
+    class Meta:
+        db_table = "telegram users"

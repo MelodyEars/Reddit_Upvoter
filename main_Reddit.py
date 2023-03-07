@@ -1,3 +1,4 @@
+import time
 import traceback
 
 from loguru import logger
@@ -13,6 +14,7 @@ from PickUpAccountsForLink import collection_info
 
 @logger.catch
 def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
+    start = time.time()
 
     id_work_link_account_obj = WorkAccountWithLink
 
@@ -39,3 +41,7 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
         except Exception:
             db_delete_record_work_account_with_link(id_work_link_account_obj)
             logger.error(traceback.format_exc())
+
+    end = time.time()
+    elapsed_time = end - start
+    logger.info(f"Program execute: {elapsed_time}")

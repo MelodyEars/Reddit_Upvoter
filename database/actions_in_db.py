@@ -1,7 +1,4 @@
-import random
-
-from base_exception import RanOutAccountsForLinkException
-
+from playhouse.postgres_ext import fn
 from .models import WorkAccountWithLink, db, Cookie
 
 
@@ -22,9 +19,7 @@ def db_reset_work_all_accounts_1_on_0():
 
 def db_get_random_account_with_0() -> list[Cookie]:
     with db:
-        cookies_db_objs = Cookie.select().where(Cookie.is_selected == 0 &
-                                                Cookie.ban.is_null() &
-                                                Cookie.cookie_path != "cookies/kirillorlovmae.pkl")
+        cookies_db_objs = Cookie.select().where((Cookie.is_selected == 0) & (fn.is_null(Cookie.ban)) & (Cookie.cookie_path != "cookies/kirillorlovmae.pkl"))
 
     return cookies_db_objs
 
