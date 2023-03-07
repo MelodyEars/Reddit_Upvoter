@@ -10,11 +10,14 @@ from database.get import db_get_link_id, db_get_cookie_proxy
 def pick_up_account_to_link(link_from_file):
 	link_id = db_get_link_id(link_from_file)
 
-	cookies_db_objs = db_get_random_account_with_0()
+	cookies_db_objs = list(db_get_random_account_with_0())
 	shuffle(cookies_db_objs)
 
 	for cookie_db_obj in cookies_db_objs:
-		outcome_created, created_id_work_link_account_obj = db_exist_record_link_account(link_id=link_id, account_id=cookie_db_obj.id)
+		outcome_created, created_id_work_link_account_obj = db_exist_record_link_account(
+			link_id=link_id,
+			cookie_id=cookie_db_obj.id
+		)
 
 		if outcome_created:  # if create record return TRUE
 			return link_id, cookie_db_obj, created_id_work_link_account_obj

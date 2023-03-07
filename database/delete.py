@@ -1,4 +1,3 @@
-from work_fs import write_line, path_near_exefile
 
 from .models import db, WorkAccountWithLink, Proxy, Cookie, Account
 
@@ -12,7 +11,7 @@ def db_delete_record_work_account_with_link(id_record):
 def db_delete_cookie_by_id(id_cookie):
     with db.atomic():
         # delete all by index from account
-        WorkAccountWithLink.delete().where(WorkAccountWithLink.account == id_cookie)
+        WorkAccountWithLink.delete().where(WorkAccountWithLink.cookie == id_cookie)
 
         # delete from tabel
         Cookie.delete_by_id(id_cookie)

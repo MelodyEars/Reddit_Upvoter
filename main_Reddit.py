@@ -10,10 +10,19 @@ from base_exception import RanOutAccountsForLinkException
 from handl_info import file_get_random_comments
 from reddit_api_selenium import open_browser
 from PickUpAccountsForLink import collection_info
+from work_fs import path_near_exefile
 
 
 @logger.catch
 def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
+    logger.add(
+        path_near_exefile("BaseReddit.log"),
+        format="{time} {level} {message}",
+        level="INFO",
+        rotation="10 MB",
+        compression="zip"
+    )
+
     start = time.time()
 
     id_work_link_account_obj = WorkAccountWithLink
@@ -45,3 +54,4 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")
+

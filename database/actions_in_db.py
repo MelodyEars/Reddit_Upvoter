@@ -1,25 +1,24 @@
-from playhouse.postgres_ext import fn
 from .models import WorkAccountWithLink, db, Cookie
 
 
-def db_exist_record_link_account(link_id, account_id):
+def db_exist_record_link_account(link_id, cookie_id):
     # check if id band with id link
     with db:
         obj: WorkAccountWithLink
         created: bool
-        obj, created = WorkAccountWithLink.get_or_create(account=account_id, link=link_id)
+        obj, created = WorkAccountWithLink.get_or_create(cookie=cookie_id, link=link_id)
 
     return created, obj.id
 
 
-def db_reset_work_all_accounts_1_on_0():
-    with db:
-        Cookie.update(is_selected=0).where(Cookie.is_selected == 1).execute()
+# def db_reset_work_all_accounts_1_on_0():
+#     with db:
+#         Cookie.update(is_selected=0).where(Cookie.is_selected == 1).execute()
 
 
 def db_get_random_account_with_0() -> list[Cookie]:
     with db:
-        cookies_db_objs = Cookie.select().where((Cookie.is_selected == 0) & (fn.is_null(Cookie.ban)) & (Cookie.cookie_path != "cookies/kirillorlovmae.pkl"))
+        cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
 
     return cookies_db_objs
 

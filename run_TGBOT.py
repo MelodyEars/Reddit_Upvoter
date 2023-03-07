@@ -20,7 +20,7 @@ if __name__ == '__main__':
 	freeze_support()
 
 	logger.add(
-		path_near_exefile("TgBot_RedditBase.log"),
+		path_near_exefile("TgBot.log"),
 		format="{time} {level} {message}",
 		level="INFO",
 		rotation="10 MB",
