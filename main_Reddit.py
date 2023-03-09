@@ -14,7 +14,7 @@ from reddit_api_selenium import open_browser
 from PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile
 from TG_bot.messages import MESSAGES
-
+from TG_bot.handlers import bot
 
 @logger.catch
 def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
@@ -59,9 +59,9 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
     logger.info(f"Program execute: {elapsed_time}")
 
 
-def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int, queue: Queue, chat_id, message_id):
+def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int, message_for_finish, queue: Queue):
     try:
         main_Reddit(reddit_link, upvote_int, comments_int)
     finally:
-        queue.put(chat_id, message_id, MESSAGES['finish_process'])
+        queue.put(message_for_finish, MESSAGES['finish_process'])
 

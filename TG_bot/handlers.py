@@ -10,7 +10,7 @@ from .messages import MESSAGES
 from .markups import mainMenu, returnMain
 from .utils import RunBotStates
 from .create import bot, dp
-from .work_PROCESS import start_process
+from .work_PROCESS import start_process, on_process_finished
 
 
 @dp.message_handler(commands="start")
@@ -31,7 +31,7 @@ async def helper(message: types.Message):
 	await message.reply(MESSAGES['help'])
 
 
-@dp.message_handler(state='*', commands='⬅️ Все спочатку')
+@dp.message_handler(state='*', commands='reset')
 @dp.message_handler(Text(equals='⬅️ Все спочатку', ignore_case=True), state='*')
 async def cancel_handler(message: types.Message, state: FSMContext):
 	logger.info("reseting Fms '⬅️ Все спочатку'")
@@ -102,11 +102,12 @@ async def answer_comment(message: types.Message, state: FSMContext):
 		data['comments_int'] = int(message.text)  # write data
 
 		# send message for edited when process finish work
-		sent_message_finish = await bot.send_message(chat_id=message.chat.id, text=MESSAGES['start_process'])
+		message_for_finish = await bot.send_message(chat_id=message.chat.id, text=MESSAGES['start_process'])
 
 		logger.info("Process starting")
-		await start_process(data=data, chat_id=sent_message_finish.chat.id, message_id=sent_message_finish.message_id)
+		await start_process(data=data, message_for_finish=message_for_finish)
 		logger.info(f"Process did started on the {data['link']}")
+		await on_process_finished()
 
 	await state.finish()
 

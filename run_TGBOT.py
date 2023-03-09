@@ -1,6 +1,7 @@
 import asyncio
 from multiprocessing import freeze_support
 
+from aiogram.utils import executor
 from loguru import logger
 
 from TG_bot.work_PROCESS import on_process_finished
@@ -9,13 +10,20 @@ from TG_bot import dp
 
 
 async def on_startup(_):
+	# task = asyncio.create_task(on_process_finished())
+	# await task
 	logger.info("Bot online")
 
 
+async def task_create():
+	# Start the background task to handle process completion notifications
+	await asyncio.run(on_process_finished())
+
+
 @logger.catch
-async def run_tg_bot():
-	asyncio.create_task(on_process_finished())
-	await dp.start_polling(skip_updates=True, on_startup=on_startup)
+def run_tg_bot():
+	asyncio.run(task_create())
+	executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
 
 
 if __name__ == '__main__':
@@ -28,5 +36,5 @@ if __name__ == '__main__':
 		rotation="10 MB",
 		compression="zip"
 	)
-
-	asyncio.run(run_tg_bot())
+	run_tg_bot()
+	# asyncio.run(run_tg_bot())
