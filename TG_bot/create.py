@@ -10,4 +10,4 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 # Queue for notifying users about process completion
-user_queues = {}
+# user_queues = {}

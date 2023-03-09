@@ -1,49 +1,44 @@
 import asyncio
 import time
-from multiprocessing import Process, Queue
+import multiprocessing as mp
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
+from loguru import logger
 
-TOKEN = 'BOT TOKEN HERE'
-chat_id = 'CHAT ID HERE'
-queue = Queue()
+TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
+CHAT_ID = "487950394"
 
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
+processes = {}
 
-async def on_process_finished():
-    while True:
-        process, result = queue.get()
-        text = f"Process {process.pid} finished with result {result}"
-        bot = Bot(token=TOKEN)
-        await bot.send_message(chat_id, text)
+async def on_process_finished(chat_id, process_name):
+    processes.pop(chat_id)
+    message = f"Process '{process_name}' has finished"
+    await bot.send_message(chat_id, message)
 
+@dp.message_handler(commands=['start_process'])
+async def start_process(message: types.Message):
+    chat_id = message.chat.id
+    process_name = message.text.split()[-1]
 
-async def run_command(cmd):
-    start_time = time.time()
-    process = await asyncio.create_subprocess_shell(
-        cmd,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE)
+    if chat_id in processes:
+        await message.reply("You have already started a process")
+        return
+    logger.info('start_process')
+    process = mp.Process(target=long_task, args=(chat_id, process_name))
+    process.start()
+    processes[chat_id] = process
 
-    stdout, stderr = await process.communicate()
-    elapsed_time = time.time() - start_time
+    await message.reply(f"Process '{process_name}' has started")
 
-    return_code = process.returncode
-    return stdout.decode(), stderr.decode(), elapsed_time, return_code
+def long_task(chat_id, process_name):
+    # Simulating a long-running task
+    for i in range(5):
+        time.sleep(1)
+        print(f"{process_name} is running...")
 
-
-async def start_process(cmd):
-    loop = asyncio.get_event_loop()
-    task = loop.create_task(run_command(cmd))
-    queue.put_nowait((await asyncio.ensure_future(task), task.result()))
-
-
-async def on_startup(dp):
-    asyncio.create_task(on_process_finished())
-
+    asyncio.run(on_process_finished(chat_id, process_name))
 
 if __name__ == '__main__':
-    bot = Bot(token=TOKEN)
-    dp = Dispatcher(bot)
-    dp.register_message_handler(start_process, commands="run")
-
-    executor.start_polling(dp, on_startup=on_startup)
+    executor.start_polling(dp, skip_updates=True)

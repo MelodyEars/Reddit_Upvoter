@@ -1,16 +1,18 @@
+from multiprocessing import Process
+
+from loguru import logger
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 
-from loguru import logger
-
 from SETTINGS import tuple_admins_id
+from main_Reddit import start_reddit_work
 
 from .messages import MESSAGES
 from .markups import mainMenu, returnMain
 from .utils import RunBotStates
 from .create import bot, dp
-from .work_PROCESS import start_process, on_process_finished
 
 
 @dp.message_handler(commands="start")
@@ -105,9 +107,15 @@ async def answer_comment(message: types.Message, state: FSMContext):
 		message_for_finish = await bot.send_message(chat_id=message.chat.id, text=MESSAGES['start_process'])
 
 		logger.info("Process starting")
-		await start_process(data=data, message_for_finish=message_for_finish)
+		# await start_process(data=data, message_for_finish=message_for_finish)
+		logger.info(message_for_finish)  # ______________________________________logger info
+		Process(
+			target=start_reddit_work,
+			args=(data['link'], data['vote_int'], data['comments_int'],
+			      message_for_finish)
+		).start()
+
 		logger.info(f"Process did started on the {data['link']}")
-		await on_process_finished()
 
 	await state.finish()
 
