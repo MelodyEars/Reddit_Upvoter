@@ -1,5 +1,3 @@
-from multiprocessing import Process
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
@@ -7,12 +5,12 @@ from aiogram.dispatcher.filters import Text
 from loguru import logger
 
 from SETTINGS import tuple_admins_id
-from main_Reddit import main_Reddit
 
 from .messages import MESSAGES
 from .markups import mainMenu, returnMain
 from .utils import RunBotStates
 from .create import bot, dp
+from .work_PROCESS import start_process
 
 
 @dp.message_handler(commands="start")
@@ -27,10 +25,10 @@ async def start(message: types.Message):
 		# raise Exception("Хтось зайшов не зареєстрований ")
 
 
-# @dp.message_handler(commands='help')
-# async def helper(message: types.Message):
-# 	logger.info("help")
-# 	await message.reply(MESSAGES['help'])
+@dp.message_handler(commands='help')
+async def helper(message: types.Message):
+	logger.info("help")
+	await message.reply(MESSAGES['help'])
 
 
 @dp.message_handler(state='*', commands='⬅️ Все спочатку')
@@ -68,8 +66,14 @@ async def answer_link(message: types.Message, state: FSMContext):
 	await message.reply(MESSAGES['vote_int'])
 
 
+@dp.message_handler(lambda message: not message.text.isdigit(), state=RunBotStates.vote_int)
+async def vote_invalid(message: types.Message):
+	""" Caught up error if vote_int not integer """
+	return await message.reply(MESSAGES['error_vote_int'])
+
+
 # catch user's upvote integer
-@dp.message_handler(state=RunBotStates.vote_int)
+@dp.message_handler(lambda message: message.text.isdigit(), state=RunBotStates.vote_int)
 async def answer_vote(message: types.Message, state: FSMContext):
 	# if message.text.isdigit():
 	logger.info("How much upvote")
@@ -83,22 +87,25 @@ async def answer_vote(message: types.Message, state: FSMContext):
 	# 	return await message.reply(MESSAGES['error_vote_int'])
 
 
-# @dp.message_handler(lambda message: not message.text.isdigit(), state=RunBotStates.comments_int)
-# async def process_age_invalid(message: types.Message):
-# 	""" Caught up error if comments_int not integer """
+@dp.message_handler(lambda message: not message.text.isdigit(), state=RunBotStates.comments_int)
+async def comment_invalid(message: types.Message):
+	""" Caught up error if comments_int not integer """
+	return await message.reply(MESSAGES['error_comments_int'])
 
 
 # catch user's upvote integer
-@dp.message_handler(state=RunBotStates.comments_int)
+@dp.message_handler(lambda message: message.text.isdigit(), state=RunBotStates.comments_int)
 async def answer_comment(message: types.Message, state: FSMContext):
 	# if message.text.isdigit():
 	async with state.proxy() as data:  # save result to dict FSM state
 		logger.info("comments?")
-		data['comments_int'] = int(message.text)
+		data['comments_int'] = int(message.text)  # write data
+
+		# send message for edited when process finish work
+		sent_message_finish = await bot.send_message(chat_id=message.chat.id, text=MESSAGES['start_process'])
 
 		logger.info("Process starting")
-		Process(target=main_Reddit, args=(data['link'], data['vote_int'], data['comments_int'],)).start()
-
+		await start_process(data=data, chat_id=sent_message_finish.chat.id, message_id=sent_message_finish.message_id)
 		logger.info(f"Process did started on the {data['link']}")
 
 	await state.finish()

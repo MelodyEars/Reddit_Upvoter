@@ -1,6 +1,8 @@
 import time
 import traceback
 
+from multiprocessing import Queue
+
 from loguru import logger
 
 from database.models import WorkAccountWithLink
@@ -11,6 +13,7 @@ from handl_info import file_get_random_comments
 from reddit_api_selenium import open_browser
 from PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile
+from TG_bot.messages import MESSAGES
 
 
 @logger.catch
@@ -44,7 +47,7 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
             open_browser(**dict_for_browser, comment=comment)
 
         except RanOutAccountsForLinkException:
-            logger.error("Недостатньо акаунтів, продовжувати робити апвоути.")
+            logger.error("Недостатньо акаунтів, щоб продовжувати робити апвоути.")
             break
 
         except Exception:
@@ -54,4 +57,11 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")
+
+
+def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int, queue: Queue, chat_id, message_id):
+    try:
+        main_Reddit(reddit_link, upvote_int, comments_int)
+    finally:
+        queue.put(chat_id, message_id, MESSAGES['finish_process'])
 

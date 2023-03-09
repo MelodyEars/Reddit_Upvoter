@@ -35,7 +35,7 @@ class BaseClass:
 
     def run_driver(self, profile=None, browser_executable_path=executable_path, user_data_dir=None,
                    download_path="default", proxy=None):
-
+        # TODO https://ipinfo.io/json get json via pydentik get object country select it country and timezone
         your_options = {}
         options = uc.ChromeOptions()
         options.add_argument("""
@@ -45,6 +45,7 @@ class BaseClass:
         --disable-notifications
         --disable-renderer-backgrounding
         --disable-backgrounding-occluded-windows
+        --lang=en-US
         """)  # 2 arg in  the end need for working on the backgrounding
 
         if proxy is not None:

@@ -2,6 +2,7 @@ import time
 from pathlib import Path
 
 from loguru import logger
+from urllib3.exceptions import ProtocolError
 
 from database import db_get_account_by_id
 from database.models import Cookie
@@ -12,7 +13,7 @@ from .reddit_actions import RedditWork
 from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
 
 
-def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
+def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
                  id_cookie: Cookie.id, comment: str):
 
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
@@ -48,3 +49,19 @@ def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, red
         logger.info(f'Successfully completed "{reddit_username}"')
         time.sleep(0.2)
         api_reddit.DRIVER.quit()
+
+
+def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
+                 id_cookie: Cookie.id, comment: str):
+    try:
+        work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, comment)
+    except ConnectionResetError:
+        logger.critical('ConnectionResetError')
+        work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, comment)
+    except ProtocolError:
+        logger.critical('ProtocolError')
+        work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, comment)
+    except ConnectionRefusedError:
+        logger.critical('ConnectionRefusedError')
+        work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, comment)
+

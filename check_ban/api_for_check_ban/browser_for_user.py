@@ -1,3 +1,5 @@
+import time
+
 from loguru import logger
 from selenium.common import NoSuchWindowException
 
@@ -17,22 +19,22 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 		try:
 			api_reddit.attend_link()
 
+			input("Press Enter, если работа с браузером окончена: ")
+			api_reddit.client_cookie.save()
+			api_reddit.DRIVER.quit()
+
 		except CookieInvalidException:
-			api_reddit.DRIVER.close()
+			api_reddit.DRIVER.quit()
 			logger.error(f'Cookie аккаунта "{name_account}" не работают, нужно перезаписать.')
 			account_dict = db_get_account_by_id(id_account)
 			return getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_account)
 
 		except NoSuchWindowException:
-			pass
-
-		finally:
-			input("Press Enter, если работа с браузером окончена: ")
-			api_reddit.client_cookie.save()
-			api_reddit.DRIVER.quite()
+			logger.warning("Cookie не збереглись. Краще буде закривати браузер через консоль натиснувши ENTER.")
+			time.sleep(3)
 
 
-def for_user_open_browser(cookie_obj: Cookie) -> None:
+def for_user_open_browser(cookie_obj: Cookie):
 
 	path_cookie, dict_proxy, id_account = db_get_cookie_proxy(cookie_obj)
 	name_account = path_cookie.stem

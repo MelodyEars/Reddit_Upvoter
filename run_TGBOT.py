@@ -1,8 +1,9 @@
+import asyncio
 from multiprocessing import freeze_support
 
-from aiogram.utils import executor
 from loguru import logger
 
+from TG_bot.work_PROCESS import on_process_finished
 from work_fs import path_near_exefile
 from TG_bot import dp
 
@@ -12,8 +13,9 @@ async def on_startup(_):
 
 
 @logger.catch
-def run_tg_bot():
-	executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
+async def run_tg_bot():
+	asyncio.create_task(on_process_finished())
+	await dp.start_polling(skip_updates=True, on_startup=on_startup)
 
 
 if __name__ == '__main__':
@@ -27,4 +29,4 @@ if __name__ == '__main__':
 		compression="zip"
 	)
 
-	run_tg_bot()
+	asyncio.run(run_tg_bot())
