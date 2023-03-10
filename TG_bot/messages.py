@@ -8,7 +8,7 @@ start_message = 'Вітаю! Цей бот потрібен для накрут�
 # ___________________________________ FMS State _______________________________________________ #
 answer_link = "Надішли посилання на пост Reddit."
 
-vote_int = "Введіть кількість upvote."
+upvote_int = "Введіть кількість upvote."
 error_vote_int = "Помилка! Ваша відповідь не є цілим числом./Введіть кількість upvote.(тільки ціле число)"
 
 comments_int = "Кількість коментарів (якщо потрібно)"
@@ -21,9 +21,9 @@ finish_process = "Зробив!"
 MESSAGES = {
     'start': start_message,
     'help': help_message,
-    'link': answer_link,
+    'reddit_link': answer_link,
     'error_vote_int': error_vote_int,
-    'vote_int': vote_int,
+    'upvote_int': upvote_int,
     'error_comments_int': error_comments_int,
     'comments_int': comments_int,
     'start_process': start_process,

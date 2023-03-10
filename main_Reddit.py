@@ -1,10 +1,8 @@
 import time
 import traceback
-import asyncio
 
 from loguru import logger
 
-from TG_bot.work_PROCESS import on_process_finished
 from database.models import WorkAccountWithLink
 from database.delete import db_delete_record_work_account_with_link
 
@@ -13,11 +11,10 @@ from handl_info import file_get_random_comments
 from reddit_api_selenium import open_browser
 from PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile
-from TG_bot.messages import MESSAGES
 
 
 @logger.catch
-def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
+def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int):
     logger.add(
         path_near_exefile("BaseReddit.log"),
         format="{time} {level} {message}",
@@ -57,12 +54,3 @@ def main_Reddit(reddit_link: str, upvote_int: int, comments_int: int):
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")
-
-
-def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int, message_for_finish):
-    try:
-        main_Reddit(reddit_link, upvote_int, comments_int)
-    finally:
-        # queue.put(message_for_finish, MESSAGES['finish_process'])
-        asyncio.run(on_process_finished(message_for_finish, MESSAGES['finish_process']))
-
