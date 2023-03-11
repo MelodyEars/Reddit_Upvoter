@@ -33,10 +33,14 @@ class Account(BaseModel):
 
 class JobModel(BaseModel):
     model_name = CharField()
-    account = ForeignKeyField(Account, backref="accounts")
-    proxy = ForeignKeyField(Proxy, backref="proxies")
+    account = ForeignKeyField(Account, backref="accounts", on_delete='CASCADE')
+    proxy = ForeignKeyField(Proxy, backref="proxies", on_delete='CASCADE')
     data_path = CharField()
     cookie_path = CharField()
 
     class Meta:
-        db_table = 'job_model'
+        db_table = 'job_models'
+
+
+class Posting(BaseModel):
+    id_account = IntegerField()

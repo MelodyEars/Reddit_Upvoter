@@ -1,5 +1,6 @@
 from .models import WorkAccountWithLink, db, Cookie
 
+from SETTINGS import mine_project
 
 def db_exist_record_link_account(link_id, cookie_id):
     # check if id band with id link
@@ -19,6 +20,10 @@ def db_exist_record_link_account(link_id, cookie_id):
 def db_get_random_account_with_0() -> list[Cookie]:
     with db:
         cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
+
+        # if mine_project:
+        # TODO compare list selected models and cookies_db_objs then return,
+        #  but this method work if remove method delete after add model
 
     return cookies_db_objs
 

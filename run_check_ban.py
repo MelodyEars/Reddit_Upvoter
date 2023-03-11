@@ -8,17 +8,26 @@ from check_ban.api_for_check_ban import for_user_open_browser
 from check_ban.ADD_new_model import create_model
 
 from database import Cookie, db_ban_add
-from database.get import db_get_cookie_objs
-from database.delete import db_delete_cookie_by_id
+from database.vote_tg_bot.get import db_get_cookie_objs
+from database.vote_tg_bot.delete import db_delete_cookie_by_id
 
-from work_fs import path_near_exefile
+from work_fs import path_near_exefile, file_exists
 
 
 def delete_account(cookie_obj: Cookie):
-    db_delete_cookie_by_id(cookie_obj.id)
     path_cookie = path_near_exefile(cookie_obj.cookie_path)
-    path_cookie.unlink()  # delete in folder
-    logger.error(f'{path_cookie.stem} був видалений з бд.')
+
+    logger.info(f"Delete account: {cookie_obj.account.login}:{cookie_obj.account.password}")
+    logger.info(f'''Delete proxy: 
+            {cookie_obj.proxy.host}:{cookie_obj.proxy.port}:{cookie_obj.proxy.user}:{cookie_obj.proxy.password}''')
+
+    db_delete_cookie_by_id(cookie_obj.id)
+
+    if file_exists(path_cookie):
+        logger.info("Видалений з папки з куками.")
+        path_cookie.unlink()  # delete in folder
+
+    logger.info(f'{path_cookie.stem} був видалений з бд.')
 
 
 @logger.catch
@@ -36,11 +45,19 @@ def main():
 
     while cookies_objs:
         selected_cookie_obj, list_selected_cookie_objs, command = user_response(cookies_objs, list_selected_cookie_objs)
+
+        # --------------------------------------- del ----------------------------------------
         if command == "del":
+            logger.info("Selected account deleting.")
             delete_account(selected_cookie_obj)
+
+        # +++++++++++++++++++++++++++++++++++++++ add +++++++++++++++++++++++++++++++++++++++++
         elif command == "add":
-            logger.info("Your account prepare.")
+            logger.info("Your account preparing.")
             create_model(selected_cookie_obj)
+            delete_account(selected_cookie_obj)
+
+        # ======================================= open ========================================
         else:
             for_user_open_browser(selected_cookie_obj)
 
@@ -51,7 +68,7 @@ if __name__ == '__main__':
     logger.add(
         "check_ban.log",
         format="{time} {level} {message}",
-        level="DEBUG",
+        level="INFO",
         rotation="10 MB",
         compression="zip"
     )

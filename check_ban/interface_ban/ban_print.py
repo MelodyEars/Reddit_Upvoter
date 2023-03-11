@@ -5,6 +5,7 @@ from work_fs import green_color, cyan_color, blue_color, clear_cmd, magenta_colo
 
 commands = ["add", "del"]
 
+
 ############################## color ####################################
 def permanent_ban(text):
 	returning_text = Back.RED + Fore.WHITE + str(

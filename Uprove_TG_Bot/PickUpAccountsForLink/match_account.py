@@ -1,10 +1,10 @@
 from random import shuffle
 
 from base_exception import RanOutAccountsForLinkException
-from handl_info import check_proxy
+from Uprove_TG_Bot.handl_info import check_proxy
 
-from database.actions_in_db import db_get_random_account_with_0, db_exist_record_link_account
-from database.get import db_get_link_id, db_get_cookie_proxy
+from database.vote_tg_bot.actions_in_db import db_get_random_account_with_0, db_exist_record_link_account
+from database.vote_tg_bot.get import db_get_link_id, db_get_cookie_proxy
 
 
 def pick_up_account_to_link(link_from_file):

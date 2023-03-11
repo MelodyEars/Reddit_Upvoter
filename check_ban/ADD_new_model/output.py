@@ -1,6 +1,6 @@
 
 from database import Cookie
-from database.posting_Actions import dp_ap_create_table, db_ap_create_account_for_posting
+from database.autoposting_db.registration_new_model import dp_ap_create_table, db_ap_create_account_for_posting
 
 from .create_folder import move_cookie, prepare_folder
 

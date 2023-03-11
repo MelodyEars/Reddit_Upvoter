@@ -4,7 +4,7 @@ from aiogram.utils import executor
 from loguru import logger
 
 from work_fs import path_near_exefile
-from TG_bot import dp
+from Uprove_TG_Bot.TG_bot import dp
 
 
 async def on_startup(_):

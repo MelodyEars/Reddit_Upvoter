@@ -5,7 +5,7 @@ from loguru import logger
 from urllib3.exceptions import ProtocolError
 
 from database import db_get_account_by_id
-from database.models import Cookie
+from database.vote_tg_bot.models import Cookie
 
 from auth_reddit import get_cookies
 

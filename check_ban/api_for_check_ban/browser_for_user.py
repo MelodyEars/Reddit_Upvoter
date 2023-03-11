@@ -4,9 +4,9 @@ from loguru import logger
 from selenium.common import NoSuchWindowException
 
 from auth_reddit import get_cookies
-from reddit_api_selenium import RedditWork
+from Uprove_TG_Bot.reddit_api_selenium import RedditWork
 from database import db_get_cookie_proxy, Cookie, db_get_account_by_id
-from reddit_api_selenium.exceptions import CookieInvalidException
+from Uprove_TG_Bot.reddit_api_selenium import CookieInvalidException
 
 
 def getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_account):

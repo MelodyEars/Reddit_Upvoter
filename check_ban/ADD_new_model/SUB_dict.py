@@ -1,5 +1,5 @@
 sub_reddit_catalog_dict = {
-	'Boobs/Nipples': [
+	'Boobs_Nipples': [
 		"https://www.reddit.com/r/FantasticBreasts/",
 		"https://www.reddit.com/r/bigtitspics/",
 		"https://www.reddit.com/r/AbcdTits/",

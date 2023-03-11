@@ -3,13 +3,13 @@ import traceback
 
 from loguru import logger
 
-from database.models import WorkAccountWithLink
-from database.delete import db_delete_record_work_account_with_link
+from database.vote_tg_bot.models import WorkAccountWithLink
+from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
 
 from base_exception import RanOutAccountsForLinkException
-from handl_info import file_get_random_comments
-from reddit_api_selenium import open_browser
-from PickUpAccountsForLink import collection_info
+from Uprove_TG_Bot.handl_info import file_get_random_comments
+from Uprove_TG_Bot.reddit_api_selenium import open_browser
+from Uprove_TG_Bot.PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile
 
 

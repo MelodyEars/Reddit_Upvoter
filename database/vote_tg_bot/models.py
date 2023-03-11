@@ -30,8 +30,8 @@ class Account(BaseModel):
 
 
 class Cookie(BaseModel):
-    account = ForeignKeyField(Account, backref="accounts")
-    proxy = ForeignKeyField(Proxy, backref="proxies")
+    account = ForeignKeyField(Account, backref="accounts", on_delete='CASCADE')
+    proxy = ForeignKeyField(Proxy, backref="proxies", on_delete='CASCADE')
     cookie_path = CharField()
     is_selected = BooleanField(default=False)
     ban = CharField(null=True, default=None)

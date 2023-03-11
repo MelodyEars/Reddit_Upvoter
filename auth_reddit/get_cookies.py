@@ -1,9 +1,7 @@
-from multiprocessing import freeze_support
-
 from loguru import logger
 
 from base_exception import ProxyInvalidException
-from handl_info import get_account_file, file_get_proxy
+from Uprove_TG_Bot.handl_info import get_account_file, file_get_proxy
 from work_fs import file_exists, path_near_exefile, write_list_to_file
 from database import create_db, db_save_proxy_cookie
 

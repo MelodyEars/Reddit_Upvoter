@@ -3,10 +3,9 @@ from pathlib import Path
 import undetected_chromedriver as uc
 from loguru import logger
 
-from Settings_Selenium import EnhancedActionChains, Cookies, ProxyExtension
+from Settings_Selenium import Cookies, ProxyExtension
 from auth_reddit import get_cookies
 from database import db_get_account_by_id
-from reddit_api_selenium.exceptions import CookieInvalidException
 
 executable_path = None
 
