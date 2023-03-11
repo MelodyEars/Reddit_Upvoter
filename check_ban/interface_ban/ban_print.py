@@ -3,6 +3,7 @@ from colorama import Fore, Style, Back, init, deinit
 from database import Cookie
 from work_fs import green_color, cyan_color, blue_color, clear_cmd, magenta_color, warning_text
 
+commands = ["add", "del"]
 
 ############################## color ####################################
 def permanent_ban(text):
@@ -30,6 +31,7 @@ def shadow_ban(text):
 def indicate_number(text_what_answer: str):
 	print(cyan_color(f"{text_what_answer}?"))
 	list_number_cmd = input().split(":")
+
 	try:
 		num = int(list_number_cmd[0]) - 1
 	except ValueError:
@@ -40,9 +42,9 @@ def indicate_number(text_what_answer: str):
 		return num, False
 
 	else:
-		is_del = list_number_cmd[1].replace(" ", "").lower()
-		if is_del == "del":
-			return num, True
+		command = list_number_cmd[1].replace(" ", "").lower()
+		if command in commands:
+			return num, command
 
 		else:
 			warning_text(f'Команда не схожа на {green_color("del")}')
@@ -88,9 +90,9 @@ def user_response(cookies_objs, list_selected_cookie_objs: list):
 	unpack_info(cookies_objs, list_selected_cookie_objs)
 	is_del_db: bool  # is True then del by number from db
 	user_int: int
-	user_int, is_del_db = indicate_number("Вкажи число: ")
+	user_int, command = indicate_number("Вкажи число: ")
 	deinit()  # <-color
 	selected_cookie = cookies_objs[user_int]
 	list_selected_cookie_objs.append(selected_cookie)
 
-	return selected_cookie, list_selected_cookie_objs, is_del_db
+	return selected_cookie, list_selected_cookie_objs, command

@@ -1,9 +1,17 @@
 from multiprocessing import freeze_support
 
+from loguru import logger
+
 from check_ban.api_for_check_ban import check_ban
 from check_ban.interface_ban import user_response, thread_for_api, if_need_check
 from check_ban.api_for_check_ban import for_user_open_browser
-from database import *
+from check_ban.ADD_new_model import create_model
+
+from database import Cookie, db_ban_add
+from database.get import db_get_cookie_objs
+from database.delete import db_delete_cookie_by_id
+
+from work_fs import path_near_exefile
 
 
 def delete_account(cookie_obj: Cookie):
@@ -27,11 +35,14 @@ def main():
     cookies_objs = list(db_get_cookie_objs())
 
     while cookies_objs:
-        selected_cookie, list_selected_cookie_objs, is_del_db = user_response(cookies_objs, list_selected_cookie_objs)
-        if not is_del_db:
-            for_user_open_browser(selected_cookie)
+        selected_cookie_obj, list_selected_cookie_objs, command = user_response(cookies_objs, list_selected_cookie_objs)
+        if command == "del":
+            delete_account(selected_cookie_obj)
+        elif command == "add":
+            logger.info("Your account prepare.")
+            create_model(selected_cookie_obj)
         else:
-            delete_account(selected_cookie)
+            for_user_open_browser(selected_cookie_obj)
 
 
 if __name__ == '__main__':

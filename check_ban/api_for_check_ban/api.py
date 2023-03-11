@@ -44,11 +44,9 @@ async def open_page(browser: Browser, path_cookie: Path):
 
 async def run_browser(path_cookies):
 	async with async_playwright() as playwright:
-		# browser = await playwright.chromium.launch(
-		# 	headless=False, executable_path=r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
-		# )
+
 		browser = await playwright.chromium.launch(
-			headless=False,
+			headless=True,
 			executable_path=EXECUTABLE_PATH)
 		print("Працюю...")
 		await asyncio.wait(

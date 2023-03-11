@@ -27,7 +27,7 @@ def write_line(filename, list_line):
     with open(filename, "w+", encoding="utf8", errors="ignore") as file:
 
         if isinstance(list_line, list):
-            list_line = [line for line in list_line if line.strip()]
+            list_line = (line for line in list_line if line.strip())
 
             file.seek(0)
             file.truncate()

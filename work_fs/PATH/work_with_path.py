@@ -6,16 +6,15 @@ This file cans:
 
 """
 
-import os
 import sys
 import subprocess
-import time
-import zipfile
+# import time
+# import zipfile
 
 from pathlib import Path
 
 
-def file_exists(path_to_file) -> bool:
+def file_exists(path_to_file: str | Path) -> bool:
     """Check file exists by path"""
     path = Path(path_to_file)
 
@@ -25,7 +24,7 @@ def file_exists(path_to_file) -> bool:
         return False
 
 
-def dir_exists(path_to_dir) -> bool:
+def dir_exists(path_to_dir: str | Path) -> bool:
     """Check directory exists by path"""
     path = Path(path_to_dir)
 
@@ -53,7 +52,7 @@ def path_near_exefile(filename: str = "") -> Path:
     return path
 
 
-def auto_create(path, _type, hidden=False):
+def auto_create(path: Path, _type: str, hidden=False):
     """
     @_type=file
     @_type=dir
@@ -69,7 +68,10 @@ def auto_create(path, _type, hidden=False):
 
     elif _type == "dir":
         if not dir_exists(path):
-            os.makedirs(path)
+            path.mkdir(parents=True, exist_ok=True)
+            '''Параметр parents=True дозволяє створювати всі проміжні папки, якщо вони не існують.
+             Параметр exist_ok=True дозволяє не викидати помилку, якщо шлях вже існує 
+             (наприклад, якщо його створила інша операція паралельно).'''
 
             if hidden:
                 subprocess.call("attrib +h " + str(path))
@@ -80,21 +82,21 @@ def auto_create(path, _type, hidden=False):
     return path
 
 
-def unziping(path_to_zipfile=Path, unzip_path=Path):
-    downloads_path = path_to_zipfile.parent
+# def unziping(path_to_zipfile=Path, unzip_path=Path):
+#     downloads_path = path_to_zipfile.parent
+#
+#     with zipfile.ZipFile(path_to_zipfile, 'r') as zip_ref:
+#         for content in zip_ref.namelist():
+#             data = zip_ref.read(content, downloads_path)
+#             myfile_path = unzip_path
+#             myfile_path.write_bytes(data)
+#
+#     # delete zip
+#     path_to_zipfile.unlink()
 
-    with zipfile.ZipFile(path_to_zipfile, 'r') as zip_ref:
-        for content in zip_ref.namelist():
-            data = zip_ref.read(content, downloads_path)
-            myfile_path = unzip_path
-            myfile_path.write_bytes(data)
-
-    # delete zip
-    path_to_zipfile.unlink()
-
-
-def wait_download(filepath):
-    while not filepath.is_file():
-        time.sleep(1)
-
-    return filepath
+#
+# def wait_download(filepath):
+#     while not filepath.is_file():
+#         time.sleep(1)
+#
+#     return filepath

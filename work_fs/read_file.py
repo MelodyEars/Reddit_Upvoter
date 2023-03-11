@@ -4,7 +4,7 @@
 """
 
 import json
-from .work_with_path import file_exists
+from work_fs.PATH.work_with_path import file_exists
 
 
 def read_json(filename):

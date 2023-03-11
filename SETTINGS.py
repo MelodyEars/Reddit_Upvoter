@@ -1,7 +1,12 @@
+
+mine_project = True
 # token for telegram bot
-TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
-# our bot
-# TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
+
+if mine_project:
+    # our bot
+    TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
+else:
+    TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
 
 
 # set up database

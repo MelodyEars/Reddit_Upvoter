@@ -31,3 +31,4 @@ def db_ban_add(DICT_ACC_BAN: dict):
             else:
                 # without ban
                 Cookie.update(ban=None).where(Cookie.cookie_path == acc_path_cookie).execute()
+

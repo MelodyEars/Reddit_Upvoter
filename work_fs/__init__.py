@@ -1,4 +1,4 @@
-from .work_with_path import *
+from .PATH.work_with_path import *
 
 from .read_file import *
 from .write_to_file import *

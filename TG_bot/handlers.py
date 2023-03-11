@@ -18,9 +18,8 @@ from .work_PROCESS import run_process_and_reply_after
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
 	logger.info("Start")
-	if message.from_user.id in tuple_admins_id:
-		await message.reply(MESSAGES['start'])
-		await bot.send_message(message.from_user.id, f"Вітаю, {message.from_user.first_name}", reply_markup=mainMenu)
+	await message.reply(MESSAGES['start'])
+	await bot.send_message(message.from_user.id, f"Вітаю, {message.from_user.first_name}", reply_markup=mainMenu)
 
 
 @dp.message_handler(commands='help')

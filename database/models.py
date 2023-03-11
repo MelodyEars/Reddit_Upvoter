@@ -1,5 +1,5 @@
 from peewee import PostgresqlDatabase, Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField, IntegerField
-from SETTINGS import set_database
+from SETTINGS import set_database, mine_project
 
 db = PostgresqlDatabase('database', **set_database)
 
@@ -60,5 +60,3 @@ class UserTG(BaseModel):
 
     class Meta:
         db_table = "telegram users"
-
-# 'database.models'.join().
