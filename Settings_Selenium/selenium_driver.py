@@ -1,19 +1,51 @@
 """ This file work with Selenium """
-import os
 import time
 import random
 
+import requests
 import undetected_chromedriver as uc
+from loguru import logger
+from requests.exceptions import ProxyError
 
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+from base_exception import ProxyInvalidException
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
 
 # executable_path = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
 executable_path = None  # default chrome
+
+
+def geolocation(loc_value_JSON: str):
+    data = loc_value_JSON.split(",")
+    latitude = float(data[0])
+    longitude = float(data[1])
+
+    capabilities = DesiredCapabilities.CHROME.copy()
+    capabilities['locationContextEnabled'] = True
+    capabilities['locationContextDefaultZoomLevel'] = 13
+    capabilities['locationContextEnabled'] = True
+    capabilities['locationContextMaxDistance'] = 10000
+    capabilities['locationContextGeoLocation'] = {'latitude': latitude, 'longitude': longitude}
+
+    return capabilities
+
+
+def proxy_data(proxy: dict):
+    proxies = {"http": f"http://{proxy['user']}:{proxy['password']}@{proxy['host']}:{proxy['port']}"}
+    url = "https://ipinfo.io/json"
+    try:
+        resp = requests.get(url, proxies=proxies, timeout=10)
+
+    except ProxyError:
+        logger.error(f"Щось з проксі {proxy['user']}:{proxy['password']}:{proxy['host']}:{proxy['port']}!")
+        raise ProxyInvalidException("ProxyError: Invalid proxy ")
+
+    return resp
 
 
 class BaseClass:
@@ -33,19 +65,23 @@ class BaseClass:
 
         return self.DRIVER
 
-    def run_driver(self, profile=None, browser_executable_path=executable_path, user_data_dir=None,
-                   download_path="default", proxy=None):
-        # TODO https://ipinfo.io/json get json via pydentik get object country select it country and timezone
+    def run_driver(self, browser_executable_path=executable_path, user_data_dir=None,
+                   download_path="default", proxy=None, headless=False):
+
+        resp = None
+
         your_options = {}
         options = uc.ChromeOptions()
+
         options.add_argument("""
+        --lang=en-US
         --disable-dev-shm-usage
         --disable-setuid-sandbox
         --disable-software-rasterizer
+        --disable-popup-blocking
         --disable-notifications
         --disable-renderer-backgrounding
         --disable-backgrounding-occluded-windows
-        --lang=en-US
         """)  # 2 arg in  the end need for working on the backgrounding
 
         if proxy is not None:
@@ -53,6 +89,11 @@ class BaseClass:
             # pass  host, port, user, password
             proxy_extension = ProxyExtension(**proxy)
             options.add_argument(f"--load-extension={proxy_extension.directory}")
+            resp = proxy_data(proxy)
+
+            # ____________________________ location _______________________________
+            capabilities = geolocation(resp.json()['loc'])
+            your_options['desired_capabilities'] = capabilities
 
         # if user_data_dir is not None:
         #     your_options["user_data_dir"] = user_data_dir
@@ -62,6 +103,7 @@ class BaseClass:
         #     options.add_argument(fr"--user-data-dir={os.environ['USERPROFILE']}\AppData\Local\Google\Chrome\User Data")
         #     options.add_argument(f"--profile-directory={profile}")
 
+        your_options["headless"] = headless
         your_options["options"] = options
         your_options["browser_executable_path"] = browser_executable_path
 
@@ -70,6 +112,11 @@ class BaseClass:
 
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)
+
+        # __________________________________ timezone _________________________________
+        if proxy is not None:
+            tz_params = {'timezoneId': resp.json()['timezone']}
+            self.DRIVER.execute_cdp_cmd('Emulation.setTimezoneOverride', tz_params)
 
         # if you need download to your folder
         if download_path == "default":

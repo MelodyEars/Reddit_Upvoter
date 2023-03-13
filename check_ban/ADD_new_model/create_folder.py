@@ -6,15 +6,17 @@ from work_fs.PATH import move_file_or_dir
 from .SUB_dict import sub_reddit_catalog_dict
 
 
-def move_cookie(data_path: Path, old_path_cookie: str):
+def move_cookie(root_folder: Path, old_path_cookie: str):
 
 	old_path: Path = path_near_exefile(old_path_cookie)
-	new_path: Path = auto_create(data_path, _type="dir") / old_path.name
+	new_path: Path = auto_create(root_folder, _type="dir") / old_path.name
 	move_file_or_dir(old_path, new_path)
 
-	new_path_to_db = new_path.relative_to(new_path.parent.parent)
+	lib_folder = new_path.parent.parent
+	new_path_to_db = new_path.relative_to(lib_folder)
+	root_folder_to_db = root_folder.relative_to(lib_folder)
 
-	return new_path_to_db
+	return new_path_to_db, root_folder_to_db
 
 
 def gen_catalog_sub(category: Path):
@@ -36,8 +38,8 @@ def generation_category(data_path: Path):
 
 def prepare_folder(model_name: str):
 	lib_path: Path = auto_create(path_near_exefile("Library"), _type="dir")
-	data_path = auto_create(lib_path / model_name, _type="dir")
+	root_folder = auto_create(lib_path / model_name, _type="dir")
 
-	generation_category(data_path)
+	generation_category(root_folder)
 
-	return data_path
+	return root_folder

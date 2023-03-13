@@ -44,12 +44,12 @@ class RedditLink(BaseModel):
     link = CharField()
 
     class Meta:
-        db_table = "reddit links"
+        db_table = "network links"
 
 
 class WorkAccountWithLink(BaseModel):
     cookie = ForeignKeyField(Cookie, backref='cookies')
-    link = ForeignKeyField(RedditLink, backref='reddit links')
+    link = ForeignKeyField(RedditLink, backref='network links')
 
     class Meta:
         db_table = "work account with link"

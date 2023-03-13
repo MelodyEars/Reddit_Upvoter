@@ -90,6 +90,7 @@ class RedditWork(BaseClass):
     def _select_interests(self):
         if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
             num = 0
+
             for _ in range(random.randint(3, 5)):
                 num_selected = random.randint(1, 3)
                 num += num_selected
@@ -113,7 +114,7 @@ class RedditWork(BaseClass):
             self.click_element('//button[contains(text(), "Yes")]')
             self._wait_load_webpage()
 
-        # when we watch on the first time on the reddit
+        # when we watch on the first time on the network
         self._select_interests()
 
         # asks to continue when you visit a site with a post
@@ -187,7 +188,7 @@ class RedditWork(BaseClass):
             wait = 0.1
             while not self.elem_exists('''//button[descendant::span[contains(text(), "Joined")] 
             or descendant::span[contains(text(), "Leave")]]''', wait=wait):
-                self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1)
+                self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=2)
                 wait = 10
                 time.sleep(2)
                 logger.debug("Чекаємо підписки!")

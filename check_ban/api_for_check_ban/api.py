@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright, Browser
 from playwright_stealth import stealth_async
 
 DICT_ACC_BAN = {}
-EXECUTABLE_PATH = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
+# EXECUTABLE_PATH = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
 
 
 async def check_and_add_ban(page, path_cookie: Path):

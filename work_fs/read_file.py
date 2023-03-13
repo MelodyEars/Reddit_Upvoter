@@ -15,7 +15,7 @@ def read_json(filename):
     return dates
 
 
-def get_list_file(path_to_file) -> list:
+def get_list_file(path_to_file) -> list[str]:
     """
     Get list from file by path.
     """
