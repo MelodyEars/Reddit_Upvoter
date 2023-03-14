@@ -3,10 +3,10 @@ import time
 from loguru import logger
 from selenium.common import NoSuchWindowException
 
+from Uprove_TG_Bot.reddit_api_selenium.exceptions import CookieInvalidException
 from auth_reddit import get_cookies
 from Uprove_TG_Bot.reddit_api_selenium import RedditWork
 from database import db_get_cookie_proxy, Cookie, db_get_account_by_id
-from Uprove_TG_Bot.reddit_api_selenium import CookieInvalidException
 
 
 def getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_account):
@@ -35,7 +35,6 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 
 
 def for_user_open_browser(cookie_obj: Cookie):
-
 	path_cookie, dict_proxy, id_account = db_get_cookie_proxy(cookie_obj)
 	name_account = path_cookie.stem
 	url = f"https://www.reddit.com/user/{name_account}"

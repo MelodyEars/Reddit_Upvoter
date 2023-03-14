@@ -12,7 +12,7 @@ def move_cookie(root_folder: Path, old_path_cookie: str):
 	new_path: Path = auto_create(root_folder, _type="dir") / old_path.name
 	move_file_or_dir(old_path, new_path)
 
-	lib_folder = new_path.parent.parent
+	lib_folder = new_path.parent.parent.parent
 	new_path_to_db = new_path.relative_to(lib_folder)
 	root_folder_to_db = root_folder.relative_to(lib_folder)
 

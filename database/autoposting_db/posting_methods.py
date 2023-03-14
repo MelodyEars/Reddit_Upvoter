@@ -4,7 +4,10 @@ from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSub
 # _______________________________ get __________________________________
 def db_get_gen_categories(jobmodel_obj: JobModel) -> list[Posting.id_category]:
 	with autoposting_db:
-		category_objs = Posting.select(Posting.id_category).where(Posting.id_jobmodel == jobmodel_obj)
+		post_objs = Posting.select(Posting.id_category).where(
+			Posting.id_jobmodel == jobmodel_obj
+		)
+		category_objs = [post.id_category for post in post_objs]
 	return category_objs
 
 
@@ -51,7 +54,12 @@ def db_get_post_for_posting(
 				(Posting.id_photo == photo_obj) &
 				(Posting.id_link_sub_reddit == link_sub_obj)
 			)
-			.execute()
 		)
 
 	return post_obj
+
+
+# ___________________________________________  DELETE  _________________________________________
+def delete_post_by_id(post_id: Posting.id):
+	with autoposting_db:
+		Posting.delete_by_id(post_id)

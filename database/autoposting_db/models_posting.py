@@ -64,10 +64,10 @@ class Category(BaseModel):
 
 
 class Posting(BaseModel):
-    id_jobmodel = ForeignKeyField(JobModel, backref='job_models', null=True, on_delete='SET_NULL')
-    id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET_NULL')
-    id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET_NULL')
-    id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET_NULL')
+    id_jobmodel = ForeignKeyField(JobModel, backref='job_models', null=True, on_delete='SET NULL')
+    id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET NULL')
+    id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET NULL')
+    id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET NULL')
     is_work = BooleanField(default=False)
 
     class Meta:

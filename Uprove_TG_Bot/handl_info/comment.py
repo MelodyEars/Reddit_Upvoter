@@ -14,7 +14,7 @@ def get_comments() -> list:
     return content
 
 
-def file_get_random_comments(count=int) -> Type[list] | list[str] | list:
+def file_get_random_comments(count: int) -> Type[list] | list[str] | list:
     if count == 0:
         return []
     else:
