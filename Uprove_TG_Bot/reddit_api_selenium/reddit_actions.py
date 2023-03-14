@@ -188,7 +188,10 @@ class RedditWork(BaseClass):
             wait = 0.1
             while not self.elem_exists('''//button[descendant::span[contains(text(), "Joined")] 
             or descendant::span[contains(text(), "Leave")]]''', wait=wait):
-                self.click_element('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=2)
+                self.click_element(
+                    '//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=2, scroll_to=True
+                )
+
                 wait = 10
                 time.sleep(2)
                 logger.debug("Чекаємо підписки!")

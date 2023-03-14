@@ -1,9 +1,9 @@
-from .models import db, Proxy, WorkAccountWithLink, Cookie, RedditLink, Account, UserTG
+from .models import db, Proxy, WorkAccountWithLink, Cookie, RedditLink, Account
 
 
 def create_db():
     with db:
-        db.create_tables([Proxy, WorkAccountWithLink, RedditLink, Cookie, Account, UserTG])
+        db.create_tables([Proxy, WorkAccountWithLink, RedditLink, Cookie, Account])
 
 
 def create_proxy(host, port, user, password):

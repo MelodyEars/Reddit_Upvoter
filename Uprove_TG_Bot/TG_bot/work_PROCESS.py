@@ -4,9 +4,10 @@ from multiprocessing import Process
 from aiogram import types
 from loguru import logger
 
+from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from main_Reddit import start_reddit_work
 
-from .messages import MESSAGES
+# from .messages import MESSAGES
 
 
 async def run_process_and_reply_after(message: types.Message, data):

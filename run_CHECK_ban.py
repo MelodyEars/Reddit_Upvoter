@@ -21,7 +21,7 @@ def delete_account(cookie_obj: Cookie):
     logger.info(f'''Delete proxy: 
             {cookie_obj.proxy.host}:{cookie_obj.proxy.port}:{cookie_obj.proxy.user}:{cookie_obj.proxy.password}''')
 
-    db_delete_cookie_by_id(cookie_obj.id)
+    db_delete_cookie_by_id(cookie_obj)
 
     if file_exists(path_cookie):
         logger.info("Видалений з папки з куками.")

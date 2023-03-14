@@ -50,7 +50,8 @@ def yield_up_data_from_db():
 		logger.info(post_obj[0].id_link_sub_reddit.link_SubReddit)
 		logger.info(post_obj[0].id_photo.path_photo)
 		logger.info("Finish collecting data.")
-		delete_post_by_id(post_obj[0].id)
+		# delete_post_by_id(post_obj[0].id)
+		post_obj[0].delete_instance(Posting)
 		logger.info("Post did deleted.")
 
 		# TODO if process then is_work == True and select is_work == False

@@ -1,7 +1,7 @@
 from peewee import PostgresqlDatabase, Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField, IntegerField
-from SETTINGS import set_database, mine_project
+from SETTINGS import set_database
 
-db = PostgresqlDatabase('database', **set_database)
+db = PostgresqlDatabase('db_tg_bot', **set_database)
 
 
 class BaseModel(Model):
@@ -53,10 +53,3 @@ class WorkAccountWithLink(BaseModel):
 
     class Meta:
         db_table = "work account with link"
-
-
-class UserTG(BaseModel):
-    user_id = IntegerField()
-
-    class Meta:
-        db_table = "telegram users"
