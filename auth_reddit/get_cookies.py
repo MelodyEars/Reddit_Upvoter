@@ -25,8 +25,7 @@ def get_cookies(account: dict, proxy_for_api: dict):
 
 def check_new_acc():
     try:
-        if not file_exists(path_near_exefile('db_tg_bot.db')):
-            create_db()
+        create_db()
 
         for account in get_account_file():
             # get working proxy

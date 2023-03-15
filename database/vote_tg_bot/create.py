@@ -1,7 +1,7 @@
 from .models import db, Proxy, WorkAccountWithLink, Cookie, RedditLink, Account
 
 
-def create_db():
+def create_db() -> None:
     with db:
         db.create_tables([Proxy, WorkAccountWithLink, RedditLink, Cookie, Account])
 

@@ -1,12 +1,12 @@
 
-mine_project = True
+mine_project = False
 # token for telegram bot
 
-# if mine_project:
+if mine_project:
     # our bot
-TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
-# else:
-#     TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
+    TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
+else:
+    TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
 
 
 # set up db_tg_bot
@@ -16,6 +16,7 @@ set_database = {
                 "host": "localhost",
                 "port": 5432,
                 }
+
 if mine_project:
     admins_id = [487950394, ]
 else:

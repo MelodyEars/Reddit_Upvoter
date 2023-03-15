@@ -11,7 +11,7 @@ from database import Cookie, db_ban_add
 from database.vote_tg_bot.get import db_get_cookie_objs
 from database.vote_tg_bot.delete import db_delete_cookie_by_id
 
-from work_fs import path_near_exefile, file_exists
+from work_fs import path_near_exefile, file_exists, auto_create
 
 
 def delete_account(cookie_obj: Cookie):
@@ -64,9 +64,8 @@ def main():
 
 if __name__ == '__main__':
     freeze_support()
-
     logger.add(
-        "check_ban.log",
+        auto_create(path_near_exefile("logs"), _type="dir") / "check_ban.log",
         format="{time} {level} {message}",
         level="INFO",
         rotation="10 MB",

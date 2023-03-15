@@ -92,8 +92,8 @@ class BaseClass:
             resp = proxy_data(proxy)
 
             # ____________________________ location _______________________________
-            capabilities = geolocation(resp.json()['loc'])
-            your_options['desired_capabilities'] = capabilities
+            # capabilities = geolocation(resp.json()['loc'])
+            # your_options['desired_capabilities'] = capabilities
 
         # if user_data_dir is not None:
         #     your_options["user_data_dir"] = user_data_dir

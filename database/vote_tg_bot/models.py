@@ -1,7 +1,7 @@
-from peewee import PostgresqlDatabase, Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField, IntegerField
+from peewee import PostgresqlDatabase, Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField
 from SETTINGS import set_database
 
-db = PostgresqlDatabase('db_tg_bot', **set_database)
+db = PostgresqlDatabase('database', **set_database)
 
 
 class BaseModel(Model):
@@ -44,12 +44,12 @@ class RedditLink(BaseModel):
     link = CharField()
 
     class Meta:
-        db_table = "network links"
+        db_table = "reddit links"
 
 
 class WorkAccountWithLink(BaseModel):
     cookie = ForeignKeyField(Cookie, backref='cookies')
-    link = ForeignKeyField(RedditLink, backref='network links')
+    link = ForeignKeyField(RedditLink, backref='reddit links')
 
     class Meta:
         db_table = "work account with link"

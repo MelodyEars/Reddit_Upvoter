@@ -1,32 +1,15 @@
 import asyncio
-import time
 
-from multiprocessing import Process
-
-from typing import NamedTuple
+from loguru import logger
 
 from aiogram import F
 from aiogram.types import Message
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-from loguru import logger
 
 from Uprove_TG_Bot.TG_bot.setup import user_router
 from Uprove_TG_Bot.TG_bot.src.telegram.buttons.user_btn import main_btn
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
-from Uprove_TG_Bot.TG_bot.work_PROCESS import run_process_and_reply_after
-
-
-class RunBotStates(StatesGroup):
-    reddit_link = State()
-    upvote_int = State()
-    comments_int = State()
-
-
-class StructData(NamedTuple):
-    reddit_link: str
-    upvote_int: int
-    comments_int: int
+from Uprove_TG_Bot.TG_bot.work_PROCESS import run_process_and_reply_after, RunBotStates, StructData
 
 
 @user_router.message(F.text == "⬅️ Все спочатку")

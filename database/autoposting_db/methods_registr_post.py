@@ -15,15 +15,14 @@ def db_add_record_post(jobmodel_obj: JobModel, name_category: str, photo_path: P
 		photo_obj, _ = Photo.get_or_create(path_photo=photo_path)
 		category_obj, _ = Category.get_or_create(name_category=name_category)
 
-		Posting.create(
+		_, created = Posting.get_or_create(
 			id_jobmodel=jobmodel_obj, id_link_sub_reddit=link_obj, id_photo=photo_obj, id_category=category_obj
 		)
+		return created
 
 
 # ------------------------- get --------------------------
 def db_grab_model_obj() -> list[JobModel]:
-	with autoposting_db:
-		list_model_obj = JobModel.select()
-
-	return list_model_obj
-
+	with autoposting_db.connection_context():
+		query = JobModel.select()
+		return list(query)

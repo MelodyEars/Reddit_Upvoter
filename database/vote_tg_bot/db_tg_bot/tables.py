@@ -1,7 +1,5 @@
 import peewee as pw
-from SETTINGS import set_database
-
-db = pw.PostgresqlDatabase('database', **set_database)
+from database import db
 
 
 class AllowedUser(pw.Model):
@@ -13,4 +11,5 @@ class AllowedUser(pw.Model):
 
 
 def create_tables():
-    db.create_tables([AllowedUser])
+    with db:
+        db.create_tables([AllowedUser])

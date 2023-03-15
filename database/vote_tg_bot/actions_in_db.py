@@ -2,6 +2,7 @@ from .models import WorkAccountWithLink, db, Cookie
 
 from SETTINGS import mine_project
 
+
 def db_exist_record_link_account(link_id, cookie_id):
     # check if id band with id link
     with db:

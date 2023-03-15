@@ -10,13 +10,13 @@ from base_exception import RanOutAccountsForLinkException
 from Uprove_TG_Bot.handl_info import file_get_random_comments
 from Uprove_TG_Bot.reddit_api_selenium import open_browser
 from Uprove_TG_Bot.PickUpAccountsForLink import collection_info
-from work_fs import path_near_exefile
+from work_fs import path_near_exefile, auto_create
 
 
 @logger.catch
 def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int):
     logger.add(
-        path_near_exefile("BaseReddit.log"),
+        auto_create(path_near_exefile("logs"), _type="dir") / "BaseReddit.log",
         format="{time} {level} {message}",
         level="INFO",
         rotation="10 MB",
