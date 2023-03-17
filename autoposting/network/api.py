@@ -97,7 +97,6 @@ class CreatePost(BaseClass):
         return url
 
     def delete_all_posts(self):
-        self.DRIVER.get()
         while self.click_element('//button[@aria-label="more options"]', wait=1):
             self.click_element('//button[./span[contains(text(), "delete")]]')
             time.sleep(5)

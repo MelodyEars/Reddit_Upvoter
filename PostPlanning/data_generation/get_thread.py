@@ -15,7 +15,8 @@ def registration_to_db():
 
 			# recording to db
 			for photo_path, link_sub_reddit in unique_combinations:
-				photo_path = photo_path.relative_to(photo_path.parent.parent.parent.parent.parent)
+				title = photo_path.stem
+				photo_path_to_db = photo_path.relative_to(photo_path.parent.parent.parent.parent.parent)
 
-				yield jobmodel_obj, name_category, photo_path, link_sub_reddit
+				yield jobmodel_obj, name_category, photo_path_to_db, link_sub_reddit, title
 

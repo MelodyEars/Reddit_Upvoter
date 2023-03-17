@@ -60,11 +60,11 @@ async def answer_comment(message: Message, state: FSMContext):
     logger.info(struct_data.upvote_int)
     logger.info(struct_data.comments_int)
 
-    task = asyncio.create_task(run_process_and_reply_after(message, struct_data))
+    run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
 
     await state.clear()
     await message.answer(
         f'Браузер запустився для опрацювання вашого посилання {data["reddit_link"]}.', reply_markup=main_btn
     )
 
-    await task
+    await run_process

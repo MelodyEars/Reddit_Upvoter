@@ -1,12 +1,12 @@
 from colorama import Fore, Style, Back, init, deinit
 
-from database import Cookie
-from work_fs import green_color, cyan_color, blue_color, clear_cmd, magenta_color, warning_text
+from SETTINGS import commands
+from database import Cookie, Proxy
+from work_fs import clear_cmd, path_near_exefile
+from work_fs.color import green_color, cyan_color, blue_color, magenta_color, warning_text
 
-commands = ["add", "del"]
 
-
-############################## color ####################################
+# __________________________________________ COLOR  _______________________________________________
 def permanent_ban(text):
 	returning_text = Back.RED + Fore.WHITE + str(
 		text) + Style.RESET_ALL + Fore.LIGHTRED_EX + " <- permanent ban!" + Style.RESET_ALL
@@ -52,25 +52,36 @@ def indicate_number(text_what_answer: str):
 			return indicate_number(text_what_answer)
 
 
+def unpack_data(cookie_obj: Cookie):
+	db_id = cookie_obj.id
+	ban = cookie_obj.ban
+	username_acc: str = path_near_exefile(cookie_obj.cookie_path).stem
+	proxy: Proxy = cookie_obj.proxy
+	info_proxy: str = f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}"
+
+	about_acc = f'id:{db_id} {username_acc} {info_proxy}'
+	return ban, about_acc
+
+
 ################################ print ################################
 def print_info(count: int, cookie_obj: Cookie, selected_cookie_objs: list):
-	ban = cookie_obj.ban
-	cookie_name: str = cookie_obj.cookie_path.split("/")[1]
+	ban, about_acc = unpack_data(cookie_obj=cookie_obj)
+
 	if ban is None:  # if ban not exists
-		account_print = green_color(cookie_name)
+		account_print = green_color(about_acc)
 
 	elif ban == "shadow":
 		if cookie_obj not in selected_cookie_objs:
-			account_print = shadow_ban(cookie_name)
+			account_print = shadow_ban(about_acc)
 
 		else:
-			account_print = opened_account(cookie_name)
+			account_print = opened_account(about_acc)
 	else:
 		if cookie_obj not in selected_cookie_objs:
-			account_print = permanent_ban(cookie_name)
+			account_print = permanent_ban(about_acc)
 
 		else:
-			account_print = opened_account(cookie_name)
+			account_print = opened_account(about_acc)
 
 	print(f"{cyan_color(count)} : {account_print}")
 

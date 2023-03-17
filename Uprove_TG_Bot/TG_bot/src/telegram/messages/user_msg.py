@@ -19,6 +19,9 @@ error_comments_int = "Помилка! Ваша відповідь не є ціл
 start_process = "Виконую..."
 finish_process = "Зробив!"
 
+# ___________________________ deleted post______________________________
+deleted_post = 'Пост був видалений!\n або \n Недостатньо акаунтів, щоб продовжувати робити апвоути.'
+
 
 class Messages(TypedDict):
     start: str
@@ -30,6 +33,7 @@ class Messages(TypedDict):
     comments_int: str
     start_process: str
     finish_process: str
+    deleted_post: str
 
 
 MESSAGES: Messages = {
@@ -42,4 +46,5 @@ MESSAGES: Messages = {
     'comments_int': comments_int,
     'start_process': start_process,
     'finish_process': finish_process,
+    'deleted_post': deleted_post,
 }

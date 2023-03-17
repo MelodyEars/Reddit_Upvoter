@@ -15,3 +15,7 @@ class CookieInvalidException(RedditException):
 
 class ElementNotClickException(RedditException):
     """Expected tuple or str"""
+
+
+class PostDeletedException(RedditException):
+    """if exists this message 'Sorry, this post has been remove'"""

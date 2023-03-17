@@ -48,8 +48,8 @@ class RedditLink(BaseModel):
 
 
 class WorkAccountWithLink(BaseModel):
-    cookie = ForeignKeyField(Cookie, backref='cookies')
-    link = ForeignKeyField(RedditLink, backref='reddit links')
+    cookie = ForeignKeyField(Cookie, backref='cookies', null=True, on_delete='SET NULL')
+    link = ForeignKeyField(RedditLink, backref='reddit links', null=True, on_delete='SET NULL')
 
     class Meta:
         db_table = "work account with link"

@@ -11,6 +11,7 @@ def get_account_file():
         list_line_content = account_line.replace(" ", "").split(':')
 
         logger.info(list_line_content)
+
         account = {
             'login': list_line_content[0],
             'password': list_line_content[1]

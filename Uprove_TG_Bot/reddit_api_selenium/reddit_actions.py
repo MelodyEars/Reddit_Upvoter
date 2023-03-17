@@ -6,7 +6,7 @@ from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
 from Settings_Selenium import Cookies
-from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
+from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException, PostDeletedException
 from Settings_Selenium import BaseClass
 
 
@@ -29,6 +29,12 @@ class RedditWork(BaseClass):
             self.DRIVER.save_screenshot("picture_mistake.png")
 
         self.DRIVER.quit()
+
+    def _deleted_post(self):
+        if not self.elem_exists('//div[contains(text(), "Sorry, this post has been remove")]', wait=1):
+            return
+        else:
+            raise PostDeletedException("this post has been remove")
 
     def attend_link(self):
 
@@ -148,10 +154,13 @@ class RedditWork(BaseClass):
     def upvote(self):
         try:
             self._baned_account()
+            self._deleted_post()
             self._previously_upvote()
         except ElementClickInterceptedException:
             self._find_popups()
-            self._previously_upvote(wait=120)
+            self.scroll_to_elem('//button[contains(text(), "Comment")]')
+            self.scroll_to_elem('//div[@data-test-id="post-content"]//button[@data-click-id="upvote"')
+            self._previously_upvote(wait=20)
 
     def write_comment(self, text_comment, reddit_username):
 
@@ -193,7 +202,8 @@ class RedditWork(BaseClass):
                 )
 
                 wait = 10
-                time.sleep(2)
+                self.DRIVER.refresh()
+                self.DRIVER.reconnect()
                 logger.debug("Чекаємо підписки!")
             else:
                 logger.debug("Підписка оформлена!!!")

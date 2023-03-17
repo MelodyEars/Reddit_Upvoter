@@ -1,8 +1,10 @@
 import time
 import traceback
 
+from aiogram import types
 from loguru import logger
 
+from Uprove_TG_Bot.reddit_api_selenium.exceptions import PostDeletedException
 from database.vote_tg_bot.models import WorkAccountWithLink
 from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
 
@@ -13,8 +15,11 @@ from Uprove_TG_Bot.PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile, auto_create
 
 
+MESSAGE_IN_TG = {}
+
+
 @logger.catch
-def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int):
+def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int, message: types.Message):
     logger.add(
         auto_create(path_near_exefile("logs"), _type="dir") / "BaseReddit.log",
         format="{time} {level} {message}",
@@ -37,19 +42,26 @@ def start_reddit_work(reddit_link: str, upvote_int: int, comments_int: int):
             comment = list_comments.pop()
 
         try:
-            logger.info(f'Підбираю інформацію для "{reddit_link}"')
+            logger.warning(f'Підбираю інформацію для "{reddit_link}"')
             id_work_link_account_obj, dict_for_browser = collection_info(reddit_link=reddit_link)
 
-            logger.info(f'''Відкриваю браузер для "{reddit_link}" і "{dict_for_browser["reddit_username"]}"''')
+            logger.warning(f'''Відкриваю браузер для "{reddit_link}" і "{dict_for_browser["reddit_username"]}"''')
             open_browser(**dict_for_browser, comment=comment)
 
         except RanOutAccountsForLinkException:
             logger.error("Недостатньо акаунтів, щоб продовжувати робити апвоути.")
             break
 
+        except PostDeletedException:
+            logger.error("Пост був видалиний.")
+
+            break
+
         except Exception:
             db_delete_record_work_account_with_link(id_work_link_account_obj)
-            logger.error(traceback.format_exc())
+            logger.critical(traceback.format_exc())
+        else:
+            MESSAGE_IN_TG[message] = True
 
     end = time.time()
     elapsed_time = end - start

@@ -47,7 +47,6 @@ def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_
 
         api_reddit.client_cookie.save()
         logger.info(f'Successfully completed "{reddit_username}"')
-        time.sleep(0.2)
         api_reddit.DRIVER.quit()
 
 

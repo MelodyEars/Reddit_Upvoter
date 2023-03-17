@@ -45,7 +45,7 @@ async def open_page(browser: Browser, path_cookie: Path):
 async def run_browser(path_cookies):
 	async with async_playwright() as playwright:
 
-		browser = await playwright.chromium.launch(headless=True, channel="chrome")
+		browser = await playwright.chromium.launch(headless=False, channel="chrome")
 
 		print("Працюю...")
 		await asyncio.wait(

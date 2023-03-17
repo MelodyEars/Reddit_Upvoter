@@ -9,10 +9,10 @@ def create_table_posting():
 		autoposting_db.create_tables([Posting, Photo, LinkSubReddit, Category, UrlPost])
 
 
-def db_add_record_post(jobmodel_obj: JobModel, name_category: str, photo_path: Path, link_sub_reddit: str):
+def db_add_record_post(jobmodel_obj: JobModel, name_category: str, photo_path: Path, link_sub_reddit: str, title: str):
 	with autoposting_db.atomic():
 		link_obj, _ = LinkSubReddit.get_or_create(link_SubReddit=link_sub_reddit)
-		photo_obj, _ = Photo.get_or_create(path_photo=photo_path)
+		photo_obj, _ = Photo.get_or_create(path_photo=photo_path, title=title)
 		category_obj, _ = Category.get_or_create(name_category=name_category)
 
 		_, created = Posting.get_or_create(

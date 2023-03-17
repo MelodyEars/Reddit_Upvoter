@@ -43,6 +43,7 @@ class JobModel(BaseModel):
 
 
 class Photo(BaseModel):
+    title = CharField()
     path_photo = CharField()
     is_submitted = BooleanField(default=False)
 
