@@ -2,7 +2,7 @@ from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSub
 
 
 # __________________________  Create  ______________________________
-def create_url(url):
+def db_write_url(url):
     UrlPost.create(url=url)
 
 # ____________________________  UPDATE  _______________________________

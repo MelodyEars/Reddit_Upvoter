@@ -16,7 +16,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from base_exception import ProxyInvalidException
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
 
-# executable_path = r'C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe'
+
 executable_path = None  # default chrome
 
 
@@ -37,7 +37,8 @@ def geolocation(loc_value_JSON: str):
 
 def proxy_data(proxy: dict):
     proxies = {"http": f"http://{proxy['user']}:{proxy['password']}@{proxy['host']}:{proxy['port']}"}
-    url = "https://ipinfo.io/json"
+    url = "http://ipinfo.io/json"
+
     try:
         resp = requests.get(url, proxies=proxies, timeout=10)
 
@@ -208,3 +209,12 @@ class BaseClass:
         self.DRIVER.execute_script(f"location='{url}'; alert();")
         self.DRIVER.switch_to.alert.accept()
         self.DRIVER.reconnect(wait)
+
+    # ________________________ BASE REDDIT ___________________________
+
+    def agree_all_cookies(self):
+        if self.click_element('//button[contains(text(), "Accept all")]', scroll_to=True, wait=2):
+            return True
+        else:
+            return False
+

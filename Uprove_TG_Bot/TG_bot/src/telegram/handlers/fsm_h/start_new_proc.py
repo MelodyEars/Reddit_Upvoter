@@ -34,22 +34,9 @@ async def answer_link(message: Message, state: FSMContext):
 async def answer_vote(message: Message, state: FSMContext):
     try:
         await state.update_data(upvote_int=int(message.text))
-        await state.set_state(RunBotStates.comments_int)
-        await message.reply(MESSAGES['comments_int'])
     except ValueError:
         await state.clear()
         await message.reply(MESSAGES['error_vote_int'],
-                            reply_markup=main_btn)
-
-
-# catch user's upvote integer
-@user_router.message(RunBotStates.comments_int)
-async def answer_comment(message: Message, state: FSMContext):
-    try:
-        await state.update_data(comments_int=int(message.text))
-    except ValueError:
-        await state.clear()
-        await message.reply(MESSAGES['error_comments_int'],
                             reply_markup=main_btn)
         return
 
@@ -58,7 +45,6 @@ async def answer_comment(message: Message, state: FSMContext):
 
     logger.info(struct_data.reddit_link)
     logger.info(struct_data.upvote_int)
-    logger.info(struct_data.comments_int)
 
     run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
 
@@ -68,3 +54,44 @@ async def answer_comment(message: Message, state: FSMContext):
     )
 
     await run_process
+
+
+
+# @user_router.message(RunBotStates.upvote_int)
+# async def answer_vote(message: Message, state: FSMContext):
+#     try:
+#         await state.update_data(upvote_int=int(message.text))
+#         await state.set_state(RunBotStates.comments_int)
+#         await message.reply(MESSAGES['comments_int'])
+#     except ValueError:
+#         await state.clear()
+#         await message.reply(MESSAGES['error_vote_int'],
+#                             reply_markup=main_btn)
+#
+#
+# # catch user's upvote integer
+# @user_router.message(RunBotStates.comments_int)
+# async def answer_comment(message: Message, state: FSMContext):
+#     try:
+#         await state.update_data(comments_int=int(message.text))
+#     except ValueError:
+#         await state.clear()
+#         await message.reply(MESSAGES['error_comments_int'],
+#                             reply_markup=main_btn)
+#         return
+#
+#     data = await state.get_data()
+#     struct_data = StructData(**data)
+#
+#     logger.info(struct_data.reddit_link)
+#     logger.info(struct_data.upvote_int)
+#     logger.info(struct_data.comments_int)
+#
+#     run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
+#
+#     await state.clear()
+#     await message.answer(
+#         f'Браузер запустився для опрацювання вашого посилання {data["reddit_link"]}.', reply_markup=main_btn
+#     )
+#
+#     await run_process

@@ -64,11 +64,11 @@ class RedditAuth(BaseClass):
         time.sleep(random.uniform(1, 3))
 
     def get_path_cookie(self, login):
+        root_folder = work_fs.path_near_exefile()
         path_cookie = work_fs.auto_create(work_fs.path_near_exefile('cookies'), _type='dir') / f'{login}.pkl'
+        db_cookie_path = path_cookie.relative_to(root_folder)
+        print(db_cookie_path)
         cookie = Cookies(driver=self.DRIVER, path_filename=path_cookie)
         cookie.save()
 
-        db_cookie_path = f"cookies/{login}.pkl"
         return db_cookie_path, self.proxy
-
-

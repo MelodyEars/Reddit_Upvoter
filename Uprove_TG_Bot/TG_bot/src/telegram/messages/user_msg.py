@@ -12,7 +12,7 @@ reddit_link = "Надішли посилання на пост Reddit."
 upvote_int = "Введіть кількість upvote."
 error_vote_int = "Помилка! Ваша відповідь не є цілим числом./Введіть кількість upvote.(тільки ціле число)"
 
-comments_int = "Кількість коментарів (якщо потрібно)"
+# comments_int = "Кількість коментарів (якщо потрібно)"
 error_comments_int = "Помилка! Ваша відповідь не є цілим числом./Кількість коментарів (якщо потрібно).(тільки ціле число)"
 
 # ___________________________ message for notification about finsh process ______________________ #
@@ -30,7 +30,7 @@ class Messages(TypedDict):
     error_vote_int: str
     upvote_int: str
     error_comments_int: str
-    comments_int: str
+    # comments_int: str
     start_process: str
     finish_process: str
     deleted_post: str
@@ -43,7 +43,7 @@ MESSAGES: Messages = {
     'error_vote_int': error_vote_int,
     'upvote_int': upvote_int,
     'error_comments_int': error_comments_int,
-    'comments_int': comments_int,
+    # 'comments_int': comments_int,
     'start_process': start_process,
     'finish_process': finish_process,
     'deleted_post': deleted_post,

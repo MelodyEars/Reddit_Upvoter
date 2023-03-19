@@ -1,7 +1,7 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.filters import Text, Command
-from aiogram import F
+# from aiogram import F
 from Uprove_TG_Bot.TG_bot.setup import user_router
 from Uprove_TG_Bot.TG_bot.src.telegram.buttons.user_btn import main_btn, cancel_btn
 from Uprove_TG_Bot.TG_bot.src.telegram.handlers.fsm_h.start_new_proc import RunBotStates

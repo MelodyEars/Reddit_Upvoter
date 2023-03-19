@@ -4,8 +4,8 @@ from work_fs import path_near_exefile
 from database import Posting, JobModel, LinkSubReddit
 
 
-def get_info_from_obj(jobmodel_obj: JobModel):
-	path_cookie = path_near_exefile(jobmodel_obj.cookie_path)
+def get_info_from_obj(jobmodel_obj: JobModel) -> tuple[Path, dict[str:str]]:
+	path_cookie: Path = path_near_exefile(jobmodel_obj.cookie_path)
 
 	proxy = {
 		"host": jobmodel_obj.proxy.host,

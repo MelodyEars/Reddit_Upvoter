@@ -15,7 +15,10 @@ class Cookies:
             with open(self.path_filename, mode="rb") as f:
                 # check all are still valid in near_future
                 try:
-                    exists = all(expiry >= near_future for cookie in pickle.load(f) if (expiry := cookie.get("expiry")))
+                    exists = all(expiry >= near_future
+                                 for cookie in pickle.load(f)
+                                 if (expiry := cookie.get("expiry"))
+                                 )
                 except EOFError:
                     exists = False
                 return exists
