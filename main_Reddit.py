@@ -1,5 +1,6 @@
 import time
 import traceback
+from queue import Queue
 
 from loguru import logger
 
@@ -49,7 +50,8 @@ def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_
             open_browser(**dict_for_browser)  # , comment=comment)
 
         except RanOutAccountsForLinkException:
-            logger.error("Недостатньо акаунтів, щоб продовжувати робити апвоути.")
+            msg = f"Недостатньо акаунтів, щоб продовжувати робити апвоути. {sub}"
+            logger.error(msg)
             break
 
         except PostDeletedException:
