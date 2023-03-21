@@ -3,13 +3,15 @@ import time
 from loguru import logger
 from selenium.common import NoSuchWindowException
 
-from Uprove_TG_Bot.reddit_api_selenium.exceptions import CookieInvalidException
+from BASE_Reddit.exceptions import CookieInvalidException
 from auth_reddit import get_cookies
 from Uprove_TG_Bot.reddit_api_selenium import RedditWork
 from database import db_get_cookie_proxy, Cookie, db_get_account_by_id
 
 
-def getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_account):
+def getter_cookie(dict_proxy, url, path_cookie, name_account, id_account):
+	logger.error(f'Cookie аккаунта "{name_account}" не работают, нужно перезаписать.')
+	account_dict = db_get_account_by_id(id_account)
 	get_cookies(account=account_dict, proxy_for_api=dict_proxy)
 	return work_api(url, dict_proxy, path_cookie, name_account, id_account)
 
@@ -25,9 +27,7 @@ def work_api(url, dict_proxy, path_cookie, name_account, id_account):
 
 		except CookieInvalidException:
 			api_reddit.DRIVER.quit()
-			logger.error(f'Cookie аккаунта "{name_account}" не работают, нужно перезаписать.')
-			account_dict = db_get_account_by_id(id_account)
-			return getter_cookie(account_dict, dict_proxy, url, path_cookie, name_account, id_account)
+			return getter_cookie(dict_proxy, url, path_cookie, name_account, id_account)
 
 		except NoSuchWindowException:
 			logger.warning("Cookie не збереглись. Краще буде закривати браузер через консоль натиснувши ENTER.")

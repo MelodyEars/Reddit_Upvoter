@@ -7,7 +7,8 @@ import undetected_chromedriver as uc
 from loguru import logger
 from requests.exceptions import ProxyError
 
-from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, NoSuchElementException, \
+    ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -126,13 +127,17 @@ class BaseClass:
         else:
             return self.__set_new_download_path(download_path)
 
-    def elem_exists(self, value, by=By.XPATH, wait=30, return_xpath=False):
+    def elem_exists(self, value, by=By.XPATH, wait=30, return_xpath=False, scroll_to=False):
         try:
             ignored_exceptions = (NoSuchElementException, StaleElementReferenceException)
             take_xpath = WebDriverWait(self.DRIVER,
                                        wait,
                                        ignored_exceptions=ignored_exceptions
                                        ).until(EC.presence_of_element_located((by, value)))
+
+            if scroll_to:
+                self.DRIVER.execute_script("arguments[0].scrollIntoView();", take_xpath)
+                time.sleep(random.uniform(.5, 1))
 
             if not return_xpath:
                 exist = True
@@ -145,22 +150,35 @@ class BaseClass:
 
         return exist
 
-    def click_element(self, value, by=By.XPATH, wait=60, move_to=True, scroll_to=False):
+    def _intercepted_click(self, elem_for_click):
+        try:
+            elem_for_click.click()
+        except ElementClickInterceptedException:
+            time.sleep(.5)
+            self._intercepted_click(elem_for_click)
+
+    def click_element(
+            self, value, by=By.XPATH, wait=60, move_to=True, scroll_to=False, intercepted_click=False
+    ) -> bool:
+
+        if scroll_to:
+            self.elem_exists(value=value, by=by, wait=wait, scroll_to=True)
+
         try:
             elem_for_click = WebDriverWait(self.DRIVER, wait).until(EC.element_to_be_clickable((by, value)))
-
-            if scroll_to:
-                self.scroll_to_elem(value)
-                time.sleep(random.uniform(.5, 1))
-
-            if move_to:
-                self.mouse_move_to(elem_for_click)
-                time.sleep(random.uniform(.5, 1))
-
-            elem_for_click.click()
-            return True
         except TimeoutException:
             return False
+
+        if move_to:
+            self.mouse_move_to(elem_for_click)
+            time.sleep(random.uniform(0.3, 0.7))
+
+        if intercepted_click:
+            self._intercepted_click(elem_for_click)
+        else:
+            elem_for_click.click()
+
+        return True
 
     def send_text_by_elem(self, value, text_or_key, by=By.XPATH, scroll_to=False, wait=60):
 
@@ -194,7 +212,6 @@ class BaseClass:
         self.action.move_to_element(element).pause(1).perform()
 
     def scroll_to_elem(self, value):
-
         web_elem = self.elem_exists(value, return_xpath=True)
         self.DRIVER.execute_script("arguments[0].scrollIntoView();", web_elem)
 
@@ -209,12 +226,3 @@ class BaseClass:
         self.DRIVER.execute_script(f"location='{url}'; alert();")
         self.DRIVER.switch_to.alert.accept()
         self.DRIVER.reconnect(wait)
-
-    # ________________________ BASE REDDIT ___________________________
-
-    def agree_all_cookies(self):
-        if self.click_element('//button[contains(text(), "Accept all")]', scroll_to=True, wait=2):
-            return True
-        else:
-            return False
-

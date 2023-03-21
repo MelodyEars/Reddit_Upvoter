@@ -4,7 +4,7 @@ import time
 from work_fs import file_exists
 
 
-class Cookies:
+class BrowserCookie:
     def __init__(self, driver, path_filename):
         self.DRIVER = driver
         self.path_filename = path_filename

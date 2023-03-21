@@ -3,7 +3,7 @@ from pathlib import Path
 import undetected_chromedriver as uc
 from loguru import logger
 
-from Settings_Selenium import Cookies, ProxyExtension
+from Settings_Selenium import BrowserCookie, ProxyExtension
 from auth_reddit import get_cookies
 from database import db_get_account_by_id
 
@@ -69,7 +69,7 @@ def run_driver(profile=None, browser_executable_path=executable_path, user_data_
 def run_reddit(cookie_path: Path, id_profile, dict_proxy):
 	driver: uc.Chrome = run_driver()
 	# self.DRIVER.delete_all_cookies()
-	client_cookie = Cookies(driver=driver, path_filename=cookie_path)
+	client_cookie = BrowserCookie(driver=driver, path_filename=cookie_path)
 
 	if client_cookie.are_valid():
 		client_cookie.preload()

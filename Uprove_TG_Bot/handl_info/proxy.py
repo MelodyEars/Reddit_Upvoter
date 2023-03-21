@@ -29,7 +29,7 @@ def file_get_proxy():
     list_proxies = get_list_file(path_proxies_file)
 
     try:
-        list_line_content = list_proxies.pop(0).replace(" ", "").split(':')
+        list_line_content = list_proxies.pop().replace(" ", "").split(':')
     except IndexError:
         raise ProxyInvalidException('Недостатньо проксі!')
 
@@ -46,3 +46,7 @@ def file_get_proxy():
     except ProxyInvalidException:
         write_list_to_file(path_proxies_file, list_proxies)
         return file_get_proxy()
+
+
+# if __name__ == '__main__':
+#     check_proxy("104.239.104.194", "6418", "spspwufzjq", "2ekek42xu75r")

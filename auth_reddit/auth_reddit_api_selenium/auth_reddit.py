@@ -9,10 +9,11 @@ import work_fs
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
-from Settings_Selenium import BaseClass, Cookies
+from BASE_Reddit.BaseReddit import BaseReddit
+from Settings_Selenium import BrowserCookie
 
 
-class RedditAuth(BaseClass):
+class RedditAuth(BaseReddit):
 
     def __init__(self, proxy: dict):
 
@@ -57,18 +58,19 @@ class RedditAuth(BaseClass):
         self.elem_exists('//body')
         self.click_element('//button[@aria-label="Close"]', wait=3)
         num = 1
-        for i in range(random.randint(1, 3)):
+        for i in range(random.randint(1, 5)):
             num = num + i
             self.scroll_to_elem(f'//div[@data-scroller-first]/following-sibling::div[{num}]')
 
-        time.sleep(random.uniform(1, 3))
+        self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=1)
+        time.sleep(1)
 
     def get_path_cookie(self, login):
         root_folder = work_fs.path_near_exefile()
         path_cookie = work_fs.auto_create(work_fs.path_near_exefile('cookies'), _type='dir') / f'{login}.pkl'
         db_cookie_path = path_cookie.relative_to(root_folder)
         print(db_cookie_path)
-        cookie = Cookies(driver=self.DRIVER, path_filename=path_cookie)
+        cookie = BrowserCookie(driver=self.DRIVER, path_filename=path_cookie)
         cookie.save()
 
         return db_cookie_path, self.proxy

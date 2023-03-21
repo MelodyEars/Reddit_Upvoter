@@ -10,7 +10,7 @@ from database.vote_tg_bot.models import Cookie
 from auth_reddit import get_cookies
 
 from .reddit_actions import RedditWork
-from .exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
+from BASE_Reddit.exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
 
 
 def getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie):
@@ -39,11 +39,6 @@ def work_api(
             # put on upvote
             api_reddit.upvote()
             logger.info("Upvote stay on.")
-
-            # follow model or join to community
-            logger.info("Account is subscribing!")
-            api_reddit.subscribing()
-            logger.info("Subscribed!")
 
         except BanAccountException:
             logger.info(f'Ban: "{reddit_username}"')

@@ -5,7 +5,7 @@ from queue import Queue
 from loguru import logger
 
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
-from Uprove_TG_Bot.reddit_api_selenium.exceptions import PostDeletedException
+from BASE_Reddit.exceptions import PostDeletedException
 from database.vote_tg_bot.models import WorkAccountWithLink
 from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
 
