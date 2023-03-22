@@ -17,9 +17,12 @@ def get_name_model():
 
 
 def pick_up_link_sub_reddit(jobmodel_obj: JobModel, category_obj: Category, photo_obj: Photo):
-    link_sub_objs: list[LinkSubReddit] = db_pick_up_reddit_sub(jobmodel_obj, category_obj, photo_obj)
+    # link_sub_objs: list[LinkSubReddit] = db_pick_up_reddit_sub(jobmodel_obj, category_obj, photo_obj)
 
-    for link_sub_obj in link_sub_objs:
+    # for link_sub_obj in link_sub_objs:
+    while link_sub_objs := db_pick_up_reddit_sub(jobmodel_obj, category_obj, photo_obj):
+        link_sub_obj = link_sub_objs.pop()
+
         logger.warning('Link Sub')
         logger.info(link_sub_obj.link_SubReddit)  # __________________ log link
         # if not link_sub_obj.is_submitted:
@@ -31,9 +34,11 @@ def pick_up_link_sub_reddit(jobmodel_obj: JobModel, category_obj: Category, phot
 
 
 def pick_up_photos(jobmodel_obj: JobModel, category_obj: Category):
-    photos_objs: list[Photo] = db_get_photos(jobmodel_obj, category_obj)
+    # photos_objs: list[Photo] = db_get_photos(jobmodel_obj, category_obj)
 
-    for photo_obj in photos_objs:
+    # for photo_obj in photos_objs:
+    while photos_objs := db_get_photos(jobmodel_obj, category_obj):
+        photo_obj = photos_objs.pop()
         logger.warning('Photo')
         logger.info(photo_obj.path_photo)  # __________________ log photo
         # if not photo_obj.is_submitted:

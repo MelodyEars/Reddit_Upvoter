@@ -8,17 +8,14 @@ def db_write_url(url):
 # ____________________________  UPDATE  _______________________________
 
 
-def db_update_photo_is_work_1(post_obj: Posting):
+def db_update_photo_is_work_1(photo_obj: Photo):
     with autoposting_db:
-        Photo.update(is_submitted=1).where(
-            (Photo.is_submitted == 0) &
-            (Photo.path_photo == post_obj.id_photo.path_photo)
-        ).execute()
+        Photo.update(is_submitted=1).where(Photo.id == photo_obj.id).execute()
 
-        LinkSubReddit.update(is_submitted=1).where(
-            (LinkSubReddit.is_submitted == 0) &
-            (LinkSubReddit.link_SubReddit == post_obj.id_link_sub_reddit.link_SubReddit)
-        ).execute()
+
+def db_update_link_is_work_1(link_obj: LinkSubReddit):
+    with autoposting_db:
+        LinkSubReddit.update(is_submitted=1).where(LinkSubReddit.id == link_obj.id).execute()
 
 
 def db_reset_is_submit_post_0():
@@ -78,6 +75,7 @@ def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_
         )
 
         link_sub_objs = [LinkSubReddit.get_by_id(post.id_link_sub_reddit) for post in post_objs]
+
     return link_sub_objs
 
 
