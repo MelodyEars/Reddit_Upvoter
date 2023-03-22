@@ -102,6 +102,9 @@ class BaseReddit(BaseClass):
 		else:
 			self.click_element('//button[@aria-label="Close"]', wait=1)
 
+	def btn_close_interest(self):
+		self.click_element('//button[@aria-label="Close"]', wait=1, intercepted_click=True)
+
 	def _select_communities(self):
 		self.elem_exists('//button[contains(text(), "Select All")]')
 		count_communities = len(self.DRIVER.find_elements(By.XPATH, '//button[contains(text(), "Select All")]'))
@@ -133,4 +136,4 @@ class BaseReddit(BaseClass):
 
 				return self._select_communities()
 			else:
-				self.click_element('//button[@aria-label="Close"]', wait=1, intercepted_click=True)
+				self.btn_close_interest()

@@ -78,7 +78,7 @@ class CreatePost(BaseReddit):
             self.click_element('//button[@aria-label="Create Post"]')  # click on the +
         except ElementClickInterceptedException:
             logger.error("ElementClickInterceptedException: create post")
-            self.select_interests()
+            self.btn_close_interest()
             self._btn_create_post()
 
     def _btn_send_post(self):
@@ -101,7 +101,7 @@ class CreatePost(BaseReddit):
                 post_timeout = text_from_el.split(" ")[-5:-3]
                 if post_timeout[1] == "minutes":
                     timeout: int = int(post_timeout[0]) * 60
-                elif post_timeout[1] == "seconds":
+                elif post_timeout[1][:-1] == "second":
                     timeout: int = int(post_timeout[0])
                 else:
                     raise WaitingPostingException('Reddit give you a break < 1hour')
@@ -129,7 +129,7 @@ class CreatePost(BaseReddit):
         # attend sub
         self.DRIVER.get(link_sub_reddit)
         self.wait_load_webpage()
-        self.select_interests()
+        self.btn_close_interest()
         # _________________________ nav ________________________
         self._btn_create_post()
         self.click_element('//button[contains(text(), "Link")]')  # select button link
@@ -149,17 +149,18 @@ class CreatePost(BaseReddit):
         url = self.DRIVER.current_url
         self.subscribing()
 
-        self._attend_profile_page()
-
-        # ________________________________ main page ______________________________
-        # on main page press button 'Insights'
-        self.click_element('//button[./span[contains(text(), "Insights")]]')
-
-        # while statistic is not hidden
-        while not self.elem_exists("//div[contains(text(), 'Total Views')]"):
-            time.sleep(3)
-            self.refrash_page()
-            self.click_element('//button[./span[contains(text(), "Insights")]]')
+        #
+        # self._attend_profile_page()
+        #
+        # # ________________________________ main page ______________________________
+        # # on main page press button 'Insights'
+        # self.click_element('//button[./span[contains(text(), "Insights")]]')
+        #
+        # # while statistic is not hidden
+        # while not self.elem_exists("//div[contains(text(), 'Total Views')]"):
+        #     time.sleep(3)
+        #     self.refrash_page()
+        #     self.click_element('//button[./span[contains(text(), "Insights")]]')
 
         logger.info(url)
         return url

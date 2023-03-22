@@ -1,4 +1,4 @@
-from work_fs import data_confirmation, indicate_number
+from work_fs import indicate_number
 
 
 def thread_for_api():

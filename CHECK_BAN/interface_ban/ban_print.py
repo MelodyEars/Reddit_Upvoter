@@ -6,6 +6,7 @@ from work_fs import clear_cmd, path_near_exefile
 from work_fs.color import green_color, cyan_color, blue_color, magenta_color, warning_text
 
 
+
 # __________________________________________ COLOR  _______________________________________________
 def permanent_ban(text):
 	returning_text = Back.RED + Fore.WHITE + str(
@@ -103,6 +104,7 @@ def user_response(cookies_objs, list_selected_cookie_objs: list):
 	is_del_db: bool  # is True then del by number from db
 	user_int: int
 	user_int, command = indicate_number("Вкажи число: ")
+
 	deinit()  # <-color
 	selected_cookie = cookies_objs[user_int]
 	list_selected_cookie_objs.append(selected_cookie)

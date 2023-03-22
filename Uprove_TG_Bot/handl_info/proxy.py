@@ -48,5 +48,5 @@ def file_get_proxy():
         return file_get_proxy()
 
 
-# if __name__ == '__main__':
-#     check_proxy("104.239.104.194", "6418", "spspwufzjq", "2ekek42xu75r")
+if __name__ == '__main__':
+    check_proxy("104.227.86.66", "8000", "Q4j6P2", "tXxxt5")

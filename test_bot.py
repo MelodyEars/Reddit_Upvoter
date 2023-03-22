@@ -1,44 +1,32 @@
-import asyncio
-import time
-import multiprocessing as mp
-from aiogram import Bot, Dispatcher, types
-from aiogram.utils import executor
 from loguru import logger
 
-TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
-CHAT_ID = "487950394"
+from work_fs.PATH import path_near_exefile, move_file_or_dir
+from work_fs.read_file import get_list_file
+from work_fs.write_to_file import write_list_to_file
 
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
-processes = {}
 
-async def on_process_finished(chat_id, process_name):
-    processes.pop(chat_id)
-    message = f"Process '{process_name}' has finished"
-    await bot.send_message(chat_id, message)
+def name_in_file():
+    path_file_names = path_near_exefile("name_photo.txt")
+    list_names = get_list_file(path_file_names)
+    while list_names:
+        list_names = get_list_file(path_file_names)
+        name = list_names.pop()
+        yield name + ".jpg"
+        write_list_to_file(path_file_names, list_names)
 
-@dp.message_handler(commands=['start_process'])
-async def start_process(message: types.Message):
-    chat_id = message.chat.id
-    process_name = message.text.split()[-1]
 
-    if chat_id in processes:
-        await message.reply("You have already started a process")
-        return
-    logger.info('start_process')
-    process = mp.Process(target=long_task, args=(chat_id, process_name))
-    process.start()
-    processes[chat_id] = process
+def main():
+    photos_paths = path_near_exefile("Photo")
+    for old_path in photos_paths.iterdir():
+        logger.info(old_path)
+        for name in name_in_file():
+            logger.info(name)
+            new_path = old_path.parent / name
+            logger.info(new_path)
+            move_file_or_dir(old_path, new_path)
 
-    await message.reply(f"Process '{process_name}' has started")
-
-def long_task(chat_id, process_name):
-    # Simulating a long-running task
-    for i in range(5):
-        time.sleep(1)
-        print(f"{process_name} is running...")
-
-    asyncio.run(on_process_finished(chat_id, process_name))
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    logger.info("Start")
+    main()
+    logger.info("Finish")

@@ -46,7 +46,8 @@ class RedditWork(BaseReddit):
             self.client_cookie.preload()
             logger.info("Attend link!")
             self.DRIVER.get(self.link)
-            self.DRIVER.reconnect()
+            # self.DRIVER.refresh()
+            # self.DRIVER.reconnect()
         else:
             raise CookieInvalidException("Cookie invalid")
 

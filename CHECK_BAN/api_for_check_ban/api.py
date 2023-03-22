@@ -24,48 +24,47 @@ async def check_and_add_ban(page, path_cookie: Path):
 		DICT_ACC_BAN[f"cookies/{path_cookie.name}"] = None
 
 
-async def open_page(context, path_cookie: Path):
-	page = await context.new_page()
+async def open_page(browser, path_cookie: Path):
+	page = await browser.new_page()
 	await stealth_async(page)
-
+		# domcontentloaded
 	url = f"https://www.reddit.com/user/{path_cookie.stem}"
-	await page.goto(url, wait_until="networkidle", timeout=0)
-
-	if await page.locator('xpath=//button[contains(text(), "Accept all")]').is_visible(timeout=10000):
+	await page.goto(url, wait_until="networkidle")
+	# networkidle
+	if await page.locator('xpath=//button[contains(text(), "Accept all")]').is_visible():
 		await page.locator('xpath=//button[contains(text(), "Accept all")]').click()
 		await page.wait_for_load_state("networkidle")
-		await check_and_add_ban(page, path_cookie)
 
-	else:
-		await check_and_add_ban(page, path_cookie)
+	await check_and_add_ban(page, path_cookie)
 
-	# await page.close()
+	await page.close()
 
 
-async def run_page(context, path_cookies):
+async def run_page(browser, path_cookies):
 	print("Працюю...")
-	await asyncio.wait(
-		[asyncio.create_task(open_page(context, path_cookie)) for path_cookie in path_cookies],
-		return_when=asyncio.ALL_COMPLETED,
-	)
+	# await asyncio.wait(
+	# 	[asyncio.create_task(open_page(context, path_cookie)) for path_cookie in path_cookies],
+	# 	return_when=asyncio.ALL_COMPLETED,
+	# )
+	tasks = [asyncio.create_task(open_page(browser, path_cookie)) for path_cookie in path_cookies]
+	await asyncio.gather(*tasks)
 	print("Закінчив працювати.")
 
 
-async def run_browser(path_cookies: list, count_page: int):
+async def run_session(path_cookies: list, count_page: int):
 	async with async_playwright() as playwright:
 		browser = await playwright.chromium.launch(headless=False, executable_path=EXECUTABLE_PATH)
-		await browser.new_page()
 
 		num = count_page
 		next_paths = path_cookies[:num]
 
 		while next_paths:
-			context = await browser.new_context()
-			await run_page(context, next_paths)
+			# context = await browser.new_context()
+			await run_page(browser, next_paths)
 			resent_num = num
 			num += count_page
 			next_paths = path_cookies[resent_num:num]
-			await context.close()
+			# await context.close()
 
 		await browser.close()
 
