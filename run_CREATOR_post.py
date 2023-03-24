@@ -1,8 +1,11 @@
+import time
+
 from multiprocessing import freeze_support
 
 from loguru import logger
 
 import work_fs as wf
+from CHECK_BAN.interface_ban import if_need_action
 from autoposting.api_run import work_browser
 from autoposting.unpack import get_name_model
 
@@ -11,7 +14,7 @@ from database.autoposting_db import db_reset_is_submit_post_0
 
 @logger.catch
 def main():
-	import time
+	# if_del = if_need_action("Видаляти пости ?")
 
 	while True:
 		start_time = time.time()  # get the start time of the program
@@ -30,6 +33,7 @@ def main():
 			time.sleep(10800 - running_time)  # sleep for the remaining time
 
 		# the program will start again after 3 hours due to the while loop
+		# if_del = True
 
 
 if __name__ == '__main__':

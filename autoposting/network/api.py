@@ -9,7 +9,8 @@ from selenium.webdriver.common.by import By
 from BASE_Reddit.BaseReddit import BaseReddit
 from Settings_Selenium import BrowserCookie
 from BASE_Reddit.exceptions import CookieInvalidException
-from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException
+from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
+    NotTrustedMembersException
 
 
 class CreatePost(BaseReddit):
@@ -37,7 +38,6 @@ class CreatePost(BaseReddit):
 
         if self.client_cookie.are_valid():
             self.client_cookie.preload()
-
         else:
             raise CookieInvalidException("Cookie invalid")
 
@@ -63,10 +63,10 @@ class CreatePost(BaseReddit):
     def delete_all_posts(self):
         """DELETE all posts while exists elem"""
         self._attend_profile_page()
-
-        # while self.elem_exists('//div[@data-testid="post-container"]', wait=1, scroll_to=True):
-        while self.elem_exists('//img[@alt="Post image"]', wait=1, scroll_to=True):
-            self.click_element('//button[@aria-label="more options"]',
+        # '//div[@data-scroller-first=""]/following-sibling::div//img[@alt="Post image"]'
+        # '//div[@data-scroller-first=""]//img[@alt="Post image"]'
+        while self.elem_exists('//div[@data-scroller-first]', wait=1, scroll_to=True):
+            self.click_element('//div[@data-scroller-first]//button[@aria-label="more options"]',
                                wait=1, intercepted_click=True)  # click ...(options)
             self.click_element('//button[./span[contains(text(), "delete")]]', wait=5)  # select Delete
             time.sleep(1)
@@ -86,6 +86,10 @@ class CreatePost(BaseReddit):
             time.sleep(1)
             if self.click_element('//footer/button[contains(text(), "Save Draft")]', wait=0.2):
                 return self._btn_send_post()
+
+            elif self.elem_exists('//*[contains(text(), "This community only allows trusted members to post here")]',
+                                  wait=0.2):
+                raise NotTrustedMembersException('This community only allows trusted members to post here')
 
             elif self.elem_exists(
                     '''//*[contains(text(), "Looks like you've been doing that a lot. Take a break for")]''',
@@ -125,13 +129,28 @@ class CreatePost(BaseReddit):
         else:
             input("Неможу запостити обери елемент чому? Та клацни Ентер.")
 
+    def _btn_subscribe(self, wait=1):
+        while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
+            self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
+            time.sleep(1)
+            self.DRIVER.refresh()
+            self.wait_load_webpage()
+
     def create_post(self, title, image_url, link_sub_reddit):
         # attend sub
         self.DRIVER.get(link_sub_reddit)
         self.wait_load_webpage()
         self.btn_close_interest()
+
         # _________________________ nav ________________________
+        self._btn_subscribe()
         self._btn_create_post()
+        self.wait_load_webpage()
+
+        if self.elem_exists('//span[contains(text(), "Your request to ")]', wait=0.2):
+            raise WaitRequestToSubredditException("Requests sent!")
+
+        # if  sent request to sub for posting
         self.click_element('//button[contains(text(), "Link")]')  # select button link
 
         # write title
@@ -147,20 +166,6 @@ class CreatePost(BaseReddit):
         # _____________________________ post _________________________________
         self.wait_load_webpage()
         url = self.DRIVER.current_url
-        self.subscribing()
-
-        #
-        # self._attend_profile_page()
-        #
-        # # ________________________________ main page ______________________________
-        # # on main page press button 'Insights'
-        # self.click_element('//button[./span[contains(text(), "Insights")]]')
-        #
-        # # while statistic is not hidden
-        # while not self.elem_exists("//div[contains(text(), 'Total Views')]"):
-        #     time.sleep(3)
-        #     self.refrash_page()
-        #     self.click_element('//button[./span[contains(text(), "Insights")]]')
 
         logger.info(url)
         return url

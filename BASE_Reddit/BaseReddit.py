@@ -67,7 +67,8 @@ class BaseReddit(BaseClass):
 				time.sleep(2)
 				wait = 1
 				self.DRIVER.refresh()
-				self.DRIVER.reconnect()
+				self.wait_load_webpage()
+
 				logger.debug("Чекаємо підписки!")
 			else:
 				logger.debug("Підписка оформлена!!!")

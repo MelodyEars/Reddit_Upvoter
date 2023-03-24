@@ -7,3 +7,7 @@ class WaitRequestToSubredditException(RedditException):
 
 class WaitingPostingException(RedditException):
 	"""Reddit give you a break <1hour"""
+
+
+class NotTrustedMembersException(RedditException):
+	"""This community only allows trusted members to post here"""

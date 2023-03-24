@@ -30,7 +30,7 @@ def get_list_file(path_to_file) -> list[str]:
 
 def get_str_file(path_to_file) -> str:
     if file_exists(path_to_file):
-        with open(path_to_file, "r") as file:
+        with open(path_to_file, "r", encoding="utf8",) as file:
             content = file.read()
 
         return content

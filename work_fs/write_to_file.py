@@ -25,7 +25,6 @@ def write_list_to_file(filename, list_data):
 def write_line(filename, list_line):
     """Writes line in file. Rewrite all info in the file."""
     with open(filename, "w+", encoding="utf8", errors="ignore") as file:
-
         if isinstance(list_line, list):
             list_line = (line for line in list_line if line.strip())
 
@@ -45,7 +44,7 @@ def adder_list(filename, list_line):
         if list_line:
             if isinstance(list_line, list):
                 list_line = [line for line in list_line if line.strip()]
-                list_line.sort()
+                # list_line.sort()
 
                 file.writelines(list_line)
 

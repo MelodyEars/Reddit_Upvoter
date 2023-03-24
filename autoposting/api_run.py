@@ -1,22 +1,25 @@
+import traceback
 from pathlib import Path
 
 from loguru import logger
+from selenium.common import UnexpectedAlertPresentException
 
 from BASE_Reddit.exceptions import CookieInvalidException
 
 from auth_reddit import get_cookies
 
 from database import JobModel, Account
-from database.autoposting_db import db_write_url
+from database.autoposting_db import db_add_url, db_delete_executed_post
 
 from work_fs.PATH import path_near_exefile, move_file_or_dir
-from work_fs.write_to_file import write_line
+from work_fs.write_to_file import adder_list
 
 from . import yield_up_data_from_db
 
 from .network import CreatePost
 from .handl_obj import get_info_from_obj, get_info_about_photo
-from .network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException
+from .network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
+	NotTrustedMembersException
 
 
 def getter_cookie(jobmodel_obj: JobModel, proxy_for_api: dict, model_cookie_path: Path):
@@ -71,13 +74,32 @@ def work_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 				reddit_post_url = BROWSER.get_post_url()
 
 				# _______________________________  to db  ____________________
-				db_write_url(reddit_post_url)
-				write_line(path_near_exefile("Post_url.txt"), reddit_post_url)
+				db_add_url(reddit_post_url)
+				adder_list(path_near_exefile("Post_url.txt"), reddit_post_url)
+
+				# delete executing post
+				logger.info("Post will delete from db.")
+				db_delete_executed_post(post_obj)
+				logger.info("Post did deleted from db.")
+
+			except WaitingPostingException:
+				logger.error('Reddit give you a break < 1hour')
+				# without continue because this post is posted
+				break
+
+			except NotTrustedMembersException:
+				logger.error("NotTrustedMembersException -> This community only allows trusted members to post here.")
 
 			except WaitRequestToSubredditException:
 				logger.error("WaitRequestToSubredditException -> Wait for offer posting from subreddit.")
-			except WaitingPostingException:
-				logger.error('Reddit give you a break < 1hour')
+
+			except UnexpectedAlertPresentException:
+				logger.error('UnexpectedAlertPresentException -> refresh browser')
+				# BROWSER.close_alert(link_sub_reddit)
+				return work_browser(jobmodel_obj, cookie_path, proxy_for_api)
+
+			except Exception:
+				logger.error(traceback.format_exc())
 
 		BROWSER.client_cookie.save()
 		BROWSER.DRIVER.quit()

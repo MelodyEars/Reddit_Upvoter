@@ -1,31 +1,32 @@
+
 from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSubReddit, Photo, UrlPost
 
 
 # __________________________  Create  ______________________________
-def db_write_url(url):
-    UrlPost.create(url=url)
+def db_add_url(url):
+    with autoposting_db:
+        UrlPost.create(url=url)
+
 
 # ____________________________  UPDATE  _______________________________
-
-
 def db_update_photo_is_work_1(photo_obj: Photo):
     with autoposting_db:
-        Photo.update(is_submitted=1).where(Photo.id == photo_obj.id).execute()
+        Photo.update(is_submitted=True).where(Photo.id == photo_obj.id).execute()
 
 
 def db_update_link_is_work_1(link_obj: LinkSubReddit):
     with autoposting_db:
-        LinkSubReddit.update(is_submitted=1).where(LinkSubReddit.id == link_obj.id).execute()
+        LinkSubReddit.update(is_submitted=True).where(LinkSubReddit.id == link_obj.id).execute()
 
 
 def db_reset_is_submit_post_0():
     with autoposting_db:
-        LinkSubReddit.update(is_submitted=0).where(LinkSubReddit.is_submitted == 1).execute()
-        Photo.update(is_submitted=0).where(Photo.is_submitted == 1).execute()
+        LinkSubReddit.update(is_submitted=False).where(LinkSubReddit.is_submitted == True).execute()
+        Photo.update(is_submitted=False).where(Photo.is_submitted == True).execute()
 
 
 # _______________________________ get __________________________________
-def db_get_gen_categories(jobmodel_obj: JobModel) -> list[Posting.id_category]:
+def db_get_gen_categories(jobmodel_obj: JobModel):
     with autoposting_db:
         post_objs = list(
             Posting
@@ -33,7 +34,7 @@ def db_get_gen_categories(jobmodel_obj: JobModel) -> list[Posting.id_category]:
             .where(Posting.id_jobmodel == jobmodel_obj)
         )
 
-        category_objs = [Category.get_by_id(post.id_category) for post in post_objs]
+        category_objs = (Category.get_by_id(post.id_category) for post in post_objs)
 
     return category_objs
 
@@ -47,9 +48,11 @@ def db_get_photos(jobmodel_obj: JobModel, category_obj: Category) -> list[Photo 
             .where(
                 (Posting.id_jobmodel == jobmodel_obj.id) &
                 (Posting.id_category == category_obj.id) &
-                (Photo.is_submitted == False) &
-                (LinkSubReddit.is_submitted == False)
-            ))
+                (Photo.is_submitted != True) &
+                (LinkSubReddit.is_submitted != True)
+            )
+            .distinct()
+        )
 
         photos_objs = [Photo.get_by_id(post.id_photo) for post in post_objs]
 
@@ -59,7 +62,7 @@ def db_get_photos(jobmodel_obj: JobModel, category_obj: Category) -> list[Photo 
 # def db_generator_photos(jobmodel_obj: JobModel, category_obj: Category):
 # 	while photos_objs := db_get_photos(jobmodel_obj, category_obj):
 
-def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_obj: Photo):
+def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_obj: Photo) -> list[LinkSubReddit]:
     with autoposting_db:
         post_objs: list[Posting] = (
             Posting.select()
@@ -69,9 +72,10 @@ def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_
                 (Posting.id_jobmodel == jobmodel_obj) &
                 (Posting.id_category == category_obj) &
                 (Posting.id_photo == photo_obj) &
-                (Photo.is_submitted == False) &
-                (LinkSubReddit.is_submitted == False)
+                (Photo.is_submitted != True) &
+                (LinkSubReddit.is_submitted != True)
             )
+            .distinct()
         )
 
         link_sub_objs = [LinkSubReddit.get_by_id(post.id_link_sub_reddit) for post in post_objs]
@@ -92,8 +96,8 @@ def db_get_post_for_posting(
                 (Posting.id_category == category_obj) &
                 (Posting.id_photo == photo_obj) &
                 (Posting.id_link_sub_reddit == link_sub_obj) &
-                (Photo.is_submitted == False) &
-                (LinkSubReddit.is_submitted == False)
+                (Photo.is_submitted != True) &
+                (LinkSubReddit.is_submitted != True)
             )
         )
 

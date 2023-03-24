@@ -3,7 +3,7 @@ from multiprocessing import freeze_support
 from loguru import logger
 
 from CHECK_BAN.api_for_check_ban import check_ban
-from CHECK_BAN.interface_ban import user_response, thread_for_api, if_need_check
+from CHECK_BAN.interface_ban import user_response, thread_for_api, if_need_action
 from CHECK_BAN.api_for_check_ban import for_user_open_browser
 from CHECK_BAN.ADD_new_model import create_model
 from CHECK_BAN.DELETE import delete_account
@@ -17,11 +17,11 @@ from work_fs import path_near_exefile, auto_create
 def main():
     list_selected_cookie_objs = []
 
-    answer = if_need_check()
+    answer = if_need_action()
     if answer:  # print interface
-        count_page = thread_for_api()  # interface
+        # count_page = thread_for_api()  # interface.
         list_path_cookies = list(path_near_exefile("cookies").glob("*"))  # in folder
-        DICT_ACC_BAN = check_ban(list_path_cookies, count_page)  # api playwright
+        DICT_ACC_BAN = check_ban(list_path_cookies)  # api playwright
         db_ban_add(DICT_ACC_BAN)  # update db
 
     cookies_objs = list(db_get_cookie_objs())
