@@ -14,12 +14,13 @@ from database.autoposting_db import db_add_url, db_delete_executed_post
 from work_fs.PATH import path_near_exefile, move_file_or_dir
 from work_fs.write_to_file import adder_list
 
-from . import yield_up_data_from_db
-
-from .network import CreatePost
-from .handl_obj import get_info_from_obj, get_info_about_photo
-from .network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
+from autoposting.unpack import yield_up_data_from_db
+from autoposting.handl_obj import get_info_from_obj, get_info_about_photo
+from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
 	NotTrustedMembersException
+
+from .api import CreatePost
+# TODO if_first_run передавать в функцию, for skip dell all posts, replacing dell the lost post
 
 
 def getter_cookie(jobmodel_obj: JobModel, proxy_for_api: dict, model_cookie_path: Path):
@@ -30,18 +31,28 @@ def getter_cookie(jobmodel_obj: JobModel, proxy_for_api: dict, model_cookie_path
 		"login": account.login,
 		"password": account.password,
 	}
+
 	# model_cookie_path.unlink()
 	cookie_path, _ = get_cookies(account=account_dict, proxy_for_api=proxy_for_api)
 	old_path: Path = path_near_exefile(cookie_path)
 	move_file_or_dir(old_path, model_cookie_path)
 
 	logger.info("Refrash browser!")
-	return work_browser(jobmodel_obj, model_cookie_path, proxy_for_api)
+	return run_browser(jobmodel_obj, model_cookie_path, proxy_for_api)
 
 
-def work_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
+def delete_post(BROWSER: CreatePost):
+	logger.info("Delete last post.")
+	BROWSER.delete_last_post()
+	db_SUBLINK_reset_is_submitted()
+	# TODO db update 1->0
+	#  delete from Posting
+
+
+def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 	if cookie_path is None:
 		cookie_path, proxy_for_api = get_info_from_obj(jobmodel_obj)
+
 	logger.critical(cookie_path)
 
 	logger.info('Run browser!')
@@ -53,8 +64,9 @@ def work_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 			BROWSER.DRIVER.quit()
 			return getter_cookie(jobmodel_obj, proxy_for_api, cookie_path)
 
-		logger.info("Delete all profile's posts.")
-		BROWSER.delete_all_posts()
+		# logger.info("Delete all profile's posts.")
+		# BROWSER.delete_all_posts()
+		delete_post(BROWSER)
 
 		for post_obj in yield_up_data_from_db(jobmodel_obj):
 			try:
@@ -96,7 +108,7 @@ def work_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 			except UnexpectedAlertPresentException:
 				logger.error('UnexpectedAlertPresentException -> refresh browser')
 				# BROWSER.close_alert(link_sub_reddit)
-				return work_browser(jobmodel_obj, cookie_path, proxy_for_api)
+				return run_browser(jobmodel_obj, cookie_path, proxy_for_api)
 
 			except Exception:
 				logger.error(traceback.format_exc())
@@ -104,5 +116,3 @@ def work_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 		BROWSER.client_cookie.save()
 		BROWSER.DRIVER.quit()
 		logger.warning("Close browser!")
-
-

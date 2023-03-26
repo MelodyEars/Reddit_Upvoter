@@ -19,9 +19,13 @@ def db_update_link_is_work_1(link_obj: LinkSubReddit):
         LinkSubReddit.update(is_submitted=True).where(LinkSubReddit.id == link_obj.id).execute()
 
 
-def db_reset_is_submit_post_0():
+def db_SUBLINK_reset_is_submitted():
     with autoposting_db:
         LinkSubReddit.update(is_submitted=False).where(LinkSubReddit.is_submitted == True).execute()
+
+
+def db_PHOTO_reset_is_submitted():
+    with autoposting_db:
         Photo.update(is_submitted=False).where(Photo.is_submitted == True).execute()
 
 

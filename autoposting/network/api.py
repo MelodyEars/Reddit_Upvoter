@@ -73,6 +73,15 @@ class CreatePost(BaseReddit):
             self.click_element('//section/footer/button[contains(text(), "Delete post")]', wait=5)  # confirm delete
             time.sleep(2)
 
+    def delete_last_post(self):
+
+        self.click_element('//button[@aria-label="more options"]',
+                           wait=1, intercepted_click=True)  # click ...(options)
+        self.click_element('//button[./span[contains(text(), "delete")]]', wait=5)  # select Delete
+        time.sleep(1)
+        self.click_element('//section/footer/button[contains(text(), "Delete post")]', wait=5)  # confirm delete
+        time.sleep(2)
+
     def _btn_create_post(self):
         try:
             self.click_element('//button[@aria-label="Create Post"]')  # click on the +
