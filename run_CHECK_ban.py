@@ -3,7 +3,7 @@ from multiprocessing import freeze_support
 from loguru import logger
 
 from CHECK_BAN.api_for_check_ban import check_ban
-from CHECK_BAN.interface_ban import user_response, thread_for_api, if_need_action
+from CHECK_BAN.interface_ban import user_response, if_need_action
 from CHECK_BAN.api_for_check_ban import for_user_open_browser
 from CHECK_BAN.ADD_new_model import create_model
 from CHECK_BAN.DELETE import delete_account

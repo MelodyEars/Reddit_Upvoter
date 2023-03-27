@@ -1,11 +1,9 @@
+from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSubReddit, Photo
 
-from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSubReddit, Photo, UrlPost
 
-
-# __________________________  Create  ______________________________
-def db_add_url(url):
+def db_add_url_post(post_obj: Posting, url: str):
     with autoposting_db:
-        UrlPost.create(url=url)
+        Posting.update(url=url).where(Posting.id == post_obj.id).execute()
 
 
 # ____________________________  UPDATE  _______________________________
@@ -19,25 +17,38 @@ def db_update_link_is_work_1(link_obj: LinkSubReddit):
         LinkSubReddit.update(is_submitted=True).where(LinkSubReddit.id == link_obj.id).execute()
 
 
-def db_SUBLINK_reset_is_submitted():
+def db_SUBLINK_reset_is_submitted(link_id: LinkSubReddit.id):
     with autoposting_db:
-        LinkSubReddit.update(is_submitted=False).where(LinkSubReddit.is_submitted == True).execute()
+        LinkSubReddit.update(is_submitted=False).where(LinkSubReddit.id == link_id).execute()
 
 
-def db_PHOTO_reset_is_submitted():
+def db_PHOTO_reset_is_submitted(photo_id: Photo.id):
     with autoposting_db:
-        Photo.update(is_submitted=False).where(Photo.is_submitted == True).execute()
+        Photo.update(is_submitted=False).where(Photo.id == photo_id).execute()
 
 
 # _______________________________ get __________________________________
+def db_get_list_post_obj_sort_by_date(jobmodel_obj: JobModel):
+    with autoposting_db:
+        post_objs = list(
+            Posting
+            .select()
+            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.url.is_null(False)))
+            .order_by(Posting.date_posted.asc())
+        )
+
+    # sort older -> younger
+    return post_objs
+
+
 def db_get_gen_categories(jobmodel_obj: JobModel):
     with autoposting_db:
         post_objs = list(
             Posting
             .select()
-            .where(Posting.id_jobmodel == jobmodel_obj)
+            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.url.is_null(True)))
+            .order_by(Posting.date_posted.asc())
         )
-
         category_objs = (Category.get_by_id(post.id_category) for post in post_objs)
 
     return category_objs
@@ -62,9 +73,6 @@ def db_get_photos(jobmodel_obj: JobModel, category_obj: Category) -> list[Photo 
 
     return photos_objs
 
-
-# def db_generator_photos(jobmodel_obj: JobModel, category_obj: Category):
-# 	while photos_objs := db_get_photos(jobmodel_obj, category_obj):
 
 def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_obj: Photo) -> list[LinkSubReddit]:
     with autoposting_db:
@@ -135,4 +143,3 @@ def db_delete_executed_post(post_obj: Posting):
     post_obj.delete_instance()
 
     return db_delete_check_if_not_exists_records(id_photo=id_photo, id_link_sub_reddit=id_link)
-

@@ -14,7 +14,7 @@ def main():
 
 
 if __name__ == '__main__':
-	IF_RUN_FIRST = if_need_action("Видяляти?")
+	# IF_RUN_FIRST = if_need_action("Видяляти?")
 
 	freeze_support()
 

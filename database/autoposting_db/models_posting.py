@@ -1,3 +1,5 @@
+import datetime
+
 from peewee import *
 
 from SETTINGS import set_database
@@ -71,7 +73,7 @@ class Posting(BaseModel):
     id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET NULL')
     id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET NULL')
     id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET NULL')
-    date_posted = DateTimeField()
+    date_posted = DateTimeField(default=datetime.datetime.now())
     url = CharField(null=True, default=None)
 
     class Meta:

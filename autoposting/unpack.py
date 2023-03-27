@@ -26,6 +26,7 @@ def pick_up_link_sub_reddit(jobmodel_obj: JobModel, category_obj: Category, phot
 
         logger.warning('Link Sub')
         logger.info(link_sub_obj.link_SubReddit)  # __________________ log link
+
         # if not link_sub_obj.is_submitted:
         list_post_obj: list[Posting] = db_get_post_for_posting(jobmodel_obj, category_obj, photo_obj, link_sub_obj)
 
