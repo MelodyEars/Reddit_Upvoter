@@ -9,8 +9,8 @@ from BASE_Reddit.exceptions import CookieInvalidException
 from auth_reddit import get_cookies
 
 from database import JobModel, Account, Posting
-from database.autoposting_db import db_delete_executed_post, db_add_url_post, db_get_list_post_obj_sort_by_date, \
-	db_SUBLINK_reset_is_submitted, db_PHOTO_reset_is_submitted
+from database.autoposting_db import db_delete_executed_post, db_add_url_to_upvoter, db_get_list_post_obj_sort_by_date, \
+	db_SUBLINK_reset_is_submitted, db_PHOTO_reset_is_submitted, db_add_date_post
 
 from work_fs.PATH import path_near_exefile, move_file_or_dir
 from work_fs.write_to_file import adder_list
@@ -108,7 +108,8 @@ def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 				reddit_post_url = BROWSER.get_post_url()
 
 				# _______________________________  to db  ____________________
-				db_add_url_post(post_obj, reddit_post_url)
+				db_add_url_to_upvoter(reddit_post_url)
+				db_add_date_post(post_obj.id)  # date posted
 				adder_list(path_near_exefile("Post_url.txt"), reddit_post_url)
 
 			except WaitingPostingException:

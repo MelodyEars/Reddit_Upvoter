@@ -73,8 +73,14 @@ class Posting(BaseModel):
     id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET NULL')
     id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET NULL')
     id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET NULL')
-    date_posted = DateTimeField(default=datetime.datetime.now())
-    url = CharField(null=True, default=None)
+    date_posted = DateTimeField(null=True, default=None)
 
     class Meta:
         db_table = 'posting'
+
+
+class UrlPost(BaseModel):
+    url = CharField()
+
+    class Meta:
+        db_table = 'urls post'

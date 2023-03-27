@@ -1,9 +1,12 @@
-from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSubReddit, Photo
+import datetime
+
+from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSubReddit, Photo, UrlPost
 
 
-def db_add_url_post(post_obj: Posting, url: str):
+# __________________________  Create  ______________________________
+def db_add_url_to_upvoter(url):
     with autoposting_db:
-        Posting.update(url=url).where(Posting.id == post_obj.id).execute()
+        UrlPost.create(url=url)
 
 
 # ____________________________  UPDATE  _______________________________
@@ -27,13 +30,18 @@ def db_PHOTO_reset_is_submitted(photo_id: Photo.id):
         Photo.update(is_submitted=False).where(Photo.id == photo_id).execute()
 
 
+def db_add_date_post(post_id: Posting.id):
+    with autoposting_db:
+        Posting.update(date_posted=datetime.datetime.now()).where(Posting.id == post_id).execute()
+
+
 # _______________________________ get __________________________________
 def db_get_list_post_obj_sort_by_date(jobmodel_obj: JobModel):
     with autoposting_db:
         post_objs = list(
             Posting
             .select()
-            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.url.is_null(False)))
+            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.date_posted.is_null(False)))
             .order_by(Posting.date_posted.asc())
         )
 
@@ -46,7 +54,7 @@ def db_get_gen_categories(jobmodel_obj: JobModel):
         post_objs = list(
             Posting
             .select()
-            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.url.is_null(True)))
+            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.date_posted.is_null(True)))
             .order_by(Posting.date_posted.asc())
         )
         category_objs = (Category.get_by_id(post.id_category) for post in post_objs)
