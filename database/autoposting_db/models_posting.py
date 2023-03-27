@@ -73,7 +73,7 @@ class Posting(BaseModel):
     id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET NULL')
     id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET NULL')
     id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET NULL')
-    date_posted = DateTimeField(null=True, default=None)
+    date_posted = DateTimeField(null=True, default="2023, 3, 27, 15, 30, 45, 832000")
 
     class Meta:
         db_table = 'posting'
