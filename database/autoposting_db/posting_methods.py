@@ -4,9 +4,10 @@ from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSub
 
 
 # __________________________  Create  ______________________________
-def db_add_url_to_upvoter(url):
+def db_add_url_to_upvoter(post_obj, url):
     with autoposting_db:
-        UrlPost.create(url=url)
+        url_obj = UrlPost.create(url=url)
+        Posting.update(id_url=url_obj).where(Posting.id == post_obj.id).execute()
 
 
 # ____________________________  UPDATE  _______________________________
@@ -41,8 +42,11 @@ def db_get_list_post_obj_sort_by_date(jobmodel_obj: JobModel):
         post_objs = list(
             Posting
             .select()
-            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.date_posted.is_null(False)))
-            .order_by(Posting.date_posted.asc())
+            .where(
+                (Posting.id_jobmodel == jobmodel_obj) &
+                (Posting.id_url.is_null(False))
+            )
+            .order_by(Posting.date_posted.desc())
         )
 
     # sort older -> younger
@@ -54,7 +58,10 @@ def db_get_gen_categories(jobmodel_obj: JobModel):
         post_objs = list(
             Posting
             .select()
-            .where((Posting.id_jobmodel == jobmodel_obj) & (Posting.date_posted.is_null(True)))
+            .where(
+                (Posting.id_jobmodel == jobmodel_obj) &
+                (Posting.id_url.is_null(True))
+            )
             .order_by(Posting.date_posted.asc())
         )
         category_objs = (Category.get_by_id(post.id_category) for post in post_objs)
@@ -151,3 +158,14 @@ def db_delete_executed_post(post_obj: Posting):
     post_obj.delete_instance()
 
     return db_delete_check_if_not_exists_records(id_photo=id_photo, id_link_sub_reddit=id_link)
+
+
+def db_del_post_banned_sub(link_sub_reddit: str):
+    with autoposting_db.atomic():
+        link_obj: LinkSubReddit = list(LinkSubReddit.select().where(LinkSubReddit.link_SubReddit == link_sub_reddit))[0]
+        post_objs: list[Posting] = Posting.select().where(Posting.id_link_sub_reddit == link_obj)
+        for post_obj in post_objs:
+            post_obj.delete_instance()
+
+        link_obj.delete_instance()
+

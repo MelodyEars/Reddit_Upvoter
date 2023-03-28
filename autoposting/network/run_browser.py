@@ -10,7 +10,7 @@ from auth_reddit import get_cookies
 
 from database import JobModel, Account, Posting
 from database.autoposting_db import db_delete_executed_post, db_add_url_to_upvoter, db_get_list_post_obj_sort_by_date, \
-	db_SUBLINK_reset_is_submitted, db_PHOTO_reset_is_submitted, db_add_date_post
+	db_SUBLINK_reset_is_submitted, db_PHOTO_reset_is_submitted, db_add_date_post, db_del_post_banned_sub
 
 from work_fs.PATH import path_near_exefile, move_file_or_dir
 from work_fs.write_to_file import adder_list
@@ -18,7 +18,7 @@ from work_fs.write_to_file import adder_list
 from autoposting.unpack import yield_up_data_from_db
 from autoposting.handl_obj import get_info_from_obj, get_info_about_photo
 from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
-	NotTrustedMembersException
+	NotTrustedMembersException, SubredditWasBannedException
 
 from .api import CreatePost
 
@@ -49,10 +49,10 @@ def delete_post(BROWSER: CreatePost, jobmodel_obj: JobModel):
 	if list_post_obj:
 		# get last post_obj
 		older_post_obj: Posting = list_post_obj.pop()
-		logger.info(f"Older post: {older_post_obj.url}, {older_post_obj.date_posted}")
+		logger.info(f"Older post: {older_post_obj.id_url.url}, {older_post_obj.date_posted}")
 		print(older_post_obj.date_posted)
 		logger.info("del last post by date in browser.")
-		BROWSER.delete_last_post(older_post_obj.url)  # add by post_obj.url
+		BROWSER.delete_last_post(older_post_obj.id_url.url)  # add by post_obj.url
 		logger.info("deleted last post by date in browser.")
 
 		# db update photo and subreddit link 1->0
@@ -108,7 +108,7 @@ def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 				reddit_post_url = BROWSER.get_post_url()
 
 				# _______________________________  to db  ____________________
-				db_add_url_to_upvoter(reddit_post_url)
+				db_add_url_to_upvoter(post_obj, reddit_post_url)
 				db_add_date_post(post_obj.id)  # date posted
 				adder_list(path_near_exefile("Post_url.txt"), reddit_post_url)
 
@@ -119,6 +119,11 @@ def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 
 			except NotTrustedMembersException:
 				logger.error("NotTrustedMembersException -> This community only allows trusted members to post here.")
+				db_del_post_banned_sub(link_sub_reddit)
+
+			except SubredditWasBannedException:
+				logger.error("SubredditWasBannedException -> This subreddit was banned due to being unmoderated.")
+				db_del_post_banned_sub(link_sub_reddit)
 
 			except WaitRequestToSubredditException:
 				logger.error("WaitRequestToSubredditException -> Wait for offer posting from subreddit.")

@@ -68,19 +68,21 @@ class Category(BaseModel):
         db_table = 'categories'
 
 
-class Posting(BaseModel):
-    id_jobmodel = ForeignKeyField(JobModel, backref='job_models', null=True, on_delete='SET NULL')
-    id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET NULL')
-    id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET NULL')
-    id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET NULL')
-    date_posted = DateTimeField(null=True, default="2023, 3, 27, 15, 30, 45, 832000")
-
-    class Meta:
-        db_table = 'posting'
-
-
 class UrlPost(BaseModel):
     url = CharField()
 
     class Meta:
         db_table = 'urls post'
+
+
+class Posting(BaseModel):
+    id_jobmodel = ForeignKeyField(JobModel, backref='job_models', null=True, on_delete='SET NULL')
+    id_link_sub_reddit = ForeignKeyField(LinkSubReddit, backref='links_sub_reddit', null=True, on_delete='SET NULL')
+    id_photo = ForeignKeyField(Photo, backref='photos', null=True, on_delete='SET NULL')
+    id_category = ForeignKeyField(Category, backref='categories', null=True, on_delete='SET NULL')
+    date_posted = DateTimeField(null=True)
+    id_url = ForeignKeyField(UrlPost, null=True, default=None, backref='urls post', on_delete='SET NULL')
+
+    class Meta:
+        db_table = 'posting'
+

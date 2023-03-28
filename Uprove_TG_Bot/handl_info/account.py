@@ -7,7 +7,7 @@ def get_account_file():
     path_account_file = path_near_exefile('accounts.txt')
 
     while list_accounts := get_list_file(path_account_file):
-        account_line = list_accounts.pop()
+        account_line = list_accounts.pop(-1)
         list_line_content = account_line.replace(" ", "").split(':')
 
         logger.info(list_line_content)

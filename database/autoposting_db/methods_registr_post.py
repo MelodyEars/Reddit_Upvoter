@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 
 from .models_posting import autoposting_db, Posting, JobModel, Category, LinkSubReddit, Photo, UrlPost
@@ -16,8 +17,10 @@ def db_add_record_post(jobmodel_obj: JobModel, name_category: str, photo_path: P
 		category_obj, _ = Category.get_or_create(name_category=name_category)
 
 		_, created = Posting.get_or_create(
-			id_jobmodel=jobmodel_obj, id_link_sub_reddit=link_obj, id_photo=photo_obj, id_category=category_obj
+			id_jobmodel=jobmodel_obj, id_link_sub_reddit=link_obj, id_photo=photo_obj,
+			id_category=category_obj, date_posted=datetime.datetime(2023, 3, 27, 15, 30, 45, 832000)
 		)
+
 		return created
 
 
@@ -26,3 +29,4 @@ def db_grab_model_obj() -> list[JobModel]:
 	with autoposting_db.connection_context():
 		query = JobModel.select()
 		return list(query)
+

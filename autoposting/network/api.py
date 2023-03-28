@@ -10,7 +10,7 @@ from BASE_Reddit.BaseReddit import BaseReddit
 from Settings_Selenium import BrowserCookie
 from BASE_Reddit.exceptions import CookieInvalidException
 from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
-    NotTrustedMembersException
+    NotTrustedMembersException, SubredditWasBannedException
 
 
 class CreatePost(BaseReddit):
@@ -76,15 +76,18 @@ class CreatePost(BaseReddit):
     def delete_last_post(self, url: str):
         self.DRIVER.get(url)
         self.wait_load_webpage()
-        self.select_interests()
+        self.btn_close_interest()
+        # self.scroll_to_elem('//div[./div[./a[@target="_blank"]/img]]')
+        self.scroll_to_elem('//button[contains(text(), "Community options")]')
+        if self.click_element('//button[@aria-label="more options"]',
+                           wait=1, intercepted_click=True):  # click ...(options)
 
-        self.click_element('//button[@aria-label="more options"]',
-                           wait=1, intercepted_click=True)  # click ...(options)
-
-        self.click_element('//button[./span[contains(text(), "delete")]]', wait=5)  # select Delete
-        time.sleep(1)
-        self.click_element('//section/footer/button[contains(text(), "Delete post")]', wait=5)  # confirm delete
-        time.sleep(2)
+            self.click_element('//button[./span[contains(text(), "delete")]]', wait=5)  # select Delete
+            time.sleep(1)
+            self.click_element('//section/footer/button[contains(text(), "Delete post")]', wait=5)  # confirm delete
+            time.sleep(2)
+        else:
+            raise Exception("Not scroll to delete last elem")
 
     def _btn_create_post(self):
         try:
@@ -117,12 +120,12 @@ class CreatePost(BaseReddit):
                 ).text
                 post_timeout = text_from_el.split(" ")[-5:-3]
                 if post_timeout[1] == "minutes":
-                    timeout: int = int(post_timeout[0]) * 60
+                    timeout: int = int(post_timeout[0]) * 60 + 60
                 elif post_timeout[1][:-1] == "second":
-                    timeout: int = int(post_timeout[0])
+                    timeout: int = int(post_timeout[0]) + 30
                 else:
                     raise WaitingPostingException('Reddit give you a break < 1hour')
-
+                logger.info(f"Pause before post: {timeout}")
                 time.sleep(timeout)  # break
                 return self._btn_send_post()
 
@@ -133,7 +136,7 @@ class CreatePost(BaseReddit):
                 self.click_element('//button[contains(text(), "Apply")]')  # btn apply
                 return self._btn_send_post()
 
-            elif self.click_element('//button[contains(text(), "Send Request")]', wait=0.2):
+            elif self.elem_exists('//button[contains(text(), "Send Request")]', wait=0.2):
                 raise WaitRequestToSubredditException("Wait for offer posting from subreddit.")
 
             else:
@@ -155,6 +158,11 @@ class CreatePost(BaseReddit):
         self.wait_load_webpage()
         self.btn_close_interest()
 
+        if self.elem_exists('//*[contains(text(), "This subreddit was banned")]', wait=0.2):
+            raise SubredditWasBannedException("This subreddit was banned due to being unmoderated.")
+
+        self.btn_close_interest()
+
         # _________________________ nav ________________________
         self._btn_subscribe()
         self._btn_create_post()
@@ -164,7 +172,8 @@ class CreatePost(BaseReddit):
             raise WaitRequestToSubredditException("Requests sent!")
 
         # if  sent request to sub for posting
-        self.click_element('//button[contains(text(), "Link")]')  # select button link
+        if not self.click_element('//button[contains(text(), "Link")]'):  # select button link
+            self.create_post(title, image_url, link_sub_reddit)
 
         # write title
         self.send_text_by_elem('//textarea[@placeholder="Title"]', title)

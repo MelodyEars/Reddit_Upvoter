@@ -123,7 +123,7 @@ class BaseReddit(BaseClass):
 		logger.info("Select interests!")
 		if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
 			num = 0
-			if random.randint(0, 3) <= 2:
+			if random.randint(0, 4) <= 2:
 				for _ in range(random.randint(3, 5)):
 					num_selected = random.randint(1, 3)
 					num += num_selected

@@ -1,5 +1,5 @@
 
-mine_project = False
+mine_project = True
 
 # ____________________________________________________________________ DATABASE
 # set up db_tg_bot
