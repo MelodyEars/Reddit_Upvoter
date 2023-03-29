@@ -62,7 +62,6 @@ def db_get_gen_categories(jobmodel_obj: JobModel):
                 (Posting.id_jobmodel == jobmodel_obj) &
                 (Posting.id_url.is_null(True))
             )
-            .order_by(Posting.date_posted.asc())
         )
         category_objs = (Category.get_by_id(post.id_category) for post in post_objs)
 
@@ -78,6 +77,7 @@ def db_get_photos(jobmodel_obj: JobModel, category_obj: Category) -> list[Photo 
             .where(
                 (Posting.id_jobmodel == jobmodel_obj.id) &
                 (Posting.id_category == category_obj.id) &
+                (Posting.id_url.is_null(True)) &
                 (Photo.is_submitted != True) &
                 (LinkSubReddit.is_submitted != True)
             )
@@ -99,6 +99,7 @@ def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_
                 (Posting.id_jobmodel == jobmodel_obj) &
                 (Posting.id_category == category_obj) &
                 (Posting.id_photo == photo_obj) &
+                (Posting.id_url.is_null(True)) &
                 (Photo.is_submitted != True) &
                 (LinkSubReddit.is_submitted != True)
             )
@@ -123,6 +124,7 @@ def db_get_post_for_posting(
                 (Posting.id_category == category_obj) &
                 (Posting.id_photo == photo_obj) &
                 (Posting.id_link_sub_reddit == link_sub_obj) &
+                (Posting.id_url.is_null(True)) &
                 (Photo.is_submitted != True) &
                 (LinkSubReddit.is_submitted != True)
             )

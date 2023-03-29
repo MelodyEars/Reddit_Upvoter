@@ -1,3 +1,5 @@
+import time
+
 from loguru import logger
 
 from .models import WorkAccountWithLink, db, Cookie
@@ -36,4 +38,7 @@ def db_ban_add(DICT_ACC_BAN: dict):
     with db.atomic():
         for acc_path_cookie, ban_cond in DICT_ACC_BAN.items():
             # without ban
+            logger.info(ban_cond)
             Cookie.update(ban=ban_cond).where(Cookie.cookie_path == acc_path_cookie).execute()
+
+        time.sleep(3)

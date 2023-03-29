@@ -155,17 +155,24 @@ class CreatePost(BaseReddit):
     def create_post(self, title, image_url, link_sub_reddit):
         # attend sub
         self.DRIVER.get(link_sub_reddit)
+        self.DRIVER.reconnect(0.5)
+        logger.info("wait load page")
         self.wait_load_webpage()
+        logger.info("button close")
         self.btn_close_interest()
 
         if self.elem_exists('//*[contains(text(), "This subreddit was banned")]', wait=0.2):
             raise SubredditWasBannedException("This subreddit was banned due to being unmoderated.")
 
+        logger.info("button close")
         self.btn_close_interest()
 
         # _________________________ nav ________________________
+        logger.info("button subscribe")
         self._btn_subscribe()
+        logger.info("create post")
         self._btn_create_post()
+        logger.info("wait load page")
         self.wait_load_webpage()
 
         if self.elem_exists('//span[contains(text(), "Your request to ")]', wait=0.2):

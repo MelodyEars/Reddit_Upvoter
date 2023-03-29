@@ -26,7 +26,7 @@ class BaseReddit(BaseClass):
 	# ________________________ BASE REDDIT ___________________________
 	def _error_cdn_to_server(self):
 		if self.elem_exists(value='body', by=By.TAG_NAME, wait=60):
-			self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3)
+			self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3, intercepted_click=True)
 			if self.elem_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
 				return True
 			else:
@@ -138,3 +138,7 @@ class BaseReddit(BaseClass):
 				return self._select_communities()
 			else:
 				self.btn_close_interest()
+
+	def accept_all_cookie(self):
+		self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=1, intercepted_click=True)
+		time.sleep(1)

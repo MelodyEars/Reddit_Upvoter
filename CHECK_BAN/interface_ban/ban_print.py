@@ -6,7 +6,6 @@ from work_fs import clear_cmd, path_near_exefile
 from work_fs.color import green_color, cyan_color, blue_color, magenta_color, warning_text
 
 
-
 # __________________________________________ COLOR  _______________________________________________
 def permanent_ban(text):
 	returning_text = Back.RED + Fore.WHITE + str(

@@ -44,15 +44,17 @@ class RedditAuth(BaseReddit):
         # self.DRIVER.current_url() <- url
 
         self.__button_login()  # attend wbpage for log in
-
-        # go to iframe
-        self.switch_iframe_xpath('//iframe[contains(@src, "https://www.reddit.com/login/")]')
+        self.accept_all_cookie()
 
     def fill_login_form(self, login, password):
-        self.send_text_by_elem(value='loginUsername', text_or_key=login, by=By.ID)
-        self.send_text_by_elem(value='loginPassword', by=By.ID, text_or_key=password)
+        if self.switch_iframe_xpath("//iframe[contains(@src, 'https://www.reddit.com/login/')]"):
+            self.send_text_by_elem(value='loginUsername', by=By.ID, text_or_key=login)
+            self.send_text_by_elem(value='loginPassword', by=By.ID, text_or_key=password)
 
-        self.click_element('//button[contains(text(), "Log In")]')
+            self.click_element('//button[contains(text(), "Log In")]')
+        else:
+            logger.error("Not ok iframe")
+            return self.fill_login_form(login, password)
 
     def skip_popups(self):
         self.elem_exists('//body')
@@ -62,8 +64,7 @@ class RedditAuth(BaseReddit):
             num = num + i
             self.scroll_to_elem(f'//div[@data-scroller-first]/following-sibling::div[{num}]')
 
-        self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=1)
-        time.sleep(1)
+        self.accept_all_cookie()
 
     def get_path_cookie(self, login):
         root_folder = work_fs.path_near_exefile()
