@@ -42,3 +42,4 @@ def check_new_acc():
 
     except ProxyInvalidException:
         logger.error("Недостатньо проксі!")
+

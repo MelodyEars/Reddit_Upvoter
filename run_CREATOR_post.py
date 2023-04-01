@@ -4,13 +4,13 @@ from multiprocessing import freeze_support
 from loguru import logger
 
 import work_fs as wf
-from CHECK_BAN.interface_ban import if_need_action
-from autoposting import post_every_3_hours
+# from CHECK_BAN.interface_ban import if_need_action
+from autoposting import do_autoposter
 
 
 @logger.catch
 def main():
-	post_every_3_hours()
+	do_autoposter()
 
 
 if __name__ == '__main__':

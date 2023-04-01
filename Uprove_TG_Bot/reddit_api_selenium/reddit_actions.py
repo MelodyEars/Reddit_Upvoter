@@ -30,7 +30,7 @@ class RedditWork(BaseReddit):
 
     def _deleted_post(self):
         self._baned_account()
-        if not self.elem_exists('//div[contains(text(), "Sorry, this post has been remove")]', wait=1):
+        if not self.elem_exists('//div[contains(text(), "Sorry, this post")]', wait=1):
             logger.error("Post prepare!")
             return
         else:

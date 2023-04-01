@@ -37,6 +37,15 @@ def db_add_date_post(post_id: Posting.id):
 
 
 # _______________________________ get __________________________________
+def db_get_exist_post_for_model(jobmodel_obj: JobModel):
+    with autoposting_db:
+        posts_objs: list[Posting] = Posting.select().where(
+            (Posting.id_url.is_null(True)) &
+            (Posting.id_jobmodel == jobmodel_obj.id)
+        )
+        return posts_objs
+
+
 def db_get_list_post_obj_sort_by_date(jobmodel_obj: JobModel):
     with autoposting_db:
         post_objs = list(
@@ -63,52 +72,59 @@ def db_get_gen_categories(jobmodel_obj: JobModel):
                 (Posting.id_url.is_null(True))
             )
         )
-        category_objs = (Category.get_by_id(post.id_category) for post in post_objs)
+        # category_objs = [Category.get_by_id(post.id_category) for post in post_objs]
+        category_ids = [post.id_category for post in post_objs]
+        unique_category_ids = set(category_ids)
+        unique_category = [Category.get_by_id(id_category) for id_category in unique_category_ids]
 
-    return category_objs
+    return unique_category
 
 
 def db_get_photos(jobmodel_obj: JobModel, category_obj: Category) -> list[Photo | None]:
     with autoposting_db:
         post_objs: list[Posting] = list(
             Posting.select()
-            .join(LinkSubReddit)
-            .join(Photo, on=(LinkSubReddit.id == Photo.id))
+            # .join(LinkSubReddit)
+            # .join(Photo, on=(LinkSubReddit.id == Photo.id))
             .where(
                 (Posting.id_jobmodel == jobmodel_obj.id) &
                 (Posting.id_category == category_obj.id) &
-                (Posting.id_url.is_null(True)) &
-                (Photo.is_submitted != True) &
-                (LinkSubReddit.is_submitted != True)
+                (Posting.id_url.is_null(True))
+                # (Photo.is_submitted != True) &
+                # (LinkSubReddit.is_submitted != True)
             )
-            .distinct()
+            # .distinct(Posting.id_photo)
         )
 
-        photos_objs = [Photo.get_by_id(post.id_photo) for post in post_objs]
-
-    return photos_objs
+        # photos_objs = [Photo.get_by_id(post.id_photo) for post in post_objs]
+        photo_ids = [post.id_photo for post in post_objs if post.id_link_sub_reddit.is_submitted == False and post.id_photo.is_submitted == False]
+        unique_photo_ids = set(photo_ids)
+        unique_photos = [Photo.get_by_id(photo_id) for photo_id in unique_photo_ids]
+    return unique_photos
 
 
 def db_pick_up_reddit_sub(jobmodel_obj: JobModel, category_obj: Category, photo_obj: Photo) -> list[LinkSubReddit]:
     with autoposting_db:
         post_objs: list[Posting] = (
             Posting.select()
-            .join(LinkSubReddit)
-            .join(Photo, on=(LinkSubReddit.id == Photo.id))
+            # .join(LinkSubReddit)
+            # .join(Photo, on=(LinkSubReddit.id == Photo.id))
             .where(
                 (Posting.id_jobmodel == jobmodel_obj) &
                 (Posting.id_category == category_obj) &
                 (Posting.id_photo == photo_obj) &
-                (Posting.id_url.is_null(True)) &
-                (Photo.is_submitted != True) &
-                (LinkSubReddit.is_submitted != True)
+                (Posting.id_url.is_null(True))
+                # (Photo.is_submitted != True) &
+                # (LinkSubReddit.is_submitted != True)
             )
-            .distinct()
+            # .distinct(Posting.id_link_sub_reddit)
         )
 
-        link_sub_objs = [LinkSubReddit.get_by_id(post.id_link_sub_reddit) for post in post_objs]
+        link_sub_ids = [post.id_link_sub_reddit for post in post_objs if post.id_link_sub_reddit.is_submitted == False and post.id_photo.is_submitted == False]
+        unique_link_sub_ids = set(link_sub_ids)
+        unique_link_sub = [LinkSubReddit.get_by_id(link_sub_id) for link_sub_id in unique_link_sub_ids]
 
-    return link_sub_objs
+    return unique_link_sub
 
 
 def db_get_post_for_posting(
@@ -134,32 +150,35 @@ def db_get_post_for_posting(
 
 
 # ___________________________________________  DELETE  _________________________________________
-def db_delete_check_if_not_exists_records(id_photo: Posting.id_photo, id_link_sub_reddit: Posting.id_link_sub_reddit):
-    with autoposting_db:
-        has_related_photo = Posting.select().join(Photo).where(Photo.id == id_photo).exists()
-        has_related_link_sub = (
-            Posting.select()
-            .join(LinkSubReddit)
-            .where(LinkSubReddit.id == id_link_sub_reddit)
-            .exists()
-        )
+# def db_delete_check_if_not_exists_records(id_photo: Posting.id_photo, id_link_sub_reddit: Posting.id_link_sub_reddit):
+#     with autoposting_db:
+#         has_related_photo = Posting.select().join(Photo).where(Photo.id == id_photo).exists()
+#         has_related_link_sub = (
+#             Posting.select()
+#             .join(LinkSubReddit)
+#             .where(LinkSubReddit.id == id_link_sub_reddit)
+#             .exists()
+#         )
+#
+#         if not has_related_photo:
+#             photo_obj = Photo.get_by_id(id_photo)
+#             photo_obj.delete_instance()
+#
+#         if not has_related_link_sub:
+#             link_gub_obj = LinkSubReddit.get_by_id(id_link_sub_reddit)
+#             link_gub_obj.delete_instance()
 
-        if not has_related_photo:
-            photo_obj = Photo.get_by_id(id_photo)
-            photo_obj.delete_instance()
 
-        if not has_related_link_sub:
-            link_gub_obj = LinkSubReddit.get_by_id(id_link_sub_reddit)
-            link_gub_obj.delete_instance()
+def db_delete_executed_post(selected_post_obj: Posting):
+    # id_photo = post_obj.id_photo
+    # id_link = post_obj.id_link_sub_reddit
+    posts_objs = Posting.select().where(Posting.id_photo == selected_post_obj.id_photo)
 
+    for post_obj in posts_objs:
+        post_obj.delete_instance()
 
-def db_delete_executed_post(post_obj: Posting):
-    id_photo = post_obj.id_photo
-    id_link = post_obj.id_link_sub_reddit
-
-    post_obj.delete_instance()
-
-    return db_delete_check_if_not_exists_records(id_photo=id_photo, id_link_sub_reddit=id_link)
+    #
+    # return db_delete_check_if_not_exists_records(id_photo=id_photo, id_link_sub_reddit=id_link)
 
 
 def db_del_post_banned_sub(link_sub_reddit: str):
@@ -170,4 +189,3 @@ def db_del_post_banned_sub(link_sub_reddit: str):
             post_obj.delete_instance()
 
         link_obj.delete_instance()
-

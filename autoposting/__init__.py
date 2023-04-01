@@ -1,1 +1,1 @@
-from .output import post_every_3_hours
+from .output import do_autoposter

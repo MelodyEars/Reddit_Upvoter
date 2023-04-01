@@ -1,3 +1,4 @@
+import time
 import traceback
 from pathlib import Path
 
@@ -9,13 +10,12 @@ from BASE_Reddit.exceptions import CookieInvalidException
 from auth_reddit import get_cookies
 
 from database import JobModel, Account, Posting
-from database.autoposting_db import db_delete_executed_post, db_add_url_to_upvoter, db_get_list_post_obj_sort_by_date, \
+from database.autoposting_db import db_add_url_to_upvoter, db_get_list_post_obj_sort_by_date, \
 	db_SUBLINK_reset_is_submitted, db_PHOTO_reset_is_submitted, db_add_date_post, db_del_post_banned_sub
 
 from work_fs.PATH import path_near_exefile, move_file_or_dir
-from work_fs.write_to_file import adder_list
 
-from autoposting.unpack import yield_up_data_from_db
+from autoposting.unpack import yield_up_data_from_db, if_enough_post
 from autoposting.handl_obj import get_info_from_obj, get_info_about_photo
 from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
 	NotTrustedMembersException, SubredditWasBannedException
@@ -59,11 +59,6 @@ def delete_post(BROWSER: CreatePost, jobmodel_obj: JobModel):
 		db_SUBLINK_reset_is_submitted(older_post_obj.id_link_sub_reddit.id)
 		db_PHOTO_reset_is_submitted(older_post_obj.id_photo.id)
 
-		#  delete from Posting
-		logger.info("Post will delete from db.")
-		db_delete_executed_post(older_post_obj)
-		logger.info("Post did deleted from db.")
-
 	else:
 		# if not exists records in db this means it's model new,
 		# then need delete all on the reddit profile's page
@@ -95,22 +90,23 @@ def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 				# get info about post
 				path_photo, title, link_sub_reddit = get_info_about_photo(post_obj)
 
-				# _________________________  Imgur ______________________________
-				logger.info("Upload photo on Imgur and get url.")
-				BROWSER.upload_video(path_photo)
+				if path_photo:  # return path_photo NOne if file not exists in folder and delete all post in db
+					# _________________________  Imgur ______________________________
+					logger.info("Upload photo on Imgur and get url.")
+					BROWSER.upload_video(path_photo)
 
-				photo_url = BROWSER.grub_link()
+					photo_url = BROWSER.grub_link()
 
-				# ___________________________  Reddit  ____________________________
-				logger.info("Creating post")
-				BROWSER.create_post(title, photo_url, link_sub_reddit)
+					# ___________________________  Reddit  ____________________________
+					logger.info("Creating post")
+					BROWSER.create_post(title, photo_url, link_sub_reddit)
 
-				reddit_post_url = BROWSER.get_post_url()
+					reddit_post_url = BROWSER.get_post_url()
 
-				# _______________________________  to db  ____________________
-				db_add_url_to_upvoter(post_obj, reddit_post_url)
-				db_add_date_post(post_obj.id)  # date posted
-				adder_list(path_near_exefile("Post_url.txt"), reddit_post_url)
+					# _______________________________  to db  ____________________
+					db_add_url_to_upvoter(post_obj, reddit_post_url)
+					db_add_date_post(post_obj.id)  # date posted
+					# adder_list(path_near_exefile("Post_url.txt"), reddit_post_url)
 
 			except WaitingPostingException:
 				logger.error('Reddit give you a break < 1hour')
@@ -139,3 +135,24 @@ def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 		BROWSER.client_cookie.save()
 		BROWSER.DRIVER.quit()
 		logger.warning("Close browser!")
+
+
+def autoposting(jobmodel_obj: JobModel):
+	if_enough_post(jobmodel_obj)
+	start_time = time.time()  # get the start time of the program
+	logger.warning(f"Start time {start_time}")
+
+	run_browser(jobmodel_obj)
+
+	end_time = time.time()  # get the end time of the program
+	logger.warning(f"End time {end_time}")
+
+	running_time = end_time - start_time  # calculate the program's running time
+	logger.info(f"The program's running time {running_time}")
+
+	if running_time < 900:  # if the program runs less than 3 hours
+		time_sleep = 900 - running_time
+		time.sleep(time_sleep)  # sleep for the remaining time
+
+	# the program will start again every 10 minutes due to the while loop
+

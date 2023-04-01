@@ -1,27 +1,18 @@
-import time
+import concurrent.futures
 
-from loguru import logger
+from database import JobModel
+from database.autoposting_db import db_grab_model_obj
+from .network.run_browser import autoposting
 
-from .network import run_browser
-from .unpack import get_name_model
 
+def do_autoposter():
+	jobmodels_objs: list[JobModel] = db_grab_model_obj()
 
-def post_every_3_hours():
 	while True:
-		start_time = time.time()  # get the start time of the program
-		logger.warning(f"Start time {start_time}")
+		with concurrent.futures.ThreadPoolExecutor() as executor:
+			# запускаємо функцію process_item паралельно для кожного елемента в списку
+			futures = [executor.submit(autoposting, jobmodel_obj) for jobmodel_obj in jobmodels_objs]
 
-		for jobmodel_obj in get_name_model():
-			run_browser(jobmodel_obj)
-
-		end_time = time.time()  # get the end time of the program
-		logger.warning(f"End time {end_time}")
-
-		running_time = end_time - start_time  # calculate the program's running time
-		logger.info(f"The program's running time {running_time}")
-
-		if running_time < 10800:  # if the program runs less than 3 hours
-			time.sleep(10800 - running_time)  # sleep for the remaining time
-
-		# the program will start again after 3 hours due to the while loop
-
+			# очікуємо завершення всіх функцій
+			for future in concurrent.futures.as_completed(futures):
+				result = future.result()

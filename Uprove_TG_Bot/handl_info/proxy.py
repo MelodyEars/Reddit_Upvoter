@@ -29,7 +29,7 @@ def file_get_proxy():
     list_proxies = get_list_file(path_proxies_file)
 
     try:
-        list_line_content = list_proxies.pop().replace(" ", "").split(':')
+        list_line_content = list_proxies.pop(-1).replace(" ", "").split(':')
     except IndexError:
         raise ProxyInvalidException('Недостатньо проксі!')
 
