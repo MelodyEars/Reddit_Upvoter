@@ -1,8 +1,9 @@
 import peewee as pw
 from database import db
+from database.vote_tg_bot.models import BaseModel
 
 
-class AllowedUser(pw.Model):
+class AllowedUser(BaseModel):
     # user_id = pw.IntegerField()
     username = pw.CharField(max_length=50)
 

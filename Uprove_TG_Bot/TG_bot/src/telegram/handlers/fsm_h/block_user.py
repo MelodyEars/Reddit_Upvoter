@@ -35,11 +35,14 @@ async def block(message: Message, state: FSMContext):
 
 @admin_router.message(AddUser.username)
 async def unblock(message: Message, state: FSMContext):
-    user, created = AllowedUser.get_or_create(username=message.text)
-    if created:
-        await message.reply(f"Юзеру *{message.text}* наданий доступ до бота 👑",
-                            parse_mode='MARKDOWN')
+    added_users = AllowedUser.select()
+    if len(added_users) <= 3:
+        user, created = AllowedUser.get_or_create(username=message.text)
+        if created:
+            await message.reply(f"Юзеру *{message.text}* наданий доступ до бота 👑",
+                                parse_mode='MARKDOWN')
+        else:
+            await message.reply("Юзер вже має доступ 🙉")
     else:
-        await message.reply("Юзер вже має доступ 🙉")
-
+        await message.reply("У вас більше 3 юзерів! 🙉")
     await state.clear()

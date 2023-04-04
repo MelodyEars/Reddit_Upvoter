@@ -189,3 +189,4 @@ def db_del_post_banned_sub(link_sub_reddit: str):
             post_obj.delete_instance()
 
         link_obj.delete_instance()
+

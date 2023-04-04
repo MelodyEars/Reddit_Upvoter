@@ -18,7 +18,9 @@ if mine_project:
     admins_id = [487950394, ]
 else:
     # get from file
-    admins_id = get_or_create_info("Введи свой telegram id", path_near_exefile("admin_id.txt"))
+    admins_id = [
+        int(admin_id) for admin_id in get_or_create_info("Введи свой telegram id", path_near_exefile("admin_id.txt"))
+    ]
     # admins_id = [487950394, 6238496977]
 
 # token for telegram bot
