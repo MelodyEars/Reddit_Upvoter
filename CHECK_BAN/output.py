@@ -11,9 +11,10 @@ from .ADD_new_model import create_model
 from .DELETE import delete_account
 
 
-def access_to_account(cookies_objs):
+def access_to_account():
     """Base action with account."""
     list_selected_cookie_objs = []
+    cookies_objs = list(db_get_cookie_objs())
 
     while cookies_objs:
         selected_cookie_obj, list_selected_cookie_objs, command = user_response(cookies_objs, list_selected_cookie_objs)
@@ -34,7 +35,7 @@ def access_to_account(cookies_objs):
             for_user_open_browser(selected_cookie_obj)
 
 
-def controller():
+def check_acc_ban():
 
     answer = if_need_action()
     if answer:  # print interface
@@ -42,7 +43,3 @@ def controller():
         list_path_cookies = list(path_near_exefile("cookies").glob("*"))  # in folder
         DICT_ACC_BAN = check_ban(list_path_cookies)  # api playwright
         db_ban_add(DICT_ACC_BAN)  # update db
-
-    cookies_objs = list(db_get_cookie_objs())
-
-    return access_to_account(cookies_objs)

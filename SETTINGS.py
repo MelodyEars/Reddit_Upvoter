@@ -1,5 +1,8 @@
+from Uprove_TG_Bot.restrict import get_or_create_token
+from work_fs.chack_info_and_write_to_file import get_or_create_info
+from work_fs.PATH import path_near_exefile
 
-mine_project = True
+mine_project = False
 
 # ____________________________________________________________________ DATABASE
 # set up db_tg_bot
@@ -14,19 +17,19 @@ set_database = {
 if mine_project:
     admins_id = [487950394, ]
 else:
-    admins_id = [487950394, 6238496977]
+    # get from file
+    admins_id = get_or_create_info("Введи свой telegram id", path_near_exefile("admin_id.txt"))
+    # admins_id = [487950394, 6238496977]
 
 # token for telegram bot
 if mine_project:
     # our bot
     TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
 else:
-    TOKEN = "6296457111:AAF-WRfX5OhpJehvd2hTS_3iAmQUB-yH9Yw"
-
+    # get from file
+    TOKEN = get_or_create_token()
 # _______________________________________________________________________ CHECK BAN
-
 if mine_project:
     commands = ["add", "del"]
 else:
     commands = ["del"]
-

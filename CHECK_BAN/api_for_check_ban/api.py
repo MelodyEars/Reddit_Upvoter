@@ -64,7 +64,7 @@ async def get_ban(path_cookie: Path):
 		html = await fetch(session, url)
 		ban = unpack_ban(html)
 
-		DICT_ACC_BAN[f"cookies/{path_cookie.name}"] = ban
+		DICT_ACC_BAN[fr"cookies\{path_cookie.name}"] = ban
 
 		print(f"{url}: {ban}")
 

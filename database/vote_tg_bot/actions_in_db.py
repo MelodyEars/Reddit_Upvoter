@@ -1,4 +1,4 @@
-
+from loguru import logger
 from peewee import fn
 
 from .models import WorkAccountWithLink, db, Cookie
@@ -34,16 +34,17 @@ def db_get_random_account_with_0() -> list[Cookie]:
 
 
 def db_ban_add(DICT_ACC_BAN: dict):
-    with db.atomic():
-        for acc_path_cookie, ban_cond in DICT_ACC_BAN.items():
-            # without ban
-            # logger.info(ban_cond)
-            Cookie.update(ban=ban_cond).where(Cookie.cookie_path == acc_path_cookie).execute()
+    # Створіть список об'єктів Cookie, які потрібно оновити
+    cookies_to_update = []
 
-    # with db.atomic():
-    #     updates = []
-    #     for acc_path_cookie, ban_cond in DICT_ACC_BAN.items():
-    #         updates.append({'cookie_path': acc_path_cookie, 'ban': ban_cond})
-    #
-    #     Cookie.bulk_update(updates, fields=['ban'], batch_size=1000)
+    for acc_path_cookie, ban_cond in DICT_ACC_BAN.items():
+        cookie = Cookie.get_or_none(Cookie.cookie_path == acc_path_cookie)
+        if cookie:
+            cookie.ban = ban_cond
+            cookies_to_update.append(cookie)
+
+    # Виконати оновлення списку об'єктів за допомогою bulk_update
+    with db.atomic():
+        for i in range(0, len(cookies_to_update), 1000):
+            Cookie.bulk_update(cookies_to_update[i:i + 1000], fields=['ban'])
 

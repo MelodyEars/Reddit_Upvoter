@@ -19,7 +19,7 @@ from Uprove_TG_Bot.TG_bot.src.telegram.middleware.admin_only import AdminOnly
 from Uprove_TG_Bot.TG_bot.src.telegram.middleware.check_users import CheckUser
 from Uprove_TG_Bot.TG_bot.src.telegram.handlers.admin_handlers import admin_router
 from Uprove_TG_Bot.TG_bot.src.telegram.handlers.user_handlers import user_router
-from access_bot.restrict import check_access
+from Uprove_TG_Bot.restrict import check_access
 from database import create_db
 
 from database.vote_tg_bot.db_tg_bot.tables import create_tables
@@ -73,10 +73,11 @@ def run_tg_bot():
 def main():
 	if mine_project:
 		run_tg_bot()
-	if check_access():
-		run_tg_bot()
 	else:
-		logger.error("Доступ запрещен проверте подписку.")
+		if check_access():
+			run_tg_bot()
+		else:
+			logger.error("Доступ запрещен проверте подписку.")
 
 
 if __name__ == '__main__':
