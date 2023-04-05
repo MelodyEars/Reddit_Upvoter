@@ -1,26 +1,12 @@
 from typing import TypedDict
 
-help_message = f'''Для того щоб використовувати бота натисніть кнопку "Поїхали!🚀" на панелі.
-                    Якщо ви вже почали роботу, але зробили десь помилку, то для того, щоб повернутись на початок натисніть "⬅️ Все спочатку".
-                    Дайте відповіді на всі запитання і Reddit бот почне працювати.'''
+from SETTINGS import mine_project
 
-start_message = 'Вітаю! Цей бот потрібен для накрутки апвоутів та написання коментарів у Reddit.\n' + help_message
 
-# ___________________________________ FMS State _______________________________________________ #
-reddit_link = "Надішли посилання на пост Reddit."
-
-upvote_int = "Введіть кількість upvote."
-error_vote_int = "Помилка! Ваша відповідь не є цілим числом./Введіть кількість upvote.(тільки ціле число)"
-
-# comments_int = "Кількість коментарів (якщо потрібно)"
-error_comments_int = "Помилка! Ваша відповідь не є цілим числом./Кількість коментарів (якщо потрібно).(тільки ціле число)"
-
-# ___________________________ message for notification about finsh process ______________________ #
-start_process = "Виконую..."
-finish_process = "Зробив!"
-
-# ___________________________ deleted post______________________________
-deleted_post = 'Пост був видалений!\n або \n Недостатньо акаунтів, щоб продовжувати робити апвоути.'
+if mine_project:
+    from .mine_USER_text import *
+else:
+    from .nochance_user_text import *
 
 
 class Messages(TypedDict):
@@ -34,6 +20,12 @@ class Messages(TypedDict):
     start_process: str
     finish_process: str
     deleted_post: str
+    reset_msg: str
+    btn_reset: str
+    notif_browser_run: str
+    hi_user: str
+    btn_run_work: str
+    not_enough_bots: str
 
 
 MESSAGES: Messages = {
@@ -47,4 +39,10 @@ MESSAGES: Messages = {
     'start_process': start_process,
     'finish_process': finish_process,
     'deleted_post': deleted_post,
+    'reset_msg': reset_msg,
+    'btn_reset': btn_reset,
+    'notif_browser_run': notif_browser_run,
+    'hi_user': hi_user,
+    'btn_run_work': btn_run_work,
+    'not_enough_bots': str
 }

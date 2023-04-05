@@ -36,7 +36,7 @@ def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_
     # get random comment from txt
     # list_comments = file_get_random_comments(comments_int)
 
-    for text_comment in range(upvote_int):
+    for _ in range(upvote_int):
         # comment = ""
         #
         # if list_comments:
@@ -50,12 +50,12 @@ def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_
             open_browser(**dict_for_browser)  # , comment=comment)
 
         except RanOutAccountsForLinkException:
-            msg = f"Недостатньо акаунтів, щоб продовжувати робити апвоути. {sub}"
+            msg = MESSAGES['not_enough_bots'] + sub
             logger.error(msg)
             break
 
         except PostDeletedException:
-            msg = f"Пост був видалиний. {sub}"
+            msg = MESSAGES['deleted_post'] + sub
             logger.error(msg)
             break
 

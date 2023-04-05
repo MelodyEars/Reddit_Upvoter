@@ -12,14 +12,14 @@ from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from Uprove_TG_Bot.TG_bot.work_PROCESS import run_process_and_reply_after, RunBotStates, StructData
 
 
-@user_router.message(F.text == "⬅️ Все спочатку")
+@user_router.message(F.text == MESSAGES['btn_reset'])
 async def cancel_handler(message: Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
         return
 
     await state.clear()
-    await message.reply('Cancelled.', reply_markup=main_btn)
+    await message.reply(MESSAGES['reset_msg'], reply_markup=main_btn)
 
 
 @user_router.message(RunBotStates.reddit_link)
@@ -49,9 +49,7 @@ async def answer_vote(message: Message, state: FSMContext):
     run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
 
     await state.clear()
-    await message.answer(
-        f'Браузер запустився для опрацювання вашого посилання {data["reddit_link"]}.', reply_markup=main_btn
-    )
+    await message.answer(str(MESSAGES['notif_browser_run'] + data["reddit_link"]), reply_markup=main_btn)
 
     await run_process
 
