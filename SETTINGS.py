@@ -2,7 +2,7 @@ from Uprove_TG_Bot.restrict import get_or_create_token
 from work_fs.chack_info_and_write_to_file import get_or_create_info
 from work_fs.PATH import path_near_exefile
 
-mine_project = False
+mine_project = True
 
 # ____________________________________________________________________ DATABASE
 # set up db_tg_bot

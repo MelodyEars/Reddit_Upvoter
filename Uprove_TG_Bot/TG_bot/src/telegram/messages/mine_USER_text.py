@@ -31,3 +31,4 @@ finish_process = "Your request has been processed!💫"
 # ___________________________ deleted post______________________________
 deleted_post = "Post has been deleted...🥲 We can't continue upvoting😑 "
 not_enough_bots = f"Not enough bots🫠 to enter the number of votes you specified "
+

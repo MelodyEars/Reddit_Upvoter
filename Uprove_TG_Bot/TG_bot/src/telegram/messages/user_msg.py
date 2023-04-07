@@ -15,7 +15,7 @@ class Messages(TypedDict):
     reddit_link: str
     error_vote_int: str
     upvote_int: str
-    error_comments_int: str
+    # error_comments_int: str
     # comments_int: str
     start_process: str
     finish_process: str
@@ -34,7 +34,7 @@ MESSAGES: Messages = {
     'reddit_link': reddit_link,
     'error_vote_int': error_vote_int,
     'upvote_int': upvote_int,
-    'error_comments_int': error_comments_int,
+    # 'error_comments_int': error_comments_int,
     # 'comments_int': comments_int,
     'start_process': start_process,
     'finish_process': finish_process,

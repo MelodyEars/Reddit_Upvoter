@@ -13,7 +13,7 @@ def db_exist_record_link_account(link_id, cookie_id):
         created: bool
         obj, created = WorkAccountWithLink.get_or_create(cookie=cookie_id, link=link_id)
 
-    return created, obj.id
+    return created, obj
 
 
 # def db_reset_work_all_accounts_1_on_0():

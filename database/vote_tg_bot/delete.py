@@ -2,10 +2,10 @@
 from .models import db, WorkAccountWithLink, Proxy, Cookie, Account
 
 
-def db_delete_record_work_account_with_link(id_record):
+def db_delete_record_work_account_with_link(obj_record: WorkAccountWithLink):
     # obj.id if needed to delete when exception exists
     with db:
-        WorkAccountWithLink.delete_by_id(id_record)
+        obj_record.delete_instance()
 
 
 def db_delete_cookie_by_id(cookie_obj: Cookie):

@@ -16,6 +16,37 @@ from Uprove_TG_Bot.PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile, auto_create
 
 
+def body_loop(reddit_link, sub, work_link_account_obj, msg):
+    # comment = ""
+    #
+    # if list_comments:
+    #     comment = list_comments.pop()
+
+    try:
+        logger.warning(f'Підбираю інформацію для "{reddit_link}"')
+        work_link_account_obj, dict_for_browser = collection_info(reddit_link=reddit_link)
+
+        logger.warning(f'''Відкриваю браузер для "{reddit_link}" і "{dict_for_browser["reddit_username"]}"''')
+        open_browser(**dict_for_browser)  # , comment=comment)
+
+    except RanOutAccountsForLinkException:
+        msg = MESSAGES['not_enough_bots'] + sub
+        logger.error(msg)
+        return "break"
+
+    except PostDeletedException:
+        msg = MESSAGES['deleted_post'] + sub
+        logger.error(msg)
+        return "break"
+
+    except Exception:
+        db_delete_record_work_account_with_link(work_link_account_obj)
+        logger.error(traceback.format_exc())
+        return body_loop(reddit_link, sub, work_link_account_obj, msg)
+
+    return msg
+
+
 @logger.catch
 def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_int: int
     sub = reddit_link.split("/")[4]
@@ -37,31 +68,9 @@ def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_
     # list_comments = file_get_random_comments(comments_int)
 
     for _ in range(upvote_int):
-        # comment = ""
-        #
-        # if list_comments:
-        #     comment = list_comments.pop()
-
-        try:
-            logger.warning(f'Підбираю інформацію для "{reddit_link}"')
-            id_work_link_account_obj, dict_for_browser = collection_info(reddit_link=reddit_link)
-
-            logger.warning(f'''Відкриваю браузер для "{reddit_link}" і "{dict_for_browser["reddit_username"]}"''')
-            open_browser(**dict_for_browser)  # , comment=comment)
-
-        except RanOutAccountsForLinkException:
-            msg = MESSAGES['not_enough_bots'] + sub
-            logger.error(msg)
+        msg = body_loop(reddit_link, sub, id_work_link_account_obj, msg)
+        if msg == "break":
             break
-
-        except PostDeletedException:
-            msg = MESSAGES['deleted_post'] + sub
-            logger.error(msg)
-            break
-
-        except Exception:
-            db_delete_record_work_account_with_link(id_work_link_account_obj)
-            logger.error(traceback.format_exc())
 
     end = time.time()
     elapsed_time = end - start

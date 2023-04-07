@@ -14,13 +14,13 @@ def pick_up_account_to_link(link_from_file):
 	shuffle(cookies_db_objs)
 
 	for cookie_db_obj in cookies_db_objs:
-		outcome_created, created_id_work_link_account_obj = db_exist_record_link_account(
+		outcome_created, created_obj_work_link_account_obj = db_exist_record_link_account(
 			link_id=link_id,
 			cookie_id=cookie_db_obj.id
 		)
 
 		if outcome_created:  # if create record return TRUE
-			return link_id, cookie_db_obj, created_id_work_link_account_obj
+			return link_id, cookie_db_obj, created_obj_work_link_account_obj
 		else:
 			continue
 	else:
@@ -29,7 +29,7 @@ def pick_up_account_to_link(link_from_file):
 
 
 def collection_info(reddit_link: str):
-	link_id, account_obj, id_work_link_account_obj = pick_up_account_to_link(reddit_link)
+	link_id, account_obj, work_link_account_obj = pick_up_account_to_link(reddit_link)
 	# get from db account not worked random choice
 	path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj)
 
@@ -45,4 +45,4 @@ def collection_info(reddit_link: str):
 		"id_cookie": id_account,
 	}
 
-	return id_work_link_account_obj, dict_for_browser
+	return work_link_account_obj, dict_for_browser
