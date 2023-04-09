@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 
 from BASE_Reddit.BaseReddit import BaseReddit
 from Settings_Selenium import BrowserCookie
+# from autoposting.network.execeptions_autoposting import SubredditWasBannedException
 
 
 class RedditAuth(BaseReddit):
@@ -65,6 +66,27 @@ class RedditAuth(BaseReddit):
             self.scroll_to_elem(f'//div[@data-scroller-first]/following-sibling::div[{num}]')
 
         self.accept_all_cookie()
+
+    def _shadow_ban(self):
+        text_or_key = 'am I?'
+
+        # send title
+        self.send_text_by_elem(value='//textarea[@placeholder="Title"]', text_or_key=text_or_key)
+
+        # send text(optional)
+        self.send_text_by_elem(value='//div[@class="notranslate public-DraftEditor-content"]',
+                               text_or_key=" " + text_or_key)
+
+        # press btn post
+        self._btn_send_post()
+
+    def create_post(self):
+        self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
+        self.wait_load_webpage()
+        self.btn_close_interest()
+        self.subscribing()
+        self._btn_create_post()
+        self._shadow_ban()
 
     def get_path_cookie(self, login):
         root_folder = work_fs.path_near_exefile()

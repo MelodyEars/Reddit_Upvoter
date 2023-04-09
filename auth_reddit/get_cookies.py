@@ -1,5 +1,6 @@
 from loguru import logger
 
+from SETTINGS import mine_project
 from base_exception import ProxyInvalidException
 from Uprove_TG_Bot.handl_info import get_account_file, file_get_proxy
 from work_fs import write_list_to_file
@@ -8,13 +9,17 @@ from database import create_db, db_save_proxy_cookie
 from .auth_reddit_api_selenium import RedditAuth
 
 
-def get_cookies(account: dict, proxy_for_api: dict):
+def get_cookies(account: dict, proxy_for_api: dict, is_import=True):
     logger.info("auth begin")
 
     with RedditAuth(proxy_for_api) as api:
         api.goto_login_form()
         api.fill_login_form(**account)
         api.skip_popups()
+
+        if (not is_import) & mine_project:
+            api.create_post()
+
         cookie_path, proxy_for_api = api.get_path_cookie(account['login'])
         api.DRIVER.quit()
 
@@ -32,7 +37,7 @@ def check_new_acc():
             proxy_for_api, list_proxies, path_proxies_file = file_get_proxy()
 
             # work_api
-            cookie_path, proxy_for_api = get_cookies(proxy_for_api=proxy_for_api, account=account)
+            cookie_path, proxy_for_api = get_cookies(account=account, proxy_for_api=proxy_for_api, is_import=False)
 
             # save to db
             db_save_proxy_cookie(proxy_from_api=proxy_for_api, cookie_path=cookie_path, account=account)

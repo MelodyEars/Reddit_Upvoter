@@ -78,7 +78,7 @@ async def get_ban(line: str):
         if ban is None:
             # print(f"{COUNT_ACCOUNT}: {line}")
             print(line)
-            # COUNT_ACCOUNT += 1
+        #     COUNT_ACCOUNT += 1
         # else:
         #     logger.critical(f"{COUNT_ACCOUNT}: {line}: {ban}")
         #     COUNT_ACCOUNT += 1

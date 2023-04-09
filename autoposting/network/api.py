@@ -3,14 +3,12 @@ from pathlib import Path
 
 import undetected_chromedriver as uc
 from loguru import logger
-from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
 from BASE_Reddit.BaseReddit import BaseReddit
 from Settings_Selenium import BrowserCookie
-from BASE_Reddit.exceptions import CookieInvalidException
-from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
-    NotTrustedMembersException, SubredditWasBannedException
+from BASE_Reddit.exceptions import CookieInvalidException, WaitRequestToSubredditException
+from .execeptions_autoposting import SubredditWasBannedException
 
 
 class CreatePost(BaseReddit):
@@ -88,68 +86,20 @@ class CreatePost(BaseReddit):
     # else:
     #         raise Exception("Not scroll to delete last elem")
 
-    def _btn_create_post(self):
-        try:
-            self.click_element('//button[@aria-label="Create Post"]')  # click on the +
-        except ElementClickInterceptedException:
-            logger.error("ElementClickInterceptedException: create post")
-            self.btn_close_interest()
-            self._btn_create_post()
+    # def _btn_create_post(self):
+    #     try:
+    #         self.click_element('//button[@aria-label="Create Post"]')  # click on the +
+    #     except ElementClickInterceptedException:
+    #         logger.error("ElementClickInterceptedException: create post")
+    #         self.btn_close_interest()
+    #         self._btn_create_post()
 
-    def _btn_send_post(self):
-        if self.click_element('//button[contains(text(), "Post") and @role="button"]', wait=2):
-            time.sleep(1)
-            if self.click_element('//footer/button[contains(text(), "Save Draft")]', wait=0.2):
-                return self._btn_send_post()
-
-            elif self.elem_exists('//*[contains(text(), "This community only allows trusted members to post here")]',
-                                  wait=0.2):
-                raise NotTrustedMembersException('This community only allows trusted members to post here')
-
-            elif self.elem_exists(
-                    '''//*[contains(text(), "Looks like you've been doing that a lot. Take a break for")]''',
-                    wait=0.2
-            ):
-                # waiting 15 minutes
-                # "Looks like you've been doing that a lot. Take a break for 9 minutes before trying again."
-                # "Looks like you've been doing that a lot. Take a break for 44 seconds before trying again."
-                text_from_el: str = self.elem_exists(
-                    '''//*[contains(text(), "Looks like you've been doing that a lot. Take a break for")]''',
-                    return_xpath=True
-                ).text
-                post_timeout = text_from_el.split(" ")[-5:-3]
-                if post_timeout[1] == "minutes":
-                    timeout: int = int(post_timeout[0]) * 60 + 60
-                elif post_timeout[1][:-1] == "second":
-                    timeout: int = int(post_timeout[0]) + 30
-                else:
-                    raise WaitingPostingException('Reddit give you a break < 1hour')
-                logger.info(f"Pause before post: {timeout}")
-                time.sleep(timeout)  # break
-                return self._btn_send_post()
-
-            elif self.elem_exists('//span[contains(text(), "Your post must contain post flair.")]', wait=0.2):
-                # select Flair
-                self.click_element('//button[@aria-label="Add flair"]')  # btn Flair
-                self.click_element('//div[@aria-label="flair_picker"]/div')  # checkbox select first topik
-                self.click_element('//button[contains(text(), "Apply")]')  # btn apply
-                return self._btn_send_post()
-
-            elif self.elem_exists('//button[contains(text(), "Send Request")]', wait=0.2):
-                raise WaitRequestToSubredditException("Wait for offer posting from subreddit.")
-
-            else:
-                logger.info("Button 'POST'")
-                return
-        else:
-            input("Неможу запостити обери елемент чому? Та клацни Ентер.")
-
-    def _btn_subscribe(self, wait=1):
-        while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
-            self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
-            time.sleep(1)
-            self.DRIVER.refresh()
-            self.wait_load_webpage()
+    # def _btn_subscribe(self, wait=1):
+    #     while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
+    #         self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
+    #         time.sleep(1)
+    #         self.DRIVER.refresh()
+    #         self.wait_load_webpage()
 
     def create_post(self, title, image_url, link_sub_reddit):
         # attend sub
@@ -168,7 +118,8 @@ class CreatePost(BaseReddit):
 
         # _________________________ nav ________________________
         logger.info("button subscribe")
-        self._btn_subscribe()
+        # self._btn_subscribe()
+        self.subscribing()
         logger.info("create post")
         self._btn_create_post()
         logger.info("wait load page")

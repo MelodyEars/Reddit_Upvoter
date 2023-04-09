@@ -78,7 +78,7 @@ def run_reddit(cookie_path: Path, id_profile, dict_proxy):
 	else:
 		logger.error(f'Cookie аккаунта "{cookie_path.stem}" не работают, нужно перезаписать.')
 		account_dict = db_get_account_by_id(id_profile)
-		get_cookies(account=account_dict, proxy_for_api=dict_proxy)
+        get_cookies(account=account_dict, proxy_for_api=dict_proxy)
 
 	return {client_cookie: driver}
 

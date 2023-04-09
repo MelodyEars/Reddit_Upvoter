@@ -6,7 +6,7 @@ from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 
 from Settings_Selenium import BaseClass
-from BASE_Reddit.exceptions import NotRefrashPageException, BanAccountException
+from BASE_Reddit.exceptions import *
 
 
 class BaseReddit(BaseClass):
@@ -53,25 +53,84 @@ class BaseReddit(BaseClass):
 			else:
 				raise NotRefrashPageException("Our CDN was unable to reach our servers")
 
-	####################################### subscribe ###################################
-	def _previously_subscribing(self):
-		# while not exists button
-		if self.elem_exists('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1):
-			wait = 10
+	# ______________________________ btn create post _________________________________ #
+	def _btn_create_post(self):
+		try:
+			self.click_element('//button[@aria-label="Create Post"]')  # click on the +
+		except ElementClickInterceptedException:
+			logger.error("ElementClickInterceptedException: create post")
+			self.btn_close_interest()
+			self._btn_create_post()
+
+	# ________________________________ btn post ___________________________________ #
+	def _btn_send_post(self):
+		if self.click_element('//button[contains(text(), "Post") and @role="button"]', wait=2):
+			time.sleep(1)
+			if self.click_element('//footer/button[contains(text(), "Save Draft")]', wait=0.2):
+				return self._btn_send_post()
+
+			elif self.elem_exists(
+					'//*[contains(text(), "This community only allows trusted members to post here")]', wait=0.2
+			):
+				raise NotTrustedMembersException('This community only allows trusted members to post here')
+
+			elif self.elem_exists(
+					'''//*[contains(text(), "Looks like you've been doing that a lot. Take a break for")]''',
+					wait=0.2
+			):
+				# waiting 15 minutes
+				# "Looks like you've been doing that a lot. Take a break for 9 minutes before trying again."
+				# "Looks like you've been doing that a lot. Take a break for 44 seconds before trying again."
+				text_from_el: str = self.elem_exists(
+					'''//*[contains(text(), "Looks like you've been doing that a lot. Take a break for")]''',
+					return_xpath=True
+				).text
+				post_timeout = text_from_el.split(" ")[-5:-3]
+				if post_timeout[1] == "minutes":
+					timeout: int = int(post_timeout[0]) * 60 + 60
+				elif post_timeout[1][:-1] == "second":
+					timeout: int = int(post_timeout[0]) + 30
+				else:
+					raise WaitingPostingException('Reddit give you a break < 1hour')
+				logger.info(f"Pause before post: {timeout}")
+				time.sleep(timeout)  # break
+				return self._btn_send_post()
+
+			elif self.elem_exists('//span[contains(text(), "Your post must contain post flair.")]', wait=0.2):
+				# select Flair
+				self.click_element('//button[@aria-label="Add flair"]')  # btn Flair
+				self.click_element('//div[@aria-label="flair_picker"]/div')  # checkbox select first topik
+				self.click_element('//button[contains(text(), "Apply")]')  # btn apply
+				return self._btn_send_post()
+
+			elif self.elem_exists('//button[contains(text(), "Send Request")]', wait=0.2):
+				raise WaitRequestToSubredditException("Wait for offer posting from subreddit.")
+
+			else:
+				logger.info("Button 'POST'")
+				return
+		else:
+			input("Неможу запостити обери елемент чому? Та клацни Ентер.")
+
+	# ___________________________________ subscribe ___________________________________________ #
+	# def _previously_subscribing(self):
+	# 	# while not exists button
+	# 	if self.elem_exists('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1):
+	# 		wait = 10
 			# while not self.elem_exists('''//button[descendant::span[contains(text(), "Joined")]
 			# or descendant::span[contains(text(), "Leave")]]''', wait=wait):
-			while not self.click_element(
-					'//button[contains(@id, "subscribe-button") and contains(text(), "Join")]',
-					wait=wait):
-
-				time.sleep(2)
-				wait = 1
-				self.DRIVER.refresh()
-				self.wait_load_webpage()
-
-				logger.debug("Чекаємо підписки!")
-			else:
-				logger.debug("Підписка оформлена!!!")
+			# while not self.click_element(
+			# 		'//button[contains(@id, "subscribe-button") and contains(text(), "Join")]',
+			# 		wait=wait):
+			#
+			# 	time.sleep(2)
+			# 	wait = 1
+			# 	self.DRIVER.refresh()
+			# 	self.wait_load_webpage()
+			#
+			# 	logger.debug("Чекаємо підписки!")
+			# else:
+			# 	logger.debug("Підписка оформлена!!!")
 		# elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
 		#     wait = 0.1
 		#     while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
@@ -80,19 +139,25 @@ class BaseReddit(BaseClass):
 		#         time.sleep(2)
 		#     else:
 		#         logger.debug("Підписка оформлена")
-		else:
-			logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
+		# else:
+		# 	logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
+	def subscribing(self, wait=1):
+		while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
+			self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
+			time.sleep(1)
+			self.DRIVER.refresh()
+			self.wait_load_webpage()
 
-	def subscribing(self):
-		logger.info("Account is subscribing!")
-
-		try:
-			self._previously_subscribing()
-		except ElementClickInterceptedException:
-			logger.error("ElementClickInterceptedException: subscribing")
-			self.subscribing()
-
-		logger.info("Subscribed!")
+	# def subscribing(self):
+	# 	logger.info("Account is subscribing!")
+	#
+	# 	try:
+	# 		self._previously_subscribing()
+	# 	except ElementClickInterceptedException:
+	# 		logger.error("ElementClickInterceptedException: subscribing")
+	# 		self.subscribing()
+	#
+	# 	logger.info("Subscribed!")
 
 	# ______________________________ interests _____________________________________
 	def _button_continue(self):
@@ -105,6 +170,7 @@ class BaseReddit(BaseClass):
 
 	def btn_close_interest(self):
 		self.click_element('//button[@aria-label="Close"]', wait=1, intercepted_click=True)
+		self.wait_load_webpage()
 
 	def _select_communities(self):
 		self.elem_exists('//button[contains(text(), "Select All")]')
