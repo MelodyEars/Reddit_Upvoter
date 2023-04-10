@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # this module is part of undetected_chromedriver
 
-from distutils.version import LooseVersion
 import io
 import logging
 import os
@@ -10,12 +9,14 @@ import re
 import string
 import sys
 import time
-from threading import Thread
-from urllib.request import urlopen
-from urllib.request import urlretrieve
 import zipfile
 
-from patch_multiple_version_selenium import auto_focus_every_30
+# from threading import Thread
+from distutils.version import LooseVersion
+from urllib.request import urlopen
+from urllib.request import urlretrieve
+
+# from SWITCHer_window import auto_focus_every_30
 
 
 logger = logging.getLogger(__name__)
@@ -210,8 +211,8 @@ class Patcher(object):
     def is_binary_patched(self, executable_path=None):
         executable_path = executable_path or self.executable_path
 
-        thread = Thread(target=auto_focus_every_30, args=(executable_path, ))
-        thread.start()
+        # thread = Thread(target=auto_focus_every_30, args=(executable_path, ))
+        # thread.start()
 
         try:
             with io.open(executable_path, "rb") as fh:

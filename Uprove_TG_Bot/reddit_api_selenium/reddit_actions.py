@@ -1,4 +1,8 @@
+# import time
+from threading import Thread
 import time
+
+# from pywinauto import Application
 
 from loguru import logger
 from selenium.common import ElementClickInterceptedException
@@ -6,6 +10,7 @@ from selenium.common import ElementClickInterceptedException
 from BASE_Reddit.BaseReddit import BaseReddit
 from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException
 from Settings_Selenium.SupportSelenium import BrowserCookie
+from SWITCHer_window import auto_focus_every_30
 
 
 class RedditWork(BaseReddit):
@@ -19,6 +24,10 @@ class RedditWork(BaseReddit):
 
     def __enter__(self):
         self.DRIVER = self.run_driver(proxy=self.proxy)
+        browser_pid = self.DRIVER.browser_pid
+
+        thread = Thread(target=auto_focus_every_30, args=(browser_pid, ))
+        thread.start()
 
         return self
 
@@ -27,6 +36,14 @@ class RedditWork(BaseReddit):
             self.DRIVER.save_screenshot("UpvoterMistake.png")
 
         self.DRIVER.quit()
+
+    # def _activation_window(self):
+    #     browser_pid = self.DRIVER.browser_pid
+    #     app = Application().connect(process=browser_pid)
+    #
+    #     # while True:
+    #     main_window = app.top_window()
+    #     main_window.set_focus()
 
     def _deleted_post(self):
         self._baned_account()
@@ -38,6 +55,7 @@ class RedditWork(BaseReddit):
             raise PostDeletedException("this post has been remove")
 
     def attend_link(self):
+        # self._activation_window()  # ___________________________________________________________ activation
         logger.info("Check cookie valid!")
         # self.DRIVER.delete_all_cookies()
         self.client_cookie = BrowserCookie(driver=self.DRIVER, path_filename=self.cookie_path)
