@@ -1,9 +1,11 @@
-import queue
+# import queue
 import asyncio
-from threading import Thread
+# from threading import Thread
 
 from typing import NamedTuple
 # from multiprocessing import Process
+from concurrent.futures import ProcessPoolExecutor
+# from concurrent.futures import ThreadPoolExecutor
 
 from loguru import logger
 
@@ -27,27 +29,41 @@ class StructData(NamedTuple):
     # comments_int: int
 
 
+# async def run_process_and_reply_after(message: types.Message, data: StructData):
+#     logger.info("runner process")
+#     # chat_id = message.chat.id
+#     # message.from_user.id
+#     # MESSAGE_IN_TG[chat_id] = False
+#     reddit_link = data.reddit_link
+#     upvote_int = data.upvote_int
+#     # comments_int = data.comments_int
+#
+#     q = queue.Queue()
+#
+#     thread = Thread(target=start_reddit_work, args=(reddit_link, upvote_int, q))  # , comments_int
+#     thread.start()
+#
+#     while thread.is_alive():
+#         await asyncio.sleep(5)
+#
+#     msg = q.get()
+#
+#     if msg:
+#         # await bot.send_message(message.from_user.id, msg)
+#         await message.reply(msg)
+#         return
+
 async def run_process_and_reply_after(message: types.Message, data: StructData):
     logger.info("runner process")
-    # chat_id = message.chat.id
-    # message.from_user.id
-    # MESSAGE_IN_TG[chat_id] = False
+
     reddit_link = data.reddit_link
     upvote_int = data.upvote_int
-    # comments_int = data.comments_int
 
-    q = queue.Queue()
+    with ProcessPoolExecutor() as executor:
+    # with ThreadPoolExecutor() as executor:
+        q = await asyncio.get_running_loop().run_in_executor(executor, start_reddit_work, reddit_link, upvote_int)
 
-    thread = Thread(target=start_reddit_work, args=(reddit_link, upvote_int, q))  # , comments_int
-    thread.start()
-
-    while thread.is_alive():
-        await asyncio.sleep(5)
-
-    msg = q.get()
-
-    if msg:
-        # await bot.send_message(message.from_user.id, msg)
-        await message.reply(msg)
+    if q:
+        # await bot.send_message(message.from_user.id, q)
+        await message.reply(q)
         return
-
