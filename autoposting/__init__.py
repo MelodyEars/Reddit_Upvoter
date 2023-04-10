@@ -1,1 +1,1 @@
-from .output import do_autoposter
+from autoposting.beautiful_page.output import do_autoposter

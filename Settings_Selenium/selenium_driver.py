@@ -74,16 +74,15 @@ class BaseClass:
 
         your_options = {}
         options = uc.ChromeOptions()
-
         options.add_argument("""
         --lang=en-US
-        --disable-dev-shm-usage
-        --disable-setuid-sandbox
-        --disable-software-rasterizer
-        --disable-popup-blocking
-        --disable-notifications
         --disable-renderer-backgrounding
         --disable-backgrounding-occluded-windows
+        --disable-software-rasterizer
+        --disable-dev-shm-usage
+        --disable-setuid-sandbox
+        --disable-popup-blocking
+        --disable-notifications
         """)  # 2 arg in  the end need for working on the backgrounding
 
         if proxy is not None:

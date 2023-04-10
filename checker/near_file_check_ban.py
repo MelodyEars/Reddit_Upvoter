@@ -10,7 +10,7 @@ from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
 
 COUNT = 1
-COUNT_ACCOUNT = 0
+COUNT_ACCOUNT = 1
 DICT_ACC_BAN = {}
 
 ROOT_DIR = Path(__file__).parent

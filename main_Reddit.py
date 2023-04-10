@@ -48,7 +48,7 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
 
 
 @logger.catch
-def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_int: int
+def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
     sub = reddit_link.split("/")[4]
     msg = MESSAGES['finish_process'] + " " + sub
 
@@ -75,4 +75,5 @@ def start_reddit_work(reddit_link: str, upvote_int: int, q: Queue):  # comments_
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")
-    q.put(msg)
+    # q.put(msg)
+    return msg

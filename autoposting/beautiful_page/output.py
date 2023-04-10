@@ -2,7 +2,7 @@ import concurrent.futures
 
 from database import JobModel
 from database.autoposting_db import db_grab_model_obj
-from .network.run_browser import autoposting
+from autoposting.beautiful_page.run_browser import autoposting
 
 
 def do_autoposter():
