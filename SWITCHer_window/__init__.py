@@ -1,1 +1,1 @@
-from .focus_window import auto_focus_every_30
+from .focus_window import PID_AUTOFOCUS, add_process, call_auto_focus

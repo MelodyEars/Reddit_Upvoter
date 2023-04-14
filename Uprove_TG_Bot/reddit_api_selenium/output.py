@@ -1,8 +1,10 @@
 # import time
 from pathlib import Path
+# from threading import Thread
 
 from loguru import logger
 from urllib3.exceptions import ProtocolError
+
 
 from database import db_get_account_by_id
 from database.vote_tg_bot.models import Cookie
@@ -27,6 +29,8 @@ def work_api(
 
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
 
+        # try:
+        # ______________________________________________________________________________ go to link
         # attends Reddit and check cookie works
         try:
             api_reddit.attend_link()
@@ -34,6 +38,7 @@ def work_api(
             api_reddit.DRIVER.quit()
             return getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie)
 
+        # ______________________________________________________________________________ upvote
         try:
             logger.info("Put on upvote!")
             # put on upvote
@@ -46,15 +51,16 @@ def work_api(
         except NotRefrashPageException:
             logger.info(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
 
-        # if required to write comments
-        # if len(comment) != 0:
-        #     logger.info(f"Account write comment: {comment}")
-        #     api_reddit.write_comment(comment, reddit_username)
-        #     logger.info("Wrote!")
+        # ______________________________________________________________________________ save
         logger.info("Save cookie!")
         api_reddit.client_cookie.save()
         logger.info(f'Successfully completed "{reddit_username}"')
         api_reddit.DRIVER.quit()
+
+        # finally:
+        #     logger.critical("I'm complete thread")
+        #     # thread.join()
+        #     logger.critical("I'm completed thread")
 
 
 def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,

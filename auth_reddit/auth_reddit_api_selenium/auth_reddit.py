@@ -24,14 +24,14 @@ class RedditAuth(BaseReddit):
     def __enter__(self):
         self.DRIVER = self.run_driver(proxy=self.proxy, detection_location=True)
         self.act = ActionChains(self.DRIVER)
-        self.DRIVER.get('https://www.reddit.com/')
-        self.DRIVER.reconnect(0.3)
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.DRIVER.quit()
 
     def __button_login(self):
+
         try:
             self.click_element('//header//a[@role="button"]')
         except ElementClickInterceptedException:
@@ -41,7 +41,9 @@ class RedditAuth(BaseReddit):
             return self.__button_login()
 
     def goto_login_form(self):
-        self.elem_exists("//body")
+        self.DRIVER.get('https://www.reddit.com/')
+        self.wait_load_webpage()
+
         # self.DRIVER.current_url() <- url
 
         self.__button_login()  # attend wbpage for log in
@@ -58,8 +60,8 @@ class RedditAuth(BaseReddit):
             return self.fill_login_form(login, password)
 
     def skip_popups(self):
-        self.elem_exists('//body')
-        self.click_element('//button[@aria-label="Close"]', wait=3)
+        self.wait_load_webpage()
+        self.click_element('//button[@aria-label="Close"]', wait=1)
         num = 1
         for i in range(random.randint(1, 5)):
             num = num + i

@@ -113,24 +113,26 @@ class BaseReddit(BaseClass):
 			input("Неможу запостити обери елемент чому? Та клацни Ентер.")
 
 	# ___________________________________ subscribe ___________________________________________ #
-	# def _previously_subscribing(self):
-	# 	# while not exists button
-	# 	if self.elem_exists('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1):
-	# 		wait = 10
+	def _previously_subscribing(self):
+		# while not exists button
+		# if self.elem_exists('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1):
+		if not self.elem_exists('//span[contains(text(), "Joined")]', wait=1):
+			wait = 1
+			self.btn_close_interest()
 			# while not self.elem_exists('''//button[descendant::span[contains(text(), "Joined")]
 			# or descendant::span[contains(text(), "Leave")]]''', wait=wait):
-			# while not self.click_element(
-			# 		'//button[contains(@id, "subscribe-button") and contains(text(), "Join")]',
-			# 		wait=wait):
-			#
-			# 	time.sleep(2)
-			# 	wait = 1
-			# 	self.DRIVER.refresh()
-			# 	self.wait_load_webpage()
-			#
-			# 	logger.debug("Чекаємо підписки!")
-			# else:
-			# 	logger.debug("Підписка оформлена!!!")
+			while not self.click_element(
+					'//button[contains(@id, "subscribe-button") and contains(text(), "Join")]',
+					wait=wait):
+
+				# time.sleep(2)
+				wait = 1
+				self.DRIVER.refresh()
+				self.wait_load_webpage()
+				logger.debug("Чекаємо підписки!")
+				self.btn_close_interest()
+			else:
+				logger.debug("Підписка оформлена!!!")
 		# elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
 		#     wait = 0.1
 		#     while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
@@ -139,25 +141,28 @@ class BaseReddit(BaseClass):
 		#         time.sleep(2)
 		#     else:
 		#         logger.debug("Підписка оформлена")
-		# else:
-		# 	logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
-	def subscribing(self, wait=1):
-		while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
-			self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
-			time.sleep(1)
-			self.DRIVER.refresh()
-			self.wait_load_webpage()
+		else:
+			logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
+	# def subscribing(self, wait=1):
+	# 	self.btn_close_interest()
+	# 	while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
+	# 		self.btn_close_interest()
+	# 		self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
+	# 		# time.sleep(1)
+	# 		self.DRIVER.refresh()
+	# 		self.wait_load_webpage()
 
-	# def subscribing(self):
-	# 	logger.info("Account is subscribing!")
-	#
-	# 	try:
-	# 		self._previously_subscribing()
-	# 	except ElementClickInterceptedException:
-	# 		logger.error("ElementClickInterceptedException: subscribing")
-	# 		self.subscribing()
-	#
-	# 	logger.info("Subscribed!")
+	def subscribing(self):
+		logger.info("Account is subscribing!")
+
+		try:
+			self._previously_subscribing()
+		except ElementClickInterceptedException:
+			logger.error("ElementClickInterceptedException: subscribing")
+			self.btn_close_interest()
+			self.subscribing()
+
+		logger.info("Subscribed!")
 
 	# ______________________________ interests _____________________________________
 	def _button_continue(self):
@@ -169,7 +174,7 @@ class BaseReddit(BaseClass):
 			self.click_element('//button[@aria-label="Close"]', wait=1)
 
 	def btn_close_interest(self):
-		self.click_element('//button[@aria-label="Close"]', wait=1, intercepted_click=True)
+		self.click_element('//button[@aria-label="Close"]', wait=0.2, intercepted_click=True)
 		self.wait_load_webpage()
 
 	def _select_communities(self):
@@ -187,23 +192,23 @@ class BaseReddit(BaseClass):
 
 	def select_interests(self):
 		logger.info("Select interests!")
-		if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
-			num = 0
-			if random.randint(0, 4) <= 2:
-				for _ in range(random.randint(3, 5)):
-					num_selected = random.randint(1, 3)
-					num += num_selected
-					interest_button = f'//div[@role="dialog"]//button[@role="button"][{num}]'
-					self.click_element(value=interest_button, scroll_to=True, wait=1)
-
-				self._button_continue()
-
-				# watch element not fill color
-				self.wait_load_webpage()
-
-				return self._select_communities()
-			else:
-				self.btn_close_interest()
+		# if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
+		# 	num = 0
+		# 	if random.randint(0, 4) <= 2:
+		# 		for _ in range(random.randint(3, 5)):
+		# 			num_selected = random.randint(1, 3)
+		# 			num += num_selected
+		# 			interest_button = f'//div[@role="dialog"]//button[@role="button"][{num}]'
+		# 			self.click_element(value=interest_button, scroll_to=True, wait=1, intercepted_click=True)
+		#
+		# 		self._button_continue()
+		#
+		# 		# watch element not fill color
+		# 		self.wait_load_webpage()
+		#
+		# 		return self._select_communities()
+		# 	else:
+		self.btn_close_interest()
 
 	def accept_all_cookie(self):
 		self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=1, intercepted_click=True)

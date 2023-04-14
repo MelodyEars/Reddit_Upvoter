@@ -40,7 +40,7 @@ class CreatePost(BaseReddit):
             raise CookieInvalidException("Cookie invalid")
 
     # ==================================  IMGUR  ============================
-    def upload_video(self, path_photo: str):
+    def upload_photo_imgur(self, path_photo: str):
         self.DRIVER.get('https://imgur.com/upload')
 
         self.elem_exists('file-input', by=By.ID, return_xpath=True).send_keys(str(path_photo))

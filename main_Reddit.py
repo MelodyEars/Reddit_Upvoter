@@ -1,27 +1,20 @@
 import time
 import traceback
-from queue import Queue
 
 from loguru import logger
 
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from BASE_Reddit.exceptions import PostDeletedException
 from database.vote_tg_bot.models import WorkAccountWithLink
-from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
+# from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
 
 from base_exception import RanOutAccountsForLinkException
-# from Uprove_TG_Bot.handl_info import file_get_random_comments
 from Uprove_TG_Bot.reddit_api_selenium import open_browser
 from Uprove_TG_Bot.PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile, auto_create
 
 
 def body_loop(reddit_link, sub, work_link_account_obj, msg):
-    # comment = ""
-    #
-    # if list_comments:
-    #     comment = list_comments.pop()
-
     try:
         logger.warning(f'Підбираю інформацію для "{reddit_link}"')
         work_link_account_obj, dict_for_browser = collection_info(reddit_link=reddit_link)
@@ -30,17 +23,18 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
         open_browser(**dict_for_browser)  # , comment=comment)
 
     except RanOutAccountsForLinkException:
-        msg = MESSAGES['not_enough_bots'] + sub
+        msg = str(MESSAGES['not_enough_bots']) + str(sub)
         logger.error(msg)
         return "break"
 
     except PostDeletedException:
-        msg = MESSAGES['deleted_post'] + sub
+        msg = str(MESSAGES['deleted_post']) + str(sub)
         logger.error(msg)
         return "break"
 
     except Exception:
-        db_delete_record_work_account_with_link(work_link_account_obj)
+        work_link_account_obj.delete_instance()
+        # db_delete_record_work_account_with_link(work_link_account_obj)
         logger.error(traceback.format_exc())
         return body_loop(reddit_link, sub, work_link_account_obj, msg)
 
@@ -50,7 +44,7 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
 @logger.catch
 def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
     sub = reddit_link.split("/")[4]
-    msg = MESSAGES['finish_process'] + " " + sub
+    msg = str(MESSAGES['finish_process']) + " " + str(sub)
 
     logger.add(
         auto_create(path_near_exefile("logs"), _type="dir") / "BaseReddit.log",
@@ -75,5 +69,4 @@ def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")
-    # q.put(msg)
     return msg

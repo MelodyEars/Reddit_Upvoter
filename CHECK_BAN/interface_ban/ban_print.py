@@ -1,6 +1,6 @@
 from colorama import Fore, Style, Back, init, deinit
 
-from SETTINGS import commands
+from SETTINGS import commands, mine_project
 from database import Cookie, Proxy
 from work_fs import clear_cmd, path_near_exefile
 from work_fs.color import green_color, cyan_color, blue_color, magenta_color, warning_text
@@ -55,11 +55,17 @@ def indicate_number(text_what_answer: str):
 def unpack_data(cookie_obj: Cookie):
 	db_id = cookie_obj.id
 	ban = cookie_obj.ban
-	username_acc: str = path_near_exefile(cookie_obj.cookie_path).stem
+	username_acc: str = cookie_obj.account.login
+
+	if mine_project:
+		password_acc = ":" + cookie_obj.account.password
+	else:
+		password_acc = ""
+
 	proxy: Proxy = cookie_obj.proxy
 	info_proxy: str = f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}"
 
-	about_acc = f'id:{db_id} {username_acc} {info_proxy}'
+	about_acc = f'id:{db_id} {username_acc}{password_acc} {info_proxy}'
 	return ban, about_acc
 
 

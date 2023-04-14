@@ -1,16 +1,14 @@
-# import time
-from threading import Thread
 import time
-
-# from pywinauto import Application
+from threading import Thread
 
 from loguru import logger
 from selenium.common import ElementClickInterceptedException
 
 from BASE_Reddit.BaseReddit import BaseReddit
 from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException
+# from SWITCHer_window import browser_auto_focus
+from SWITCHer_window import add_process
 from Settings_Selenium.SupportSelenium import BrowserCookie
-from SWITCHer_window import auto_focus_every_30
 
 
 class RedditWork(BaseReddit):
@@ -21,21 +19,24 @@ class RedditWork(BaseReddit):
         self.proxy = proxy
         self.link = link
         self.cookie_path = path_cookie
+        # self.thread = Thread
 
     def __enter__(self):
         self.DRIVER = self.run_driver(proxy=self.proxy)
-        browser_pid = self.DRIVER.browser_pid
 
-        thread = Thread(target=auto_focus_every_30, args=(browser_pid, ))
-        thread.start()
+        # ______________________________________________________________________________ run window focus
+        browser_pid = self.DRIVER.browser_pid
+        add_process(browser_pid)
+        # self.thread = Thread(target=browser_auto_focus, args=(browser_pid,))
+        # self.thread.start()
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type or exc_val or exc_tb:
             self.DRIVER.save_screenshot("UpvoterMistake.png")
-
         self.DRIVER.quit()
+        # self.thread.join()
 
     # def _activation_window(self):
     #     browser_pid = self.DRIVER.browser_pid
@@ -46,9 +47,8 @@ class RedditWork(BaseReddit):
     #     main_window.set_focus()
 
     def _deleted_post(self):
-        self._baned_account()
         if not self.elem_exists('//div[contains(text(), "Sorry, this post")]', wait=1):
-            logger.error("Post prepare!")
+            logger.info("Post prepare!")
             return
         else:
             logger.error("Post deleted!")
@@ -79,6 +79,7 @@ class RedditWork(BaseReddit):
         if self.elem_exists('//h3[contains(text(), "You must be 18+")]', wait=0.2):
             logger.info('You must be 18+')
             self.click_element('//button[contains(text(), "Yes")]')
+            self.DRIVER.get(self.link)
             self.wait_load_webpage()
 
         # when we watch on the first time on the network
@@ -104,7 +105,8 @@ class RedditWork(BaseReddit):
             else:
                 # repeats actions
                 logger.error("Клік був, але кнопка апвоуту і досі прозора!")
-                return self.upvote()
+
+                return self._previously_upvote(wait)
 
         else:
             logger.error("Кліку по апвоуту не було!")
@@ -116,14 +118,15 @@ class RedditWork(BaseReddit):
                 return
             else:
                 logger.error("Щось пішло не запланом, мабуть з'явились меню вибору інтересів!")
-                self._find_popups()
+                self.btn_close_interest()
                 self._previously_upvote(wait)
 
     def upvote(self, wait=4):
         try:
             self._baned_account()
+            self._find_popups()
+            self.btn_close_interest()
             self._deleted_post()
-            # self.scroll_to_elem('//button[contains(text(), "Comment")]')
             self._previously_upvote(wait)
             self.subscribing()
         except ElementClickInterceptedException:

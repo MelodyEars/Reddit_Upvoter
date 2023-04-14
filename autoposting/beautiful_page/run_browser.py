@@ -5,7 +5,8 @@ from pathlib import Path
 from loguru import logger
 from selenium.common import UnexpectedAlertPresentException
 
-from BASE_Reddit.exceptions import CookieInvalidException
+from BASE_Reddit.exceptions import CookieInvalidException, WaitRequestToSubredditException, NotTrustedMembersException, \
+	WaitingPostingException
 
 from auth_reddit import get_cookies
 
@@ -17,8 +18,7 @@ from work_fs.PATH import path_near_exefile, move_file_or_dir
 
 from autoposting.beautiful_page.unpack import yield_up_data_from_db, if_enough_post
 from autoposting.beautiful_page.handl_obj import get_info_from_obj, get_info_about_photo
-from autoposting.network.execeptions_autoposting import WaitRequestToSubredditException, WaitingPostingException, \
-	NotTrustedMembersException, SubredditWasBannedException
+from autoposting.network.execeptions_autoposting import SubredditWasBannedException
 
 from autoposting.network.api import CreatePost
 
@@ -93,8 +93,7 @@ def run_browser(jobmodel_obj: JobModel, cookie_path=None, proxy_for_api=None):
 				if path_photo:  # return path_photo NOne if file not exists in folder and delete all post in db
 					# _________________________  Imgur ______________________________
 					logger.info("Upload photo on Imgur and get url.")
-					BROWSER.upload_video(path_photo)
-
+					BROWSER.upload_photo_imgur(path_photo)
 					photo_url = BROWSER.grub_link()
 
 					# ___________________________  Reddit  ____________________________
