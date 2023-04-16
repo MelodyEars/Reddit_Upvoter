@@ -1,13 +1,10 @@
 import time
-from threading import Thread
 
 from loguru import logger
 from selenium.common import ElementClickInterceptedException
 
 from BASE_Reddit.BaseReddit import BaseReddit
 from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException
-# from SWITCHer_window import browser_auto_focus
-from SWITCHer_window import add_process
 from Settings_Selenium.SupportSelenium import BrowserCookie
 
 
@@ -19,16 +16,9 @@ class RedditWork(BaseReddit):
         self.proxy = proxy
         self.link = link
         self.cookie_path = path_cookie
-        # self.thread = Thread
 
     def __enter__(self):
         self.DRIVER = self.run_driver(proxy=self.proxy)
-
-        # ______________________________________________________________________________ run window focus
-        browser_pid = self.DRIVER.browser_pid
-        add_process(browser_pid)
-        # self.thread = Thread(target=browser_auto_focus, args=(browser_pid,))
-        # self.thread.start()
 
         return self
 
@@ -36,15 +26,6 @@ class RedditWork(BaseReddit):
         if exc_type or exc_val or exc_tb:
             self.DRIVER.save_screenshot("UpvoterMistake.png")
         self.DRIVER.quit()
-        # self.thread.join()
-
-    # def _activation_window(self):
-    #     browser_pid = self.DRIVER.browser_pid
-    #     app = Application().connect(process=browser_pid)
-    #
-    #     # while True:
-    #     main_window = app.top_window()
-    #     main_window.set_focus()
 
     def _deleted_post(self):
         if not self.elem_exists('//div[contains(text(), "Sorry, this post")]', wait=1):
@@ -64,8 +45,7 @@ class RedditWork(BaseReddit):
             self.client_cookie.preload()
             logger.info("Attend link!")
             self.DRIVER.get(self.link)
-            # self.DRIVER.refresh()
-            # self.DRIVER.reconnect()
+
         else:
             raise CookieInvalidException("Cookie invalid")
 
@@ -133,31 +113,3 @@ class RedditWork(BaseReddit):
             logger.error("ElementClickInterceptedException: Клік був перехоплнний коли ставив upvote!")
             self._find_popups()
             self.upvote(wait=1)
-
-    # def write_comment(self, text_comment, reddit_username):
-    #
-    #     if not self.elem_exists(
-    #             value=f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=2):
-    #
-    #         self.stealth_send_text(value='//div[@class="notranslate public-DraftEditor-content"]',
-    #                                text_or_key=str(text_comment),
-    #                                scroll_to=True)
-    #
-    #         if not self.elem_exists("""//*[contains(text(),
-    #         "Looks like you've been doing that a lot. Take a break for 2 minutes before trying again.")]""", wait=1):
-    #             # send comment
-    #             self.click_element('//button[contains(text(), "Comment")]', move_to=True)
-    #             time.sleep(5)
-    #
-    #             # check username's comment exists
-    #             if self.elem_exists(
-    #                     f'//a[contains(text(), "{reddit_username}") and @data-testid="comment_author_link"]', wait=10):
-    #                 # success
-    #                 return
-    #             else:
-    #                 logger.warning("Виникла помилка при написанні коментаря! =(")
-    #             #     if self.elem_exists('//*[contains("Something went wrong")]'):
-    #             #         logger.warning('З\'явлось алерт при написанні коментаря "Something went wrong"')
-    #             #         return
-    #             #     else:
-    #             #         return self.write_comment(text_comment, reddit_username)

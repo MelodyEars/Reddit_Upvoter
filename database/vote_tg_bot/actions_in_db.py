@@ -12,7 +12,7 @@ def db_exist_record_link_account(link_id, cookie_id):
         obj: WorkAccountWithLink
         created: bool
         obj, created = WorkAccountWithLink.get_or_create(cookie=cookie_id, link=link_id)
-
+    logger.info(obj)
     return created, obj
 
 

@@ -1,6 +1,6 @@
 import asyncio
 
-from multiprocessing import freeze_support, Process
+from multiprocessing import freeze_support
 
 from loguru import logger
 
@@ -13,7 +13,7 @@ from aiogram.webhook.aiohttp_server import (
 
 import work_fs as wf
 from SETTINGS import mine_project
-from SWITCHer_window import call_auto_focus
+# from SWITCHer_window import call_auto_focus
 
 from Uprove_TG_Bot.TG_bot.setup import dp, bot
 from Uprove_TG_Bot.TG_bot.src.telegram.middleware.admin_only import AdminOnly
@@ -48,10 +48,6 @@ async def on_shutdown(bot: Bot, base_url: str):
 
 
 def start_webhook():
-	# run autofocus
-	autofocus_process = Process(target=call_auto_focus)
-	autofocus_process.start()
-
 	# dp["base_url"] = ngrok_url
 	dp.startup.register(on_startup)
 	dp.shutdown.register(on_shutdown)
@@ -96,8 +92,3 @@ if __name__ == '__main__':
 	)
 
 	main()
-
-
-# TODO delete by id if record not execute
-# TODO add 1 iteration not focus
-# TODO Manager

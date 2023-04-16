@@ -44,5 +44,5 @@ MESSAGES: Messages = {
     'notif_browser_run': notif_browser_run,
     'hi_user': hi_user,
     'btn_run_work': btn_run_work,
-    'not_enough_bots': str
+    'not_enough_bots': not_enough_bots
 }
