@@ -11,7 +11,7 @@ from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file
 
 
-COUNT = 1
+FILE_COUNT = 1
 DICT_ACC_BAN = {}
 
 
@@ -37,7 +37,7 @@ def del_all_responses():
 
 
 async def fetch(session, url):
-	global COUNT
+	global FILE_COUNT
 
 	async with session.get(url, headers={'User-Agent': UserAgent().random}) as response:
 		html_to_file = await response.text()

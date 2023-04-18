@@ -60,6 +60,17 @@ class StructData(NamedTuple):
 #         await message.reply(q)
 #         return
 
+
+class RunBotStates(StatesGroup):
+    reddit_link = State()
+    upvote_int = State()
+
+
+class StructData(NamedTuple):
+    reddit_link: str
+    upvote_int: int
+
+
 class AutofocusManager:
     def __init__(self):
         self.process = None
@@ -75,16 +86,15 @@ class AutofocusManager:
 
 async def run_process_and_reply_after(message: types.Message, data: StructData):
     logger.info("runner process")
-
     reddit_link = data.reddit_link
     upvote_int = data.upvote_int
     autofocus_manager = AutofocusManager()
 
-    with Manager() as manager:
+    async with Manager() as manager:
         LIST_PID_BROWSERS = manager.list()
         autofocus_manager.start_autofocus(LIST_PID_BROWSERS)
 
-        with ProcessPoolExecutor() as executor:
+        async with ProcessPoolExecutor() as executor:
             q = await asyncio.get_running_loop().run_in_executor(
                 executor, start_reddit_work, reddit_link, upvote_int, LIST_PID_BROWSERS
             )

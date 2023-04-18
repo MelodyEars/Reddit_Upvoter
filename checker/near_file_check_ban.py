@@ -9,9 +9,9 @@ from work_fs.PATH import auto_create
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
 
-COUNT = 1
+FILE_COUNT = 1
 COUNT_ACCOUNT = 1
-DICT_ACC_BAN = {}
+
 
 ROOT_DIR = Path(__file__).parent
 
@@ -46,15 +46,15 @@ def del_all_responses():
 
 
 async def fetch(session, url):
-    global COUNT
+    global FILE_COUNT
 
     async with session.get(url, headers={'User-Agent': UserAgent().random}) as response:
         html_to_file = await response.text()
-        filepath: Path = auto_create(ROOT_DIR / "responses", _type="dir") / f"output{COUNT}.html"
+        filepath: Path = auto_create(ROOT_DIR / "responses", _type="dir") / f"output{FILE_COUNT}.html"
         write_line(filepath, html_to_file)
         html = get_str_file(filepath)
 
-        COUNT += 1
+        FILE_COUNT += 1
 
         if not ('page not found' in html and html is None):
             return html
@@ -76,12 +76,12 @@ async def get_ban(line: str):
         ban = unpack_ban(html)
 
         if ban is None:
-            # print(f"{COUNT_ACCOUNT}: {line}")
-            print(line)
-        #     COUNT_ACCOUNT += 1
-        # else:
-        #     logger.critical(f"{COUNT_ACCOUNT}: {line}: {ban}")
-        #     COUNT_ACCOUNT += 1
+            print(f"{COUNT_ACCOUNT}: {line}")
+            # print(line)
+            COUNT_ACCOUNT += 1
+        else:
+            logger.critical(f"{COUNT_ACCOUNT}: {line}: {ban}")
+            COUNT_ACCOUNT += 1
 
 
 async def create_task():
@@ -95,8 +95,6 @@ def check_ban():
 
     finally:
         del_all_responses()
-
-    return DICT_ACC_BAN
 
 
 if __name__ == '__main__':

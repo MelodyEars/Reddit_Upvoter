@@ -5,7 +5,6 @@ from pathlib import Path
 from loguru import logger
 from urllib3.exceptions import ProtocolError
 
-from SWITCHer_window import add_process
 from database import db_get_account_by_id
 from database.vote_tg_bot.models import Cookie
 
@@ -31,10 +30,8 @@ def work_api(
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
         # ______________________________________________________________________________ run window focus
         browser_pid = api_reddit.DRIVER.browser_pid
-        add_process(browser_pid, LIST_PID_BROWSERS)
-        # self.thread = Thread(target=browser_auto_focus, args=(browser_pid,))
-        # self.thread.start()
-        # try:
+        LIST_PID_BROWSERS.append(browser_pid)  # append browser's pid which handling in switcher_window
+
         # ______________________________________________________________________________ go to link
         # attends Reddit and check cookie works
         try:
@@ -61,11 +58,6 @@ def work_api(
         api_reddit.client_cookie.save()
         logger.info(f'Successfully completed "{reddit_username}"')
         api_reddit.DRIVER.quit()
-
-        # finally:
-        #     logger.critical("I'm complete thread")
-        #     # thread.join()
-        #     logger.critical("I'm completed thread")
 
 
 def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,

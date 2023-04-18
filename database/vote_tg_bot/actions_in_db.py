@@ -12,7 +12,7 @@ def db_exist_record_link_account(link_id, cookie_id):
         obj: WorkAccountWithLink
         created: bool
         obj, created = WorkAccountWithLink.get_or_create(cookie=cookie_id, link=link_id)
-    logger.info(obj)
+    # заменить запросом в бд если записи такой еще нет берем и делаем, делать вьіборку из записей у которьіх нет связей в бд с сьілкой
     return created, obj
 
 
