@@ -11,7 +11,6 @@ from selenium.webdriver.common.by import By
 
 from BASE_Reddit.BaseReddit import BaseReddit
 from Settings_Selenium import BrowserCookie
-# from autoposting.network.execeptions_autoposting import SubredditWasBannedException
 
 
 class RedditAuth(BaseReddit):
@@ -86,7 +85,7 @@ class RedditAuth(BaseReddit):
         self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
         self.wait_load_webpage()
         self.btn_close_interest()
-        self.subscribing()
+        self.subscribing_main_page_sub()
         self._btn_create_post()
         self._shadow_ban()
 

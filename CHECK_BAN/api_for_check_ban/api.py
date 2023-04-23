@@ -41,11 +41,11 @@ async def fetch(session, url):
 
 	async with session.get(url, headers={'User-Agent': UserAgent().random}) as response:
 		html_to_file = await response.text()
-		filepath: Path = auto_create(path_near_exefile("responses"), _type="dir") / f"output{COUNT}.html"
+		filepath: Path = auto_create(path_near_exefile("responses"), _type="dir") / f"output{FILE_COUNT}.html"
 		write_line(filepath, html_to_file)
 		html = get_str_file(filepath)
 
-		COUNT += 1
+		FILE_COUNT += 1
 
 		if not ('page not found' in html and html is None):
 			return html

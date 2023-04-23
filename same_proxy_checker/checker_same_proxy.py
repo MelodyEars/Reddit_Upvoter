@@ -37,23 +37,23 @@ def get_proxy_from_file():
     file = "proxy_list.txt"
     file_lins = get_list_file(ROOT_DIR / file)
     for line in file_lins:
-        line_in_list = line.split('"')
-        db_id = line_in_list[0].strip()
-        host: str = line_in_list[1]
-        port = line_in_list[3]
-        user = line_in_list[5]
-        password = line_in_list[7]
-        #
-        # # list ":"
-        # line_in_list = line.split(':')
-        # host = line_in_list[0]
-        # port = line_in_list[1]
-        # user = line_in_list[2]
-        # password = line_in_list[3]
+        # line_in_list = line.split('"')
+        # db_id = line_in_list[0].strip()
+        # host: str = line_in_list[1]
+        # port = line_in_list[3]
+        # user = line_in_list[5]
+        # password = line_in_list[7]
 
+        # list ":"
+        line_in_list = line.split(':')
+        host = line_in_list[0]
+        port = line_in_list[1]
+        user = line_in_list[2]
+        password = line_in_list[3]
         proxy_link = f"http://{host}:{port}"
         auth = aiohttp.BasicAuth(user, password)
-        yield db_id, proxy_link, auth
+        proxy_view = f"{host}:{port}:{user}:{password}"
+        yield proxy_view, proxy_link, auth
 
 
 # ____________________________________________________________________________________ Connect to ipinfo
@@ -98,12 +98,13 @@ async def about_proxy(db_id, proxy_link, auth):
         # ip_info = IpInfo.parse_raw(html)
         json_obj = json.loads(html)
         # print(f"{db_id}: {json_obj['loc']}")
-
+        print(html)
         try:
-            # DICT_ID_INFO[db_id] = json_obj['hostname']
-            print(f"{db_id}: {json_obj['hostname']}")
+            DICT_ID_INFO[db_id] = json_obj['hostname']
+            # print(f"{db_id}: {json_obj['hostname']}")
         except KeyError:
-            logger.critical(db_id)
+            DICT_ID_INFO[db_id] = ""
+            # logger.critical(db_id)
 
 # {
 #   "ip": "216.73.159.44",
@@ -138,20 +139,22 @@ async def create_task():
 
 def run():
     asyncio.run(create_task())
-    # same_count = 0
-    # different_count = 0
-    # for id_db, location in DICT_ID_INFO.items():
-    #     if list(DICT_ID_INFO.values()).count(location) > 1:
-    #         logger.critical(f"{id_db}: {location}")
-    #         same_count += 1
-    #     else:
-    #         print(f"{id_db}: {location}")
-    #         different_count += 1
-    #
-    # print(f"different count: {different_count}")
-    # print(f"same count: {same_count}")
-    # print(len(DICT_ID_INFO))
+    same_count = 0
+    different_count = 0
+    for id_db, location in DICT_ID_INFO.items():
+        if location:
+        # if list(DICT_ID_INFO.values()).count(location) > 1 or location is not None:
+            logger.critical(f"{id_db}: {location}")
+            same_count += 1
+        else:
+            print(f"{id_db}: {location}")
+            different_count += 1
+
+    print(f"different count: {different_count}")
+    print(f"same count: {same_count}")
+    print(len(DICT_ID_INFO))
 
 
 if __name__ == '__main__':
     run()
+

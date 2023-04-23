@@ -3,6 +3,7 @@ from pathlib import Path
 # from threading import Thread
 
 from loguru import logger
+from requests import ReadTimeout
 from urllib3.exceptions import ProtocolError
 
 from database import db_get_account_by_id
@@ -24,14 +25,10 @@ def getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cook
 
 def work_api(
         link_reddit: str, dict_proxy: dict[str], path_cookie: Path,
-        reddit_username: str, id_cookie: Cookie.id, LIST_PID_BROWSERS
+        reddit_username: str, id_cookie: Cookie.id,
 ):  # comment: str):
 
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
-        # ______________________________________________________________________________ run window focus
-        browser_pid = api_reddit.DRIVER.browser_pid
-        LIST_PID_BROWSERS.append(browser_pid)  # append browser's pid which handling in switcher_window
-
         # ______________________________________________________________________________ go to link
         # attends Reddit and check cookie works
         try:
@@ -61,15 +58,20 @@ def work_api(
 
 
 def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
-                 id_cookie: Cookie.id, LIST_PID_BROWSERS):  # , comment: str):
+                 id_cookie: Cookie.id, ):  # , comment: str):
     try:
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, LIST_PID_BROWSERS)
+        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
     except ConnectionResetError:
         logger.critical('ConnectionResetError output.py')
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, LIST_PID_BROWSERS)
+        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
     except ProtocolError:
         logger.critical('ProtocolError output.py')
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, LIST_PID_BROWSERS)
+        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
     except TimeoutError:
         logger.critical('TimeoutError output.py')
-        return getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, LIST_PID_BROWSERS)
+        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+        # return getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+    except ReadTimeout:
+        logger.critical('ReadTimeout output.py')
+        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+

@@ -143,14 +143,14 @@ class BaseReddit(BaseClass):
 		#         logger.debug("Підписка оформлена")
 		else:
 			logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
-	# def subscribing(self, wait=1):
-	# 	self.btn_close_interest()
-	# 	while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
-	# 		self.btn_close_interest()
-	# 		self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
-	# 		# time.sleep(1)
-	# 		self.DRIVER.refresh()
-	# 		self.wait_load_webpage()
+	def subscribing_main_page_sub(self, wait=1):
+		self.btn_close_interest()
+		while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
+			self.btn_close_interest()
+			self.click_element('//button[contains(text(), "Join")]', wait=wait, intercepted_click=True)
+			# time.sleep(1)
+			self.DRIVER.refresh()
+			self.wait_load_webpage()
 
 	def subscribing(self):
 		logger.info("Account is subscribing!")

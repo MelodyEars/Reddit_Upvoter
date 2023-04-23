@@ -5,8 +5,8 @@ from peewee import *
 from SETTINGS import set_database
 
 
-autoposting_db = PostgresqlDatabase('AutoPosting', **set_database)
-
+# autoposting_db = PostgresqlDatabase('AutoPosting', **set_database)
+autoposting_db = None
 
 class BaseModel(Model):
     id = PrimaryKeyField(unique=True)

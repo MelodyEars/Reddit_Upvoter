@@ -1,7 +1,5 @@
-from peewee import PostgresqlDatabase, Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField
-from SETTINGS import set_database
-
-db = PostgresqlDatabase('database', **set_database)
+from peewee import Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField
+from SETTINGS import db
 
 
 class BaseModel(Model):
