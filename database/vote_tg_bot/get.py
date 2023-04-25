@@ -1,3 +1,6 @@
+from peewee import IntegrityError, DoesNotExist
+
+from SETTINGS import mine_project
 from work_fs import path_near_exefile
 from .models import RedditLink, db, Cookie, Account
 
@@ -5,8 +8,16 @@ from .models import RedditLink, db, Cookie, Account
 def db_get_link_id(link_from_file) -> RedditLink:
     # this func work in handl_info->get_links
     # get list id by list text
-    with db:
-        link_obj = RedditLink.get_or_create(link=link_from_file)[0]
+    link_obj: RedditLink
+    if mine_project:
+        with db:
+            try:
+                link_obj = RedditLink.get(link=link_from_file)
+            except DoesNotExist:
+                link_obj = RedditLink.create(link=link_from_file)
+    else:
+        with db:
+            link_obj, created = RedditLink.get_or_create(link=link_from_file)
 
     return link_obj
 

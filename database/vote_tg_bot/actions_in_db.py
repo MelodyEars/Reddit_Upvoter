@@ -1,22 +1,37 @@
+from peewee import DoesNotExist
+
 from SETTINGS import mine_project
 from .models import WorkAccountWithLink, db, Cookie
 
 
-def db_exist_record_link_account(link_id, cookie_id):
+def db_exist_record_link_account(link_id, cookie_id) -> (bool, WorkAccountWithLink):
     # check if id band with id link
-
-    with db:
-        obj: WorkAccountWithLink
-        created: bool
-        obj, created = WorkAccountWithLink.get_or_create(cookie=cookie_id, link=link_id)
+    if mine_project:
+        with db:
+            obj: WorkAccountWithLink
+            try:
+                obj = WorkAccountWithLink.get(cookie=cookie_id, link=link_id)
+                created = True
+            except DoesNotExist:
+                obj = WorkAccountWithLink.create(cookie=cookie_id, link=link_id)
+                created = False
+    else:
+        with db:
+            obj: WorkAccountWithLink
+            created: bool
+            obj, created = WorkAccountWithLink.get_or_create(cookie=cookie_id, link=link_id)
 
     # заменить запросом в бд если записи такой еще нет берем и делаем, делать вьіборку из записей у которьіх нет связей в бд с сьілкой
     return created, obj
 
 
 def db_get_random_account_with_0() -> list[Cookie]:
-    with db:
-        cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
+    if mine_project:
+        with db:
+            cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
+    else:
+        with db:
+            cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
 
     return cookies_db_objs
 

@@ -2,6 +2,7 @@ from random import shuffle
 
 from base_exception import RanOutAccountsForLinkException
 from Uprove_TG_Bot.handl_info import check_proxy
+from database import db_save_1_by_id
 
 from database.vote_tg_bot.actions_in_db import db_get_random_account_with_0, db_exist_record_link_account
 from database.vote_tg_bot.get import db_get_link_id, db_get_cookie_proxy
@@ -15,14 +16,12 @@ def pick_up_account_to_link(link_from_file):
 
 	for cookie_db_obj in cookies_db_objs:
 		outcome_created, created_obj_work_link_account_obj = db_exist_record_link_account(
-			link_id=link_id,
-			cookie_id=cookie_db_obj.id
+			link_id=link_id, cookie_id=cookie_db_obj.id
 		)
-
-		if outcome_created:  # if create record return TRUE
+		if not outcome_created:  # if create record return TRUE
+			db_save_1_by_id(cookie_db_obj.id)  # bot engaged
 			return link_id, cookie_db_obj, created_obj_work_link_account_obj
-		else:
-			continue
+
 	else:
 		# This exception will be earlier in db_get_random_account_with_0
 		raise RanOutAccountsForLinkException

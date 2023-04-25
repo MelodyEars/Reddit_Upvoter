@@ -19,3 +19,8 @@ def db_save_proxy_cookie(proxy_from_api: dict, cookie_path: str, account: dict):
 def db_save_1_by_id(id_cookie):
     with db:
         Cookie.update(is_selected=1).where(Cookie.id == id_cookie).execute()
+
+
+def db_update_0_by_id(id_cookie):
+    with db:
+        Cookie.update(is_selected=0).where(Cookie.id == id_cookie).execute()

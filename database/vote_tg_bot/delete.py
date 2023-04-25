@@ -10,7 +10,7 @@ def db_delete_record_work_account_with_link(obj_record: WorkAccountWithLink):
 
 def db_delete_cookie_by_id(cookie_obj: Cookie):
     if mine_project:
-        with db.transaction():
+        with db:
             WorkAccountWithLink.delete().where(WorkAccountWithLink.cookie == cookie_obj.id).execute()
 
             # delete from

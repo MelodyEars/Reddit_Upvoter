@@ -76,12 +76,12 @@ async def get_ban(line: str):
         ban = unpack_ban(html)
 
         if ban is None:
-            print(f"{COUNT_ACCOUNT}: {line}")
-            # print(line)
-            COUNT_ACCOUNT += 1
-        else:
-            logger.critical(f"{COUNT_ACCOUNT}: {line}: {ban}")
-            COUNT_ACCOUNT += 1
+            # print(f"{COUNT_ACCOUNT}: {line}")
+            print(line)
+            # COUNT_ACCOUNT += 1
+        # else:
+        #     logger.critical(f"{COUNT_ACCOUNT}: {line}: {ban}")
+        #     COUNT_ACCOUNT += 1
 
 
 async def create_task():

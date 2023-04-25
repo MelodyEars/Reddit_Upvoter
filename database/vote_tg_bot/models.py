@@ -5,6 +5,18 @@ from SETTINGS import db
 class BaseModel(Model):
     id = PrimaryKeyField(unique=True)
 
+    # @classmethod
+    # def get_or_create_crdb(cls, **kwargs):
+    #     with cls._meta.database.transaction():
+    #         try:
+    #             record = cls.select().for_update().get(**kwargs)
+    #             created = False
+    #         except cls.DoesNotExist:
+    #             record = cls.create(**kwargs)
+    #             created = True
+    #     return record, created
+
+
     class Meta:
         database = db
 
