@@ -16,14 +16,13 @@ from SETTINGS import mine_project
 # from SWITCHer_window import call_auto_focus
 
 from Uprove_TG_Bot.TG_bot.setup import dp, bot
+from Uprove_TG_Bot.TG_bot.src.database.tables import create_tables
 from Uprove_TG_Bot.TG_bot.src.telegram.middleware.admin_only import AdminOnly
 from Uprove_TG_Bot.TG_bot.src.telegram.middleware.check_users import CheckUser
 from Uprove_TG_Bot.TG_bot.src.telegram.handlers.admin_handlers import admin_router
 from Uprove_TG_Bot.TG_bot.src.telegram.handlers.user_handlers import user_router
 from Uprove_TG_Bot.restrict import check_access
 from database import create_db
-
-from database.vote_tg_bot.db_tg_bot.tables import create_tables
 
 
 async def _start():

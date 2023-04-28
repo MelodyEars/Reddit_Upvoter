@@ -45,12 +45,12 @@ else:
     # admins_id = [487950394, 6238496977]
 
 # token for telegram bot
-if mine_project:
-    # our bot
-    TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
-else:
+# if mine_project:
+#     # our bot
+#     TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
+# else:
     # get from file
-    TOKEN = get_or_create_token()
+TOKEN = get_or_create_token()
 
 # _______________________________________________________________________ CHECK BAN
 if mine_project:

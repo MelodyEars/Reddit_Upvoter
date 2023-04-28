@@ -40,12 +40,12 @@ class RedditWork(BaseReddit):
 
     def _deleted_post(self):
         self._baned_account()
-        if not self.elem_exists('//div[contains(text(), "Sorry, this post")]', wait=1):
+        if not self.elem_exists('//*[contains(text(), "Sorry, this post")]', wait=1):
             logger.error("Post prepare!")
             return
         else:
             logger.error("Post deleted!")
-            raise PostDeletedException("this post has been remove")
+            raise PostDeletedException("this post has been removed")
 
     def attend_link(self):
         # self._activation_window()  # ___________________________________________________________ activation

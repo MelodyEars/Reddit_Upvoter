@@ -1,9 +1,9 @@
 import peewee as pw
-from database import db
-from database.vote_tg_bot.models import BaseModel
+
+db = pw.SqliteDatabase('app.db')
 
 
-class AllowedUser(BaseModel):
+class AllowedUser(pw.Model):
     # user_id = pw.IntegerField()
     username = pw.CharField(max_length=50)
 
@@ -12,5 +12,4 @@ class AllowedUser(BaseModel):
 
 
 def create_tables():
-    with db:
-        db.create_tables([AllowedUser])
+    db.create_tables([AllowedUser])

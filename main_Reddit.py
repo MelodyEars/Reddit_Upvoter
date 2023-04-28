@@ -5,7 +5,8 @@ from loguru import logger
 
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from BASE_Reddit.exceptions import PostDeletedException
-from database import db_update_0_by_id
+from database import db_delete_record_work_account_with_link
+# from database import db_update_0_by_id
 from database.vote_tg_bot.models import WorkAccountWithLink
 # from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
 
@@ -16,7 +17,7 @@ from work_fs import path_near_exefile, auto_create
 
 
 def body_loop(reddit_link, sub, work_link_account_obj, msg):
-    dict_for_browser = {}
+    # dict_for_browser = {}
 
     try:
         logger.warning(f'Підбираю інформацію для "{reddit_link}"')
@@ -37,13 +38,13 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
         return "break", msg
 
     except Exception:
-        work_link_account_obj.delete_instance()
-        # db_delete_record_work_account_with_link(work_link_account_obj)
+        # work_link_account_obj.delete_instance()
+        db_delete_record_work_account_with_link(work_link_account_obj)
         logger.error(traceback.format_exc())
         return body_loop(reddit_link, sub, work_link_account_obj, msg)
-    finally:
-        if dict_for_browser:
-            db_update_0_by_id(dict_for_browser['id_cookie'])
+    # finally:
+    #     if dict_for_browser:
+    #         db_update_0_by_id(dict_for_browser['id_cookie'])
 
     return None, msg
 

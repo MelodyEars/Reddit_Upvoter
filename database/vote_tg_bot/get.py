@@ -1,4 +1,4 @@
-from peewee import IntegrityError, DoesNotExist
+from peewee import DoesNotExist
 
 from SETTINGS import mine_project
 from work_fs import path_near_exefile

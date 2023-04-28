@@ -1,4 +1,22 @@
-from Uprove_TG_Bot.PickUpAccountsForLink.match_account import pick_up_account_to_link
 
-link = 'https://www.reddit.com/r/OnlyCurvyGW/comments/12xcoqo/let_me_take_off_my_top_to_show_you_my_lovely_tits/'
-print(pick_up_account_to_link(link))
+
+
+# TODO screenshot this site
+# 'https://kipling.com.au/product/art-m-jessica-large-tote/KI47786JB.html'
+
+from SETTINGS import db
+from database import Cookie
+
+with db:
+    cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
+    print(len(cookies_db_objs))
+    for cookie_obj in cookies_db_objs:
+        print(cookie_obj.account.login)
+        # Cookie.update(is_selected=0).where(Cookie.id == cookie_obj.id).execute()
+
+
+
+# базу данньіх
+# 1 тг бот ник уникальньій ключ
+# оплата и когда автоматически отключать
+#  приход и расход кто сколько получил чколько на что тратиться (прокси и сервера)

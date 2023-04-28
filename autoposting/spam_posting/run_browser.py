@@ -15,7 +15,7 @@ def get_link_photo(api: SpamPosterReddit):
 
 
 def activate_spam_poster(account: dict[str, str], proxy_for_api: dict[str: str]):
-    with SpamPosterReddit(proxy=proxy_for_api, path_cookie=None) as api:
+    with SpamPosterReddit(proxy=proxy_for_api) as api:
         # ________________________________________________________________ auth
 
         api.goto_login_form()

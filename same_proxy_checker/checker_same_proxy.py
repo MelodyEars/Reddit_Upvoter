@@ -98,13 +98,13 @@ async def about_proxy(db_id, proxy_link, auth):
         # ip_info = IpInfo.parse_raw(html)
         json_obj = json.loads(html)
         # print(f"{db_id}: {json_obj['loc']}")
-        print(html)
+        # print(html)
         try:
-            DICT_ID_INFO[db_id] = json_obj['hostname']
-            # print(f"{db_id}: {json_obj['hostname']}")
+            # DICT_ID_INFO[db_id] = json_obj['hostname']
+            print(f"{db_id}: {json_obj['hostname']}")
         except KeyError:
-            DICT_ID_INFO[db_id] = ""
-            # logger.critical(db_id)
+            # DICT_ID_INFO[db_id] = ""
+            logger.critical(db_id)
 
 # {
 #   "ip": "216.73.159.44",

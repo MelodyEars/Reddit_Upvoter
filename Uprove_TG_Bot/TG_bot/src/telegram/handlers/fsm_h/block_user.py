@@ -8,8 +8,8 @@ from SETTINGS import mine_project
 # from src.database.tables import AllowedUser
 
 from Uprove_TG_Bot.TG_bot.setup import admin_router
+from Uprove_TG_Bot.TG_bot.src.database.tables import AllowedUser
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.admin_msg import admin_MESSAGES
-from database.vote_tg_bot.db_tg_bot.tables import AllowedUser
 
 blocked_users = []
 

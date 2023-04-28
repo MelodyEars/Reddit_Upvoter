@@ -13,8 +13,8 @@ from .execeptions_autoposting import SubredditWasBannedException
 
 class CreatePost(BaseReddit):
     """Get link photo from Imgure passes to Reddit Post(create post on a sub-network)"""
-    def __init__(self, path_cookie: Path, proxy=None):
-        super(__class__, self).__init__()
+    def __init__(self, proxy, path_cookie=None):
+        super().__init__()
         self.client_cookie = BrowserCookie
         self.proxy = proxy
         self.cookie_path = path_cookie

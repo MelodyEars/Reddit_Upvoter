@@ -51,6 +51,50 @@ def proxy_data(proxy: dict):
     return resp
 
 
+class Chrome(uc.Chrome):
+    def __init__(
+            self,
+            options=None,
+            user_data_dir=None,
+            driver_executable_path=None,
+            browser_executable_path=None,
+            port=0,
+            enable_cdp_events=False,
+            service_args=None,
+            service_creationflags=None,
+            desired_capabilities=None,
+            advanced_elements=False,
+            service_log_path=None,
+            keep_alive=True,
+            log_level=0,
+            headless=False,
+            version_main=None,
+            patcher_force_close=False,
+            suppress_welcome=True,
+            use_subprocess=True,
+            debug=False,
+            no_sandbox=True,
+            **kw,
+    ):
+        super().__init__(options, user_data_dir, driver_executable_path, browser_executable_path, port,
+                         enable_cdp_events, service_args, service_creationflags, desired_capabilities,
+                         advanced_elements, service_log_path, keep_alive, log_level, headless, version_main,
+                         patcher_force_close, suppress_welcome, use_subprocess, debug, no_sandbox, **kw)
+        self.get = None
+
+    def get(self, url):
+        # block js execution
+        self.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": "alert();"})
+        # but let get(url) immediately return
+        super().get(url)
+        # resume js execution
+        self.switch_to.alert.accept()
+        # immediately stop and restart the service to avoid timings detection
+        self.reconnect()
+        # this is only needed once per session, is it ?
+        self.get = super().get
+
+
 class BaseClass:
 
     def __init__(self):
