@@ -32,6 +32,7 @@ else:
                     "host": "localhost",
                     "port": 5432,
                     }
+
     db = PostgresqlDatabase('database', **set_database)
 
 # ______________________________________________________________________ TG BOT
@@ -50,6 +51,7 @@ else:
 #     TOKEN = '5340721195:AAFlnSS4qNyoVF1mfkwmdBrzHzOStr--ThA'
 # else:
     # get from file
+
 TOKEN = get_or_create_token()
 
 # _______________________________________________________________________ CHECK BAN

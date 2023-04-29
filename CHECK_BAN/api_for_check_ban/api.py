@@ -68,13 +68,13 @@ async def get_ban(path_cookie: Path):
 		print(f"{url}: {ban}")
 
 
-async def create_task(path_cookies: list):
+async def create_tasks(path_cookies: list):
 	tasks = [asyncio.create_task(get_ban(path_cookie)) for path_cookie in path_cookies]
 	await asyncio.gather(*tasks)
 
 
 def check_ban(path_cookies: list[Path]):
-	asyncio.run(create_task(path_cookies))
+	asyncio.run(create_tasks(path_cookies))
 	del_all_responses()
 
 	return DICT_ACC_BAN

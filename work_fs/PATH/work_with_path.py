@@ -47,7 +47,7 @@ def path_near_exefile(filename: str = ".") -> Path:
 
     # get path from this file
     else:
-        path = Path(__file__).parent.parent / filename
+        path = Path(__file__).parent.parent.parent / filename
 
     return path
 

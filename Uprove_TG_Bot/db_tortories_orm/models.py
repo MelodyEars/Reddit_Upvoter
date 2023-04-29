@@ -1,65 +1,59 @@
-from tortoise import Tortoise
-from tortoise.fields import *
+from tortoise import fields
 from tortoise.models import Model
 
-# Налаштування підключення до бази даних
-DATABASE = {
-    "provider": "asyncpg",
-    "user": "doadmin",
-    "password": "AVNS_XCxtxUH7rZz8txAxKYO",
-    "host": "bots-do-user-11731497-0.b.db.ondigitalocean.com",
-    "port": "25061",
-    "database": "8-core_start_comp",
-}
-
-# Ініціалізація підключення до бази даних
-Tortoise.init(DATABASE)
 
 class BaseModel(Model):
-    id = IntField(pk=True)
+    id = fields.IntField(pk=True)
 
-    class Meta:
-        abstract = True
 
 class Proxy(BaseModel):
-    host = CharField(max_length=255)
-    port = CharField(max_length=255)
-    user = CharField(max_length=255)
-    password = CharField(max_length=255)
+    host = fields.CharField(max_length=255)
+    port = fields.CharField(max_length=255)
+    user = fields.CharField(max_length=255)
+    password = fields.CharField(max_length=255)
 
     class Meta:
         table = 'proxies'
 
 
 class Account(BaseModel):
-    login = CharField(max_length=255, unique=True)
-    password = CharField(max_length=255)
+    login = fields.CharField(max_length=255, unique=True)
+    password = fields.CharField(max_length=255)
 
     class Meta:
         table = 'accounts'
 
 
 class Cookie(BaseModel):
-    account = ForeignKeyField("models.Account", related_name="cookies", on_delete='CASCADE')
-    proxy = ForeignKeyField("models.Proxy", related_name="cookies", on_delete='CASCADE')
-    cookie_path = CharField(max_length=255)
-    is_selected = BooleanField(default=False)
-    ban = CharField(max_length=255, null=True, default=None)
+    account = fields.ForeignKeyField('models.Account', related_name='cookies')
+    proxy = fields.ForeignKeyField('models.Proxy', related_name='cookies')
+    cookie_path = fields.CharField(max_length=255)
+    is_selected = fields.BooleanField(default=False)
+    ban = fields.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.cookie_path
 
     class Meta:
         table = 'cookies'
 
 
 class RedditLink(BaseModel):
-    link = CharField(max_length=255)
+    link = fields.CharField(max_length=255)
+
+    def __str__(self):
+        return self.link
 
     class Meta:
-        table = "reddit_links"
+        table = 'reddit links'
 
 
 class WorkAccountWithLink(BaseModel):
-    cookie = ForeignKeyField("models.Cookie", related_name="work_accounts", null=True, on_delete='SET NULL')
-    link = ForeignKeyField("models.RedditLink", related_name="work_accounts", null=True, on_delete='SET NULL')
+    cookie = fields.ForeignKeyField('models.Cookie', related_name='work_accounts', null=True)
+    link = fields.ForeignKeyField('models.RedditLink', related_name='work_accounts', null=True)
 
     class Meta:
-        table = "work_account_with_links"
+        table = 'work account with link'
+
+    # cookie = fields.ManyToManyField('models.Cookie', related_name='work_account_links', null=True)
+    # link = fields.ManyToManyField('models.RedditLink', related_name='work_account_links', null=True)
