@@ -26,12 +26,8 @@ def db_exist_record_link_account(link_id, cookie_id) -> (bool, WorkAccountWithLi
 
 
 def db_get_random_account_with_0() -> list[Cookie]:
-    if mine_project:
-        with db:
-            cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
-    else:
-        with db:
-            cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
+    with db:
+        cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
 
     return cookies_db_objs
 

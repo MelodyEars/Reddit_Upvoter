@@ -1,6 +1,5 @@
 import ssl
 from pathlib import Path
-
 from tortoise import Tortoise
 
 
@@ -17,13 +16,14 @@ DATABASE_CONFIG = {
                 "password": "AVNS_XCxtxUH7rZz8txAxKYO",
                 "port": 25061,
                 "user": "doadmin",
+                'statement_cache_size': 0,
                 "ssl": ssl_ctx,
             },
         },
     },
     "apps": {
         "models": {
-            "models": ["Uprove_TG_Bot.db_tortories_orm.models"],
+            "models": ["NW_Upvoter.db_tortories_orm.models"],
             "default_connection": "default",
         },
     },
