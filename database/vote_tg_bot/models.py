@@ -16,7 +16,6 @@ class BaseModel(Model):
     #             created = True
     #     return record, created
 
-
     class Meta:
         database = db
 

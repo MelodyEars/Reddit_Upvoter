@@ -3,8 +3,6 @@ from pathlib import Path
 
 from tortoise import Tortoise
 
-from work_fs import path_near_exefile
-
 
 path_to_certificate = str(Path(__file__).parent / 'ca-certificate.crt')
 ssl_ctx = ssl.create_default_context(cafile=path_to_certificate)

@@ -18,10 +18,6 @@ async def db_work():
     print(result)
 
 
-# def main():
-#     # task = asyncio.create_task(db_work())
-#     asyncio.gather(db_work())
-
 
 if __name__ == '__main__':
     asyncio.run(db_work())
