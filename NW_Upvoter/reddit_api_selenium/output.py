@@ -49,12 +49,13 @@ def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_
                 logger.info("Upvote stay on.")
 
             except BanAccountException:
-                logger.info(f'Ban: "{reddit_username}"')
+                logger.error(f'Ban: "{reddit_username}"')
 
             except NotRefrashPageException:
-                logger.info(f'Our CDN was unable to reach our servers. Account: "{reddit_username}"')
+                logger.critical(f'Not refresh page: "{reddit_username}"')
 
             logger.info("Save cookie!")
             api_reddit.client_cookie.save()
             logger.info(f'Successfully completed "{reddit_username}"')
+            api_reddit.DRIVER.quit()
             break

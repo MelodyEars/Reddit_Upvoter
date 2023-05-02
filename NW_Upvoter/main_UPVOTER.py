@@ -5,7 +5,7 @@ from aiogram import types
 from loguru import logger
 
 from base_exception import RanOutAccountsForLinkException
-from BASE_Reddit.exceptions import PostDeletedException
+from BASE_Reddit.exceptions import PostDeletedException, NotLoadPageException
 from work_fs import path_near_exefile, auto_create
 
 from NW_Upvoter.db_tortories_orm.models import WorkAccountWithLink
@@ -32,6 +32,9 @@ async def body_loop(reddit_link, sub, work_link_account_obj, msg):
         msg = str(MESSAGES['deleted_post']) + str(sub)
         logger.error(msg)
         return "break", msg
+
+    except NotLoadPageException:
+        logger.critical("Not load page")
 
     except Exception:
         # work_link_account_obj.delete_instance()

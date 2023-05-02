@@ -4,7 +4,7 @@ from loguru import logger
 from selenium.common import ElementClickInterceptedException
 
 from BASE_Reddit.BaseReddit import BaseReddit
-from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException
+from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException, CrashRedditException
 from Settings_Selenium.SupportSelenium import BrowserCookie
 
 

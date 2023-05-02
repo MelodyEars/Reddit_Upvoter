@@ -31,3 +31,7 @@ class WaitingPostingException(RedditException):
 
 class NotTrustedMembersException(RedditException):
     """This community only allows trusted members to post here"""
+
+
+class NotLoadPageException(RedditException):
+    """Page not load"""

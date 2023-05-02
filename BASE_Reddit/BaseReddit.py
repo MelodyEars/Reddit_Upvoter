@@ -25,21 +25,20 @@ class BaseReddit(BaseClass):
 
 	# ________________________ BASE REDDIT ___________________________
 	def _error_cdn_to_server(self):
-		if self.elem_exists(value='body', by=By.TAG_NAME, wait=60):
-			self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.3, intercepted_click=True)
-			if self.elem_exists('//*[contains(text(), "Our CDN was unable to reach our servers")]', wait=0.1):
+		"""This function check if page load or not, add only errors"""
+		if self.elem_exists(value='body', by=By.TAG_NAME, wait=30):
+			self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.1, intercepted_click=True)
+			if (
+					self.elem_exists('//*[contains(text(), "Our CDN was unable ")]', wait=0.1) or
+					self.elem_exists('''//*[contains(text(), "Sorry, for some reason reddit")]''', wait=0.1)
+			):
 				return True
 			else:
 				return False
-		elif self.elem_exists('''//*[contains(text(), "Sorry, for some reason reddit can't be reached.")]'''):
-			if self.elem_exists(
-					'''//*[contains(text(), "Sorry, for some reason reddit can't be reached.")]''', wait=0.1):
-				return True
-			else:
-				return False
+
 		else:
 			logger.warning("Сторінка не завантажилась, беру наступну задачу.")
-			return True
+			raise NotLoadPageException("PAGE NOT LOAD!!!")
 
 	def wait_load_webpage(self):
 		logger.info("Wait load page!")
@@ -143,6 +142,7 @@ class BaseReddit(BaseClass):
 		#         logger.debug("Підписка оформлена")
 		else:
 			logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
+
 	def subscribing_main_page_sub(self, wait=1):
 		self.btn_close_interest()
 		while not self.elem_exists('//span[contains(text(), "Joined")]', wait=wait):
@@ -213,3 +213,4 @@ class BaseReddit(BaseClass):
 	def accept_all_cookie(self):
 		self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=1, intercepted_click=True)
 		time.sleep(1)
+
