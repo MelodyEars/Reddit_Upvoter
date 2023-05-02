@@ -1,4 +1,6 @@
 # import time
+import asyncio
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 # from threading import Thread
 
@@ -23,11 +25,7 @@ def getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cook
     return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie)
 
 
-def work_api(
-        link_reddit: str, dict_proxy: dict[str], path_cookie: Path,
-        reddit_username: str, id_cookie: Cookie.id,
-):  # comment: str):
-
+def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str, id_cookie: Cookie.id,):
     with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
         # ______________________________________________________________________________ go to link
         # attends Reddit and check cookie works
@@ -36,7 +34,6 @@ def work_api(
         except CookieInvalidException:
             api_reddit.DRIVER.quit()
             return getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie)
-
         # ______________________________________________________________________________ upvote
         try:
             logger.info("Put on upvote!")
@@ -57,21 +54,29 @@ def work_api(
         api_reddit.DRIVER.quit()
 
 
-def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
-                 id_cookie: Cookie.id, ):  # , comment: str):
+def handling_api(dict_for_browser):
     try:
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+        return work_api(**dict_for_browser)
     except ConnectionResetError:
         logger.critical('ConnectionResetError output.py')
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+        return handling_api(dict_for_browser)
     except ProtocolError:
         logger.critical('ProtocolError output.py')
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+        return handling_api(dict_for_browser)
     except TimeoutError:
         logger.critical('TimeoutError output.py')
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+        return handling_api(dict_for_browser)
         # return getter_cookie(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
     except ReadTimeout:
         logger.critical('ReadTimeout output.py')
-        return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )
+        return handling_api(dict_for_browser)
 
+
+async def open_browser(dict_for_browser):
+    with ProcessPoolExecutor() as executor:
+        try:
+            await asyncio.wait_for(asyncio.get_running_loop().run_in_executor(executor, handling_api, dict_for_browser), timeout=180)
+        except asyncio.TimeoutError:
+            logger.info("Timeout occurred. Restarting process...")
+            # Рекурсивно перезапускає функцію, якщо вона завершилася через timeout
+            return await open_browser(dict_for_browser)

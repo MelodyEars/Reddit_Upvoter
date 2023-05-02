@@ -11,5 +11,5 @@ class AllowedUser(pw.Model):
         database = db
 
 
-def create_tables():
+def create_tables_user_tg():
     db.create_tables([AllowedUser])

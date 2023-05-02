@@ -1,21 +1,17 @@
-import asyncio
-
 from typing import NamedTuple
-from concurrent.futures import ProcessPoolExecutor
 
 from loguru import logger
 
 from aiogram import types
 from aiogram.fsm.state import State, StatesGroup
 
-
-from main_Reddit import start_reddit_work # MESSAGE_IN_TG
+from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db
+from NW_Upvoter.main_UPVOTER import start_reddit_work
 
 
 class RunBotStates(StatesGroup):
     reddit_link = State()
     upvote_int = State()
-    # comments_int = State()
 
 
 class StructData(NamedTuple):
@@ -28,13 +24,14 @@ async def run_process_and_reply_after(message: types.Message, data: StructData):
 
     reddit_link = data.reddit_link
     upvote_int = data.upvote_int
-
-    with ProcessPoolExecutor(max_workers=2) as executor:
-        q = await asyncio.get_running_loop().run_in_executor(executor, start_reddit_work, reddit_link, upvote_int)
-
-    if q:
-        await message.reply(q)
-        return
+    await connect_to_db()
+    await start_reddit_work(reddit_link, upvote_int, message)
+    # with ProcessPoolExecutor(max_workers=2) as executor:
+    #     q = await asyncio.get_running_loop().run_in_executor(executor, start_reddit_work, reddit_link, upvote_int)
+    #
+    # if q:
+    #     await message.reply(q)
+    #     return
 
 # async def run_process_and_reply_after(message: types.Message, data: StructData):
 #     logger.info("runner process")

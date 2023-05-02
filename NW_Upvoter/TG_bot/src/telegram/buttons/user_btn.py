@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
+from NW_Upvoter.TG_bot.src.telegram.messages.user_msg import MESSAGES
 
 
 def one_btn(text: str) -> ReplyKeyboardMarkup:

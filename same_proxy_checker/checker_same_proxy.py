@@ -4,7 +4,6 @@ from pathlib import Path
 
 import aiohttp
 from fake_useragent import UserAgent
-from pydantic import BaseModel
 from loguru import logger
 
 from work_fs.PATH import auto_create
@@ -16,19 +15,6 @@ FILE_COUNT = 1
 ROOT_DIR = Path(__file__).parent
 DICT_ID_INFO = {}
 
-
-# _______________________________________________________________________ pydantic
-# class IpInfo(BaseModel):
-#     ip: str
-#     hostname: str | None
-#     city: str
-#     region: str
-#     country: str
-#     loc: str
-#     org: str
-#     postal: str
-#     timezone: str
-#     readme: str
 
 # _______________________________________________________________________ from file
 def get_proxy_from_file():

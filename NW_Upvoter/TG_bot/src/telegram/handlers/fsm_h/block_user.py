@@ -7,9 +7,9 @@ from SETTINGS import mine_project
 # from src.database.query.block_user import unblock_user, block_user
 # from src.database.tables import AllowedUser
 
-from Uprove_TG_Bot.TG_bot.setup import admin_router
-from Uprove_TG_Bot.TG_bot.src.database.tables import AllowedUser
-from Uprove_TG_Bot.TG_bot.src.telegram.messages.admin_msg import admin_MESSAGES
+from NW_Upvoter.TG_bot.setup import admin_router
+from NW_Upvoter.TG_bot.src.database.tables import AllowedUser
+from NW_Upvoter.TG_bot.src.telegram.messages.admin_msg import admin_MESSAGES
 
 blocked_users = []
 

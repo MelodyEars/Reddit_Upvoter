@@ -1,10 +1,16 @@
-import ssl
-from pathlib import Path
+import os
+import sys
+from ssl import create_default_context
+# from pathlib import Path
 from tortoise import Tortoise
 
+if getattr(sys, 'frozen', False):
+    bundle_dir = sys._MEIPASS
+else:
+    bundle_dir = os.path.dirname(os.path.abspath(__file__))
 
-path_to_certificate = str(Path(__file__).parent / 'ca-certificate.crt')
-ssl_ctx = ssl.create_default_context(cafile=path_to_certificate)
+path_to_certificate = os.path.join(bundle_dir, 'ca-certificate.crt')
+ssl_ctx = create_default_context(cafile=path_to_certificate)
 
 DATABASE_CONFIG = {
     "connections": {

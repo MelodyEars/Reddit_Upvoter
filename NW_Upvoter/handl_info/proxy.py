@@ -1,52 +1,58 @@
-import requests
+import asyncio
+from pathlib import Path
 
+import aiohttp
+from aiohttp import ClientProxyConnectionError
+from fake_useragent import UserAgent
 from loguru import logger
-from requests.exceptions import ProxyError, ReadTimeout
 
 from base_exception import ProxyInvalidException
-from work_fs import path_near_exefile, get_list_file, write_list_to_file
+from work_fs import path_near_exefile, auto_create, write_line, get_str_file
+from work_fs.PATH import delete_dir
+
+FILE_COUNT = 1
+
+RESP_PATH = path_near_exefile("responses")
 
 
-def check_proxy(host, port, user, password):
-    proxies = {"http": f"http://{user}:{password}@{host}:{port}"}
-    # url = "http://ipinfo.io/json"
+def del_all_responses():
+    delete_dir(RESP_PATH)
+
+
+async def fetch(session, proxy_link, auth):
+    global FILE_COUNT
+
     url = 'http://httpbin.org/ip'
+    async with session.get(url, proxy=proxy_link, proxy_auth=auth,
+                           headers={'User-Agent': UserAgent().random}) as response:
+        # _____________________________________________________________________ write to file
+        html_to_file = await response.text()
+        filepath: Path = auto_create(RESP_PATH, _type="dir") / f"output{FILE_COUNT}.html"
+        write_line(filepath, html_to_file)
+        # ______________________________________________________________________ get from file
+        html = get_str_file(filepath)
+        FILE_COUNT += 1
+        return html
 
-    try:
-        response = requests.get(url, proxies=proxies, timeout=10)
-        print(host + response.text)
-        logger.info(f"Successfully connect to {host}:{port}:{user}:{password}")
-    except ReadTimeout:
-        logger.error(f"ReadTimeout connect to {host}:{port}:{user}:{password}")
-        return check_proxy(host, port, user, password)
-    except ProxyError:
-        logger.error(f"Щось з проксі {host}:{port}:{user}:{password}! НЕ  відправляє данні на сайт.")
-        raise ProxyInvalidException("ProxyError: Invalid proxy ")
 
+async def check_proxy(host, port, user, password):
+    proxy_link = f"http://{host}:{port}"
+    auth = aiohttp.BasicAuth(user, password)
 
-def file_get_proxy():
-    path_proxies_file = path_near_exefile('proxies.txt')
-    list_proxies = get_list_file(path_proxies_file)
+    async with aiohttp.ClientSession() as session:
+        try:
+            html = await fetch(session, proxy_link, auth)
 
-    try:
-        list_line_content = list_proxies.pop(-1).replace(" ", "").split(':')
-    except IndexError:
-        raise ProxyInvalidException('Недостатньо проксі!')
-
-    proxy_for_api = {
-        'host': list_line_content[0],
-        'port': list_line_content[1],
-        'user': list_line_content[2],
-        'password': list_line_content[3]
-    }
-
-    try:
-        check_proxy(**proxy_for_api)
-        return proxy_for_api, list_proxies, path_proxies_file
-    except ProxyInvalidException:
-        write_list_to_file(path_proxies_file, list_proxies)
-        return file_get_proxy()
+            print(host + " " + html)
+            logger.info(f"Successfully connect to {host}:{port}:{user}:{password}")
+            del_all_responses()  # __________________________________________________delete all responses
+        except TimeoutError:
+            logger.error(f"ReadTimeout connect to {host}:{port}:{user}:{password}")
+            return check_proxy(host, port, user, password)
+        except ClientProxyConnectionError:
+            logger.error(f"Щось з проксі {host}:{port}:{user}:{password}! НЕ  відправляє данні на сайт.")
+            raise ProxyInvalidException("ProxyError: Invalid proxy ")
 
 
 if __name__ == '__main__':
-    check_proxy("62.109.29.75", "12296", "modeler_ZBzURk", "RqF3o1B9EDKr")
+    asyncio.run(check_proxy("185.112.12.107", "2831", "34900", "OhOopsbY"))

@@ -6,10 +6,10 @@ from aiogram import F
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from Uprove_TG_Bot.TG_bot.setup import user_router
-from Uprove_TG_Bot.TG_bot.src.telegram.buttons.user_btn import main_btn
-from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
-from Uprove_TG_Bot.TG_bot.work_PROCESS import run_process_and_reply_after, RunBotStates, StructData
+from NW_Upvoter.TG_bot.setup import user_router
+from NW_Upvoter.TG_bot.src.telegram.buttons.user_btn import main_btn
+from NW_Upvoter.TG_bot.src.telegram.messages.user_msg import MESSAGES
+from NW_Upvoter.TG_bot.create_TASK_LINK import run_process_and_reply_after, RunBotStates, StructData
 
 
 @user_router.message(F.text == MESSAGES['btn_reset'])

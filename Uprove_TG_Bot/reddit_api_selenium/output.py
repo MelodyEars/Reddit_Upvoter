@@ -57,7 +57,7 @@ def work_api(
         api_reddit.DRIVER.quit()
 
 
-def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
+async def open_browser(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str,
                  id_cookie: Cookie.id, ):  # , comment: str):
     try:
         return work_api(link_reddit, dict_proxy, path_cookie, reddit_username, id_cookie, )

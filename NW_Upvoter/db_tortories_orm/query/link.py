@@ -8,7 +8,7 @@ from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db
 async def db_get_or_create_link_obj(link: str):
     """Get or create link id from database"""
     link_obj, _ = await RedditLink.get_or_create(link=link)
-
+    print(_)
     return link_obj
 
 

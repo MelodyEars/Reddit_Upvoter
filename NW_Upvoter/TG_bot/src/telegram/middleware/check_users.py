@@ -2,7 +2,7 @@ from typing import Callable, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 
-from Uprove_TG_Bot.TG_bot.src.database.tables import AllowedUser
+from NW_Upvoter.TG_bot.src.database.tables import AllowedUser
 
 
 class CheckUser(BaseMiddleware):

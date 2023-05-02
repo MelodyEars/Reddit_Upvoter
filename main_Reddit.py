@@ -1,6 +1,7 @@
 import time
 import traceback
 
+from aiogram import types
 from loguru import logger
 
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
@@ -17,8 +18,6 @@ from work_fs import path_near_exefile, auto_create
 
 
 def body_loop(reddit_link, sub, work_link_account_obj, msg):
-    # dict_for_browser = {}
-
     try:
         logger.warning(f'Підбираю інформацію для "{reddit_link}"')
         work_link_account_obj, dict_for_browser = collection_info(reddit_link=reddit_link)
@@ -50,7 +49,7 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
 
 
 @logger.catch
-def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
+def start_reddit_work(reddit_link: str, upvote_int: int, message: types.Message):  # comments_int: int
     sub = reddit_link.split("/")[4]
     msg = str(MESSAGES['finish_process']) + " " + str(sub)
 
@@ -66,9 +65,6 @@ def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
 
     id_work_link_account_obj = WorkAccountWithLink
 
-    # get random comment from txt
-    # list_comments = file_get_random_comments(comments_int)
-
     for _ in range(upvote_int):
         condition, msg = body_loop(reddit_link, sub, id_work_link_account_obj, msg)
         if condition is not None:
@@ -77,4 +73,3 @@ def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")
-    return msg
