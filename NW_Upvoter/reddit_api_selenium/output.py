@@ -1,5 +1,6 @@
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
+from http.client import RemoteDisconnected
 from pathlib import Path
 
 from loguru import logger
@@ -15,6 +16,7 @@ from .reddit_actions import RedditWork
 from BASE_Reddit.exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
 
 
+# TODO close browser via pid or driver quit
 async def open_browser(dict_for_browser):
     with ProcessPoolExecutor() as executor:
         try:
@@ -27,7 +29,8 @@ async def open_browser(dict_for_browser):
 def handling_api(dict_for_browser):
     try:
         return work_api(**dict_for_browser)
-    except (ConnectionResetError, ProtocolError, TimeoutError, ReadTimeout) as e:
+    except (ConnectionResetError, ProtocolError, TimeoutError, ReadTimeout,
+            ConnectionError, RemoteDisconnected, ConnectionError) as e:
         logger.critical(f'{type(e).__name__} in output.py')
         return handling_api(dict_for_browser)
 

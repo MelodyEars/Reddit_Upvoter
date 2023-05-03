@@ -10,6 +10,7 @@ from NW_Upvoter.TG_bot.setup import user_router
 from NW_Upvoter.TG_bot.src.telegram.buttons.user_btn import main_btn
 from NW_Upvoter.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from NW_Upvoter.TG_bot.create_TASK_LINK import run_process_and_reply_after, RunBotStates, StructData
+from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db
 
 
 @user_router.message(F.text == MESSAGES['btn_reset'])
@@ -46,6 +47,7 @@ async def answer_vote(message: Message, state: FSMContext):
     logger.info(struct_data.reddit_link)
     logger.info(struct_data.upvote_int)
 
+    await connect_to_db()
     run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
 
     await state.clear()
@@ -53,43 +55,3 @@ async def answer_vote(message: Message, state: FSMContext):
 
     await run_process
 
-
-
-# @user_router.message(RunBotStates.upvote_int)
-# async def answer_vote(message: Message, state: FSMContext):
-#     try:
-#         await state.update_data(upvote_int=int(message.text))
-#         await state.set_state(RunBotStates.comments_int)
-#         await message.reply(MESSAGES['comments_int'])
-#     except ValueError:
-#         await state.clear()
-#         await message.reply(MESSAGES['error_vote_int'],
-#                             reply_markup=main_btn)
-#
-#
-# # catch user's upvote integer
-# @user_router.message(RunBotStates.comments_int)
-# async def answer_comment(message: Message, state: FSMContext):
-#     try:
-#         await state.update_data(comments_int=int(message.text))
-#     except ValueError:
-#         await state.clear()
-#         await message.reply(MESSAGES['error_comments_int'],
-#                             reply_markup=main_btn)
-#         return
-#
-#     data = await state.get_data()
-#     struct_data = StructData(**data)
-#
-#     logger.info(struct_data.reddit_link)
-#     logger.info(struct_data.upvote_int)
-#     logger.info(struct_data.comments_int)
-#
-#     run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
-#
-#     await state.clear()
-#     await message.answer(
-#         f'Браузер запустився для опрацювання вашого посилання {data["reddit_link"]}.', reply_markup=main_btn
-#     )
-#
-#     await run_process

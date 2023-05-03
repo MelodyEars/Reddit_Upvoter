@@ -4,6 +4,7 @@ import traceback
 from aiogram import types
 from loguru import logger
 
+from NW_Upvoter.TG_bot.src.repair_tgBOT import send_telegram_message
 from base_exception import RanOutAccountsForLinkException
 from BASE_Reddit.exceptions import PostDeletedException, NotLoadPageException
 from work_fs import path_near_exefile, auto_create
@@ -69,7 +70,7 @@ async def start_reddit_work(reddit_link: str, upvote_int: int, message: types.Me
         if condition is not None:
             break
 
-    await message.answer(msg)
+    await send_telegram_message(message, msg)
     end = time.time()
     elapsed_time = end - start
     logger.info(f"Program execute: {elapsed_time}")

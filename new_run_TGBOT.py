@@ -10,6 +10,7 @@ from aiogram.webhook.aiohttp_server import (
 	SimpleRequestHandler,
 	setup_application,
 )
+from tortoise import Tortoise
 
 import work_fs as wf
 from NW_Upvoter.TG_bot.setup import dp, bot
@@ -38,6 +39,7 @@ async def on_startup(bot: Bot, base_url: str):
 
 
 async def on_shutdown(bot: Bot, base_url: str):
+	await Tortoise.close_connections()
 	await bot.delete_webhook()
 
 

@@ -5,7 +5,6 @@ from loguru import logger
 from aiogram import types
 from aiogram.fsm.state import State, StatesGroup
 
-from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db
 from NW_Upvoter.main_UPVOTER import start_reddit_work
 
 
@@ -24,7 +23,6 @@ async def run_process_and_reply_after(message: types.Message, data: StructData):
 
     reddit_link = data.reddit_link
     upvote_int = data.upvote_int
-    await connect_to_db()
     await start_reddit_work(reddit_link, upvote_int, message)
     # with ProcessPoolExecutor(max_workers=2) as executor:
     #     q = await asyncio.get_running_loop().run_in_executor(executor, start_reddit_work, reddit_link, upvote_int)

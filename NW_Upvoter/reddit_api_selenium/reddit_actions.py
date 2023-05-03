@@ -4,7 +4,7 @@ from loguru import logger
 from selenium.common import ElementClickInterceptedException
 
 from BASE_Reddit.BaseReddit import BaseReddit
-from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException, CrashRedditException
+from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException
 from Settings_Selenium.SupportSelenium import BrowserCookie
 
 
@@ -28,7 +28,7 @@ class RedditWork(BaseReddit):
 
     def _deleted_post(self):
         self._baned_account()
-        if not self.elem_exists('//*[contains(text(), "Sorry, this post")]', wait=1):
+        if not self.elem_exists('//*[contains(text(), "Sorry, this post")]', wait=0.2):
             logger.error("Post prepare!")
             return
         else:
@@ -68,12 +68,12 @@ class RedditWork(BaseReddit):
 
             time.sleep(2)
             if self.elem_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
-                                wait=4):
+                                wait=3):
                 logger.info("Клік червоний проходимо далі!")
             else:
                 logger.error("Клік був, але кнопка апвоуту і досі прозора!")
+                self.DRIVER.refresh()
                 return self.upvote()
-
         else:
             logger.error("Кліку по апвоуту не було!")
 

@@ -5,7 +5,7 @@ import random
 import requests
 import undetected_chromedriver as uc
 from loguru import logger
-from requests import JSONDecodeError
+from requests import JSONDecodeError, ReadTimeout
 from requests.exceptions import ProxyError
 
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, NoSuchElementException, \
@@ -44,6 +44,8 @@ def proxy_data(proxy: dict):
     try:
         resp = requests.get(url, proxies=proxies, timeout=10)
 
+    except (ConnectionError, TimeoutException, ConnectionResetError, TimeoutError, ReadTimeout):
+        return proxy_data(proxy)
     except ProxyError:
         logger.error(f"Щось з проксі {proxy['user']}:{proxy['password']}:{proxy['host']}:{proxy['port']}!")
         raise ProxyInvalidException("ProxyError: Invalid proxy ")
@@ -143,7 +145,7 @@ class BaseClass:
                     your_options['desired_capabilities'] = capabilities
                 except JSONDecodeError:
                     raise Exception("Щось не так з проксі. Було залучено останній з файлу 'proxies.txt'")
-        # if user_data_dir is not None:
+
         #     your_options["user_data_dir"] = user_data_dir
         #
         # elif profile is not None:
