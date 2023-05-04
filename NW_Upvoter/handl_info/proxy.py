@@ -2,7 +2,7 @@ import asyncio
 from pathlib import Path
 
 import aiohttp
-from aiohttp import ClientProxyConnectionError
+from aiohttp import ClientProxyConnectionError, ServerDisconnectedError
 from fake_useragent import UserAgent
 from loguru import logger
 
@@ -46,7 +46,7 @@ async def check_proxy(host, port, user, password):
             print(host + " " + html)
             logger.info(f"Successfully connect to {host}:{port}:{user}:{password}")
             del_all_responses()  # __________________________________________________delete all responses
-        except TimeoutError:
+        except (TimeoutError, ServerDisconnectedError):
             logger.error(f"ReadTimeout connect to {host}:{port}:{user}:{password}")
             return check_proxy(host, port, user, password)
         except ClientProxyConnectionError:

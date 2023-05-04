@@ -47,7 +47,6 @@ async def answer_vote(message: Message, state: FSMContext):
     logger.info(struct_data.reddit_link)
     logger.info(struct_data.upvote_int)
 
-    await connect_to_db()
     run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
 
     await state.clear()

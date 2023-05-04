@@ -1,7 +1,9 @@
 import os
 import sys
+
+from functools import wraps
 from ssl import create_default_context
-# from pathlib import Path
+
 from tortoise import Tortoise
 
 if getattr(sys, 'frozen', False):
@@ -11,6 +13,7 @@ else:
 
 path_to_certificate = os.path.join(bundle_dir, 'ca-certificate.crt')
 ssl_ctx = create_default_context(cafile=path_to_certificate)
+
 
 DATABASE_CONFIG = {
     "connections": {
@@ -22,8 +25,13 @@ DATABASE_CONFIG = {
                 "password": "AVNS_XCxtxUH7rZz8txAxKYO",
                 "port": 25061,
                 "user": "doadmin",
-                'statement_cache_size': 0,
+                "statement_cache_size": 0,
                 "ssl": ssl_ctx,
+                "min_size": 1,
+                "max_size": 10,
+                "timeout": 60,
+                "max_queries": 50000,
+                "max_inactive_connection_lifetime": 300,
             },
         },
     },
@@ -39,3 +47,26 @@ DATABASE_CONFIG = {
 async def connect_to_db():
     await Tortoise.init(config=DATABASE_CONFIG)
     await Tortoise.generate_schemas()
+
+
+async def is_connected():
+    try:
+        # Виконайте простий запит до бази даних
+        await Tortoise.get_connection("default").execute_query("SELECT 1;")
+        return True
+    except Exception:
+        return False
+
+
+def db_connection_required(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        if not await is_connected():
+            await connect_to_db()
+        return await func(*args, **kwargs)
+    return wrapper
+
+
+# @db_connection_required
+# async def some_function_that_uses_db():
+#     # Ваш код, який працює з базою даних

@@ -41,6 +41,7 @@ def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_
             try:
                 api_reddit.attend_link()
             except CookieInvalidException:
+                api_reddit.DRIVER.quit()
                 logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
                 account_dict = db_get_account_by_id(id_cookie)
                 get_cookies(account=account_dict, proxy_for_api=dict_proxy)
