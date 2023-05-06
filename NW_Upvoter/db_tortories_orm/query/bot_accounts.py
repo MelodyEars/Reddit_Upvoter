@@ -16,7 +16,7 @@ async def get_bot_accounts() -> list[Cookie]:
 async def get_unlinked_cookies(link_obj) -> list[Cookie]:
     # Запит на отримання cookies, які не мають зв'язку з link_obj в таблиці WorkAccountWithLink
     cookies = await Cookie.filter(is_selected=False,
-                                  ban__isnull=True).prefetch_related("proxy",  "work_accounts", "accounts")
+                                  ban__isnull=True).prefetch_related("proxy",  "work_accounts", "account")
 
     unlinked_cookies = [cookie for cookie in cookies if
                         not any(wa.link_id == link_obj.id for wa in cookie.work_accounts)]
