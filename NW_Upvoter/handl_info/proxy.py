@@ -46,11 +46,15 @@ async def check_proxy(host, port, user, password):
             print(host + " " + html)
             logger.info(f"Successfully connect to {host}:{port}:{user}:{password}")
             del_all_responses()  # __________________________________________________delete all responses
+
         except (TimeoutError, ServerDisconnectedError):
-            logger.error(f"ReadTimeout connect to {host}:{port}:{user}:{password}")
+            logger.error(f"'http://httpbin.org/ip' not connect to {host}:{port}:{user}:{password}")
             return check_proxy(host, port, user, password)
+
         except ClientProxyConnectionError:
-            logger.error(f"Щось з проксі {host}:{port}:{user}:{password}! НЕ  відправляє данні на сайт.")
+            logger.error(
+                f"Щось з проксі  {host}:{port}:{user}:{password}! НЕ  відправляє данні на сайт 'http://httpbin.org/ip'."
+            )
             raise ProxyInvalidException("ProxyError: Invalid proxy ")
 
 

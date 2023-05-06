@@ -1,16 +1,23 @@
-from NW_Upvoter.db_tortories_orm.models import Cookie
+from NW_Upvoter.db_tortories_orm.models import Cookie, Proxy, Account
 from work_fs import path_near_exefile
 
 
 def unpack_cooke_obj(cookie_db_obj: Cookie):
+    proxy_obj: Proxy = cookie_db_obj.proxy
+    account_obj: Account = cookie_db_obj.account
+
     dict_proxy: dict[str, Cookie] = {
-        "host": cookie_db_obj.proxy.host,
-        "port": cookie_db_obj.proxy.port,
-        "user": cookie_db_obj.proxy.user,
-        "password": cookie_db_obj.proxy.password,
+        "host": proxy_obj.host,
+        "port": proxy_obj.port,
+        "user": proxy_obj.user,
+        "password": proxy_obj.password,
+    }
+
+    log_pswd = {
+        "login": account_obj.login,
+        "password": account_obj.password
     }
 
     path_cookie = path_near_exefile(cookie_db_obj.cookie_path)
-    id_account = cookie_db_obj.id
 
-    return path_cookie, dict_proxy, id_account
+    return path_cookie, dict_proxy, log_pswd

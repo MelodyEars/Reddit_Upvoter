@@ -9,7 +9,6 @@ from base_exception import RanOutAccountsForLinkException
 from BASE_Reddit.exceptions import PostDeletedException, NotLoadPageException
 from work_fs import path_near_exefile, auto_create
 
-from NW_Upvoter.db_tortories_orm.models import WorkAccountWithLink
 from NW_Upvoter.db_tortories_orm.query.record import db_delete_record_work_account_with_link
 from NW_Upvoter.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from NW_Upvoter.reddit_api_selenium import open_browser
@@ -30,21 +29,19 @@ async def body_loop(reddit_link, sub, work_link_account_obj, msg):
         return "break", msg
 
     except PostDeletedException:
+        await db_delete_record_work_account_with_link(work_link_account_obj)
         msg = str(MESSAGES['deleted_post']) + str(sub)
         logger.error(msg)
         return "break", msg
 
     except NotLoadPageException:
-        logger.critical("Not load page")
+        logger.error("Not load page in Reddit, start new account")
+        await db_delete_record_work_account_with_link(work_link_account_obj)
 
     except Exception:
-        # work_link_account_obj.delete_instance()
         await db_delete_record_work_account_with_link(work_link_account_obj)
         logger.error(traceback.format_exc())
         return await body_loop(reddit_link, sub, work_link_account_obj, msg)
-    # finally:
-    #     if dict_for_browser:
-    #         db_update_0_by_id(dict_for_browser['id_cookie'])
 
     return None, msg
 
@@ -63,12 +60,15 @@ async def start_reddit_work(reddit_link: str, upvote_int: int, message: types.Me
     )
 
     start = time.time()
-    id_work_link_account_obj = WorkAccountWithLink
+    id_work_link_account_obj = None
 
-    for _ in range(upvote_int):
+    counter = 0
+    while counter < upvote_int:
         condition, msg = await body_loop(reddit_link, sub, id_work_link_account_obj, msg)
         if condition is not None:
             break
+        counter += 1
+        print(counter)
 
     await send_telegram_message(message, msg)
     end = time.time()

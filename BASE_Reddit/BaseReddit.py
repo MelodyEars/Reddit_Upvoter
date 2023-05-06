@@ -30,7 +30,8 @@ class BaseReddit(BaseClass):
 			self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=0.1, intercepted_click=True)
 			if (
 					self.elem_exists('//*[contains(text(), "Our CDN was unable ")]', wait=0.1) or
-					self.elem_exists('''//*[contains(text(), "Sorry, for some reason reddit")]''', wait=0.1)
+					self.elem_exists('''//*[contains(text(), "Sorry, for some reason reddit")]''', wait=0.1) or
+					self.elem_exists('//*[contains(text(), "Service Unavailable")]', wait=0.1)
 			):
 				return True
 			else:
@@ -113,25 +114,40 @@ class BaseReddit(BaseClass):
 
 	# ___________________________________ subscribe ___________________________________________ #
 	def _previously_subscribing(self):
-		# while not exists button
-		# if self.elem_exists('//button[contains(@id, "subscribe-button") and contains(text(), "Join")]', wait=1):
-		if not self.elem_exists('//span[contains(text(), "Joined")]', wait=1):
-			wait = 1
-			self.btn_close_interest()
-			# while not self.elem_exists('''//button[descendant::span[contains(text(), "Joined")]
-			# or descendant::span[contains(text(), "Leave")]]''', wait=wait):
-			while not self.click_element(
-					'//button[contains(@id, "subscribe-button") and contains(text(), "Join")]',
-					wait=wait):
+		logger.info("Account is subscribing!")
 
-				# time.sleep(2)
-				wait = 1
-				self.DRIVER.refresh()
-				self.wait_load_webpage()
-				logger.debug("Чекаємо підписки!")
-				self.btn_close_interest()
+		max_attempts = 5
+		attempt = 0
+		joined = False
+
+		while not joined and attempt < max_attempts:
+			attempt += 1
+
+			# Check if the "Joined" button exists
+			if not self.elem_exists('//span[contains(text(), "Joined")]', wait=1):
+				try:
+					# Try to click the "Join" button
+					if self.click_element(
+							value='//button[contains(@id, "subscribe-button") and contains(text(), "Join")]',
+							wait=1
+					):
+						logger.debug("Підписка оформлена!!!")
+						joined = True
+					else:
+						logger.debug("Не вдалося натиснути кнопку 'Join', спробуйте ще раз.")
+						self.DRIVER.refresh()
+						self.wait_load_webpage()
+						self.btn_close_interest()
+				except ElementClickInterceptedException:
+					logger.error("ElementClickInterceptedException: subscribing")
+					self.btn_close_interest()
 			else:
-				logger.debug("Підписка оформлена!!!")
+				logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
+				break
+
+		if not joined:
+			logger.error("Не вдалося оформити підписку після максимальної кількості спроб.")
+
 		# elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
 		#     wait = 0.1
 		#     while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
@@ -140,8 +156,6 @@ class BaseReddit(BaseClass):
 		#         time.sleep(2)
 		#     else:
 		#         logger.debug("Підписка оформлена")
-		else:
-			logger.debug("Підписки не було зроблено. Можливо вона вже оформлена.")
 
 	def subscribing_main_page_sub(self, wait=1):
 		self.btn_close_interest()

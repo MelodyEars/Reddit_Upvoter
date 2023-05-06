@@ -10,7 +10,6 @@ from NW_Upvoter.TG_bot.setup import user_router
 from NW_Upvoter.TG_bot.src.telegram.buttons.user_btn import main_btn
 from NW_Upvoter.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from NW_Upvoter.TG_bot.create_TASK_LINK import run_process_and_reply_after, RunBotStates, StructData
-from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db
 
 
 @user_router.message(F.text == MESSAGES['btn_reset'])

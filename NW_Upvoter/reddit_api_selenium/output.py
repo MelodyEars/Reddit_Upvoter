@@ -8,7 +8,6 @@ from requests import ReadTimeout
 from urllib3.exceptions import ProtocolError
 
 from database import db_get_account_by_id
-from database.vote_tg_bot.models import Cookie
 
 from auth_reddit import get_cookies
 
@@ -30,12 +29,12 @@ def handling_api(dict_for_browser):
     try:
         return work_api(**dict_for_browser)
     except (ConnectionResetError, ProtocolError, TimeoutError, ReadTimeout,
-            ConnectionError, RemoteDisconnected, ConnectionError) as e:
+            ConnectionError, RemoteDisconnected) as e:
         logger.critical(f'{type(e).__name__} in output.py')
         return handling_api(dict_for_browser)
 
 
-def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_username: str, id_cookie: Cookie.id):
+def work_api(link_reddit: str, dict_proxy: dict, path_cookie: Path, reddit_username: str, log_pswd: dict):
     while True:
         with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
             try:
@@ -43,8 +42,7 @@ def work_api(link_reddit: str, dict_proxy: dict[str], path_cookie: Path, reddit_
             except CookieInvalidException:
                 api_reddit.DRIVER.quit()
                 logger.error(f'Cookie аккаунта "{reddit_username}" не работают, нужно перезаписать.')
-                account_dict = db_get_account_by_id(id_cookie)
-                get_cookies(account=account_dict, proxy_for_api=dict_proxy)
+                get_cookies(account=log_pswd, proxy_for_api=dict_proxy)
                 continue
 
             try:

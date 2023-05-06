@@ -27,11 +27,6 @@ DATABASE_CONFIG = {
                 "user": "doadmin",
                 "statement_cache_size": 0,
                 "ssl": ssl_ctx,
-                "min_size": 1,
-                "max_size": 10,
-                "timeout": 60,
-                "max_queries": 50000,
-                "max_inactive_connection_lifetime": 300,
             },
         },
     },
@@ -65,8 +60,3 @@ def db_connection_required(func):
             await connect_to_db()
         return await func(*args, **kwargs)
     return wrapper
-
-
-# @db_connection_required
-# async def some_function_that_uses_db():
-#     # Ваш код, який працює з базою даних

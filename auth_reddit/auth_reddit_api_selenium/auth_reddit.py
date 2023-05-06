@@ -56,7 +56,7 @@ class RedditAuth(BaseReddit):
             self.click_element('//button[contains(text(), "Log In")]')
         else:
             logger.error("Not ok iframe")
-            return self.fill_login_form(login, password)
+            return self.goto_login_form()  # refresh auth reddit
 
     def skip_popups(self):
         self.wait_load_webpage()

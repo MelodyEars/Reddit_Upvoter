@@ -6,7 +6,7 @@ import requests
 import undetected_chromedriver as uc
 from loguru import logger
 from requests import JSONDecodeError, ReadTimeout
-from requests.exceptions import ProxyError
+from requests.exceptions import ProxyError, ConnectTimeout
 
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException, NoSuchElementException, \
     ElementClickInterceptedException
@@ -44,7 +44,8 @@ def proxy_data(proxy: dict):
     try:
         resp = requests.get(url, proxies=proxies, timeout=10)
 
-    except (ConnectionError, TimeoutException, ConnectionResetError, TimeoutError, ReadTimeout):
+    except (ConnectionError, TimeoutException, ConnectionResetError, TimeoutError, ReadTimeout, ConnectTimeout):
+        logger.error(f"Щось з проксі {proxy['user']}:{proxy['password']}:{proxy['host']}:{proxy['port']}!")
         return proxy_data(proxy)
     except ProxyError:
         logger.error(f"Щось з проксі {proxy['user']}:{proxy['password']}:{proxy['host']}:{proxy['port']}!")
