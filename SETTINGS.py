@@ -4,6 +4,7 @@ from playhouse.cockroachdb import CockroachDatabase
 from Uprove_TG_Bot.restrict import get_or_create_token
 from work_fs.chack_info_and_write_to_file import get_or_create_info
 from work_fs.PATH import path_near_exefile
+from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
 mine_project = True
 
@@ -21,7 +22,9 @@ if mine_project:
     #     "sslrootcert": r"C:\Users\Administrator\Documents\ca-certificate.crt"
     # }
 
-    set_database = r'postgresql://doadmin:AVNS_XCxtxUH7rZz8txAxKYO@bots-do-user-11731497-0.b.db.ondigitalocean.com:25061/8-core_start_comp?sslmode=require&sslrootcert=C:\Users\Administrator\Documents\ca-certificate.crt'
+    path_certificate = path_to_sertificate()
+
+    set_database = rf'postgresql://doadmin:AVNS_XCxtxUH7rZz8txAxKYO@bots-do-user-11731497-0.b.db.ondigitalocean.com:25061/8-core_start_comp?sslmode=require&sslrootcert={path_certificate}'
     db = CockroachDatabase(set_database)
 
 

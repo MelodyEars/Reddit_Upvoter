@@ -5,7 +5,7 @@ This file cans:
     - auto create if not exists file or dir
 
 """
-
+import os
 import sys
 import subprocess
 # import time
@@ -50,6 +50,15 @@ def path_near_exefile(filename: str = ".") -> Path:
         path = Path(__file__).parent.parent.parent / filename
 
     return path
+
+
+def path_in_exefile():
+    if getattr(sys, 'frozen', False):
+         bundle_dir = sys._MEIPASS
+    else:
+        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+
+    return bundle_dir
 
 
 def auto_create(path: Path, _type: str, hidden=False):

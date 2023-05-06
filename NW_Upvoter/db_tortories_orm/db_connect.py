@@ -1,18 +1,13 @@
-import os
-import sys
 
 from functools import wraps
 from ssl import create_default_context
 
 from tortoise import Tortoise
 
-if getattr(sys, 'frozen', False):
-    bundle_dir = sys._MEIPASS
-else:
-    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
-path_to_certificate = os.path.join(bundle_dir, 'ca-certificate.crt')
-ssl_ctx = create_default_context(cafile=path_to_certificate)
+path_certificate = path_to_sertificate()
+ssl_ctx = create_default_context(cafile=path_certificate)
 
 
 DATABASE_CONFIG = {
