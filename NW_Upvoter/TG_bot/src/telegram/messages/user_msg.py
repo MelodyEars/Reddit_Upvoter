@@ -26,7 +26,8 @@ class Messages(TypedDict):
     hi_user: str
     btn_run_work: str
     not_enough_bots: str
-
+    process_wrong: str
+    error_vote_int_2: str
 
 MESSAGES: Messages = {
     'start': start_message,
@@ -44,5 +45,7 @@ MESSAGES: Messages = {
     'notif_browser_run': notif_browser_run,
     'hi_user': hi_user,
     'btn_run_work': btn_run_work,
-    'not_enough_bots': not_enough_bots
+    'not_enough_bots': not_enough_bots,
+    'process_wrong': process_wrong,
+    'error_vote_int_2': error_vote_int_2
 }

@@ -33,7 +33,12 @@ async def answer_link(message: Message, state: FSMContext):
 @user_router.message(RunBotStates.upvote_int)
 async def answer_vote(message: Message, state: FSMContext):
     try:
-        await state.update_data(upvote_int=int(message.text))
+        if message.text < "50":
+            await state.update_data(upvote_int=int(message.text))
+        else:
+            await state.clear()
+            await message.reply(MESSAGES['error_vote_int_2'], reply_markup=main_btn)
+            return
     except ValueError:
         await state.clear()
         await message.reply(MESSAGES['error_vote_int'],
@@ -46,10 +51,12 @@ async def answer_vote(message: Message, state: FSMContext):
     logger.info(struct_data.reddit_link)
     logger.info(struct_data.upvote_int)
 
-    run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
+    try:
+        run_process = asyncio.create_task(run_process_and_reply_after(message, struct_data))
 
-    await state.clear()
-    await message.answer(str(MESSAGES['notif_browser_run'] + data["reddit_link"]), reply_markup=main_btn)
+        await state.clear()
+        await message.answer(str(MESSAGES['notif_browser_run'] + data["reddit_link"]), reply_markup=main_btn)
 
-    await run_process
-
+        await run_process
+    except Exception:
+        await message.answer(MESSAGES['process_wrong'], reply_markup=main_btn)
