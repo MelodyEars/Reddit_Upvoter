@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import aiohttp
+from aiohttp import ClientConnectorError
 from fake_useragent import UserAgent
 from loguru import logger
 
@@ -80,7 +81,12 @@ async def ipinfo(session: aiohttp.ClientSession, proxy_link: str, auth: aiohttp.
 
 async def about_proxy(db_id, proxy_link, auth):
     async with aiohttp.ClientSession() as session:
-        html = await ipinfo(session, proxy_link, auth)
+        try:
+
+            html = await ipinfo(session, proxy_link, auth)
+            print(html)
+        except ClientConnectorError:
+            return await about_proxy(db_id, proxy_link, auth)
         # ip_info = IpInfo.parse_raw(html)
         json_obj = json.loads(html)
         # print(f"{db_id}: {json_obj['loc']}")
@@ -90,19 +96,8 @@ async def about_proxy(db_id, proxy_link, auth):
             print(f"{db_id}: {json_obj['hostname']}")
         except KeyError:
             # DICT_ID_INFO[db_id] = ""
-            logger.critical(db_id)
-
-# {
-#   "ip": "216.73.159.44",
-#   "city": "Valdivia",
-#   "region": "Los Ríos Region",
-#   "country": "CL",
-#   "loc": "-39.8142,-73.2459", ---- uf1
-#   "org": "AS61138 Zappie Host LLC",
-#   "postal": "5090000",
-#   "timezone": "America/Santiago",
-#   "readme": "https://ipinfo.io/missingauth"
-# }
+            # logger.critical(db_id)
+            pass
 
 # {
 #   "ip": "167.179.91.8",
@@ -117,6 +112,18 @@ async def about_proxy(db_id, proxy_link, auth):
 #   "readme": "https://ipinfo.io/missingauth"
 # }
 
+# {
+#   "ip": "185.33.84.125",
+#   "city": "Chicago",
+#   "region": "Illinois",
+#   "country": "US",
+#   "loc": "41.8798,-87.6285",
+#   "org": "AS202015 HZ Hosting Ltd",
+#   "postal": "60603",
+#   "timezone": "America/Chicago",
+#   "readme": "https://ipinfo.io/missingauth"
+# }
+
 
 async def create_task():
     tasks = [asyncio.create_task(about_proxy(db_id, proxy_link, auth)) for db_id, proxy_link, auth in get_proxy_from_file()]
@@ -127,6 +134,7 @@ def run():
     asyncio.run(create_task())
     same_count = 0
     different_count = 0
+
     for id_db, location in DICT_ID_INFO.items():
         if location:
         # if list(DICT_ID_INFO.values()).count(location) > 1 or location is not None:
@@ -143,4 +151,3 @@ def run():
 
 if __name__ == '__main__':
     run()
-

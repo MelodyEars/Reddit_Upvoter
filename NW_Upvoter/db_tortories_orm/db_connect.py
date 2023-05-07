@@ -7,6 +7,7 @@ from tortoise import Tortoise
 from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
 path_certificate = path_to_sertificate()
+print(path_certificate)
 ssl_ctx = create_default_context(cafile=path_certificate)
 
 

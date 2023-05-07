@@ -52,11 +52,15 @@ def path_near_exefile(filename: str = ".") -> Path:
     return path
 
 
-def path_in_exefile():
+def path_in_exefile(path_to_file=None):
     if getattr(sys, 'frozen', False):
-         bundle_dir = sys._MEIPASS
+        bundle_dir = sys._MEIPASS
+
     else:
-        bundle_dir = os.path.dirname(os.path.abspath(__file__))
+        if path_to_file:
+            bundle_dir = os.path.dirname(os.path.abspath(path_to_file))
+        else:
+            bundle_dir = os.path.dirname(os.path.abspath(__file__))
 
     return bundle_dir
 
