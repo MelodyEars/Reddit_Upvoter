@@ -1,18 +1,16 @@
 import time
 import traceback
 
-from aiogram import types
 from loguru import logger
 
 from Uprove_TG_Bot.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from BASE_Reddit.exceptions import PostDeletedException
 from database import db_delete_record_work_account_with_link
-# from database import db_update_0_by_id
+
 from database.vote_tg_bot.models import WorkAccountWithLink
-# from database.vote_tg_bot.delete import db_delete_record_work_account_with_link
 
 from base_exception import RanOutAccountsForLinkException
-from Uprove_TG_Bot.reddit_api_selenium import open_browser
+from Uprove_TG_Bot.reddit_api_selenium import incubator_open_browser
 from Uprove_TG_Bot.PickUpAccountsForLink import collection_info
 from work_fs import path_near_exefile, auto_create
 
@@ -24,7 +22,7 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
 
         logger.warning(f'''Відкриваю браузер для "{reddit_link}" і "{dict_for_browser["reddit_username"]}"''')
 
-        open_browser(**dict_for_browser)  # , comment=comment)
+        incubator_open_browser(dict_for_browser)
 
     except RanOutAccountsForLinkException:
         msg = str(MESSAGES['not_enough_bots']) + str(sub)
@@ -37,19 +35,15 @@ def body_loop(reddit_link, sub, work_link_account_obj, msg):
         return "break", msg
 
     except Exception:
-        # work_link_account_obj.delete_instance()
         db_delete_record_work_account_with_link(work_link_account_obj)
         logger.error(traceback.format_exc())
         return body_loop(reddit_link, sub, work_link_account_obj, msg)
-    # finally:
-    #     if dict_for_browser:
-    #         db_update_0_by_id(dict_for_browser['id_cookie'])
 
     return None, msg
 
 
 @logger.catch
-def start_reddit_work(reddit_link: str, upvote_int: int, message: types.Message):  # comments_int: int
+def start_reddit_work(reddit_link: str, upvote_int: int):  # comments_int: int
     sub = reddit_link.split("/")[4]
     msg = str(MESSAGES['finish_process']) + " " + str(sub)
 

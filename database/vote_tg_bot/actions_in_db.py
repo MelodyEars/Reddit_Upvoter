@@ -11,10 +11,10 @@ def db_exist_record_link_account(link_id, cookie_id) -> (bool, WorkAccountWithLi
             obj: WorkAccountWithLink
             try:
                 obj = WorkAccountWithLink.get(cookie=cookie_id, link=link_id)
-                created = True
+                created = False
             except DoesNotExist:
                 obj = WorkAccountWithLink.create(cookie=cookie_id, link=link_id)
-                created = False
+                created = True
     else:
         with db:
             obj: WorkAccountWithLink

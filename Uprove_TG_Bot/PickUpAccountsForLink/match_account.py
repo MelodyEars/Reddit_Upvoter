@@ -19,7 +19,7 @@ def pick_up_account_to_link(link_from_file):
 			link_id=link_id, cookie_id=cookie_db_obj.id
 		)
 
-		if not outcome_created:  # if create record return TRUE
+		if outcome_created:  # if create record return TRUE
 			# db_save_1_by_id(cookie_db_obj.id)  # bot engaged
 			return link_id, cookie_db_obj, work_link_account_obj
 
@@ -31,7 +31,7 @@ def pick_up_account_to_link(link_from_file):
 def collection_info(reddit_link: str):
 	link_id, account_obj, work_link_account_obj = pick_up_account_to_link(reddit_link)
 	# get from db account not worked random choice
-	path_cookie, dict_proxy, id_account = db_get_cookie_proxy(account_obj)
+	path_cookie, dict_proxy, log_pswd = db_get_cookie_proxy(account_obj)
 
 	check_proxy(**dict_proxy)
 
@@ -42,7 +42,7 @@ def collection_info(reddit_link: str):
 		"dict_proxy": dict_proxy,
 		"path_cookie": path_cookie,
 		"reddit_username": reddit_username,
-		"id_cookie": id_account,
+		"log_pswd": log_pswd,
 	}
 
 	return work_link_account_obj, dict_for_browser

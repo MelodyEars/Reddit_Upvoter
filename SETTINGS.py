@@ -7,6 +7,7 @@ from work_fs.PATH import path_near_exefile
 from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
 mine_project = True
+incubator = True
 
 # ____________________________________________________________________ DATABASE
 # set up db_tg_bot
@@ -21,11 +22,20 @@ if mine_project:
     #     "sslmode": "require",
     #     "sslrootcert": r"C:\Users\Administrator\Documents\ca-certificate.crt"
     # }
+    if not incubator:
+        path_certificate = path_to_sertificate()
 
-    path_certificate = path_to_sertificate()
+        set_database = rf'postgresql://doadmin:AVNS_XCxtxUH7rZz8txAxKYO@bots-do-user-11731497-0.b.db.ondigitalocean.com:25061/8-core_start_comp?sslmode=require&sslrootcert={path_certificate}'
+        db = CockroachDatabase(set_database)
+    else:
+        set_database = {
+            "user": 'postgres',
+            "password": 'root123',
+            "host": "localhost",
+            "port": 5432,
+        }
 
-    set_database = rf'postgresql://doadmin:AVNS_XCxtxUH7rZz8txAxKYO@bots-do-user-11731497-0.b.db.ondigitalocean.com:25061/8-core_start_comp?sslmode=require&sslrootcert={path_certificate}'
-    db = CockroachDatabase(set_database)
+        db = PostgresqlDatabase('database', **set_database)
 
 
 else:
