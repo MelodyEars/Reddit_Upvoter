@@ -8,6 +8,8 @@ from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
 mine_project = True
 incubator = True
+COUNT_BOT = 50
+
 
 # ____________________________________________________________________ DATABASE
 # set up db_tg_bot

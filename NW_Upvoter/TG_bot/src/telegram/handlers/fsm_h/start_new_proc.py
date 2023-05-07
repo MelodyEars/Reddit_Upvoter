@@ -10,6 +10,7 @@ from NW_Upvoter.TG_bot.setup import user_router
 from NW_Upvoter.TG_bot.src.telegram.buttons.user_btn import main_btn
 from NW_Upvoter.TG_bot.src.telegram.messages.user_msg import MESSAGES
 from NW_Upvoter.TG_bot.create_TASK_LINK import run_process_and_reply_after, RunBotStates, StructData
+from SETTINGS import COUNT_BOT
 
 
 @user_router.message(F.text == MESSAGES['btn_reset'])
@@ -33,12 +34,15 @@ async def answer_link(message: Message, state: FSMContext):
 @user_router.message(RunBotStates.upvote_int)
 async def answer_vote(message: Message, state: FSMContext):
     try:
-        if message.text < "50":
-            await state.update_data(upvote_int=int(message.text))
+        upvote_int = int(message.text)
+
+        if upvote_int <= COUNT_BOT:
+            await state.update_data(upvote_int=upvote_int)
         else:
             await state.clear()
             await message.reply(MESSAGES['error_vote_int_2'], reply_markup=main_btn)
             return
+
     except ValueError:
         await state.clear()
         await message.reply(MESSAGES['error_vote_int'],

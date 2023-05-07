@@ -1,6 +1,7 @@
 """ This file work with Selenium """
 import time
 import random
+from http.client import RemoteDisconnected
 
 import requests
 import undetected_chromedriver as uc
@@ -14,6 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from urllib3.exceptions import ProtocolError
 
 from base_exception import ProxyInvalidException
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
@@ -114,7 +116,7 @@ class BaseClass:
 
         return self.DRIVER
 
-    def run_driver(self, browser_executable_path=executable_path, user_data_dir=None,
+    def _set_up_driver(self, browser_executable_path=executable_path, user_data_dir=None,
                    download_path="default", proxy=None, headless=False, detection_location=True):
 
         resp = None
@@ -175,6 +177,18 @@ class BaseClass:
 
         else:
             return self.__set_new_download_path(download_path)
+
+    def run_driver(self, browser_executable_path=executable_path, user_data_dir=None,
+                   download_path="default", proxy=None, headless=False, detection_location=True):
+        try:
+            return self._set_up_driver(browser_executable_path, user_data_dir,
+                                download_path, proxy, headless, detection_location)
+
+        except (ConnectionResetError, ProtocolError, TimeoutError, ReadTimeout,
+                ConnectionError, RemoteDisconnected) as e:
+            logger.error(f'{type(e).__name__} in selenium_driver.py')
+            return self.run_driver(browser_executable_path, user_data_dir,
+                                download_path, proxy, headless, detection_location)
 
     def elem_exists(self, value, by=By.XPATH, wait=30, return_xpath=False, scroll_to=False):
         try:
