@@ -9,3 +9,4 @@
 /.env
 /*.crt
 /Uprove_TG_Bot/db_tortories_orm/ca-certificate.crt
+/.idea/

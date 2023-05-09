@@ -1,5 +1,7 @@
 import asyncio
 
+from colorama import init, deinit
+
 from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
 from NW_Upvoter.db_tortories_orm.models import RedditLink
 from work_fs.color import green_color, magenta_color
@@ -33,8 +35,14 @@ async def pars_name_reddit():
     for link in unique_list_link:
         name_subreddit = link.split('/')[4]
         if name_subreddit not in subs_from_file:
+
             print(f"{green_color(name_subreddit)}")
 
 
 if __name__ == '__main__':
-    asyncio.run(pars_name_reddit())
+    try:
+        init()
+        asyncio.run(pars_name_reddit())
+        deinit()
+    finally:
+        input('Done!')
