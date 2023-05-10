@@ -27,14 +27,15 @@ notif_browser_run = 'Bot work🙂'
 start_process = "Wait Please🧘‍♂️"
 finish_process = "Your request has been processed!💫"
 process_wrong = """
-Something wrong🤔.\n
-If the problem persists, please, try again and contact us at\n
-https://t.me/+3JSytE1pR0JjNzgy
+Server sleeps🤔.\n
+Try again\n
+if you have any questions, please write me👇\n
+@happy_lite_smile
 """
 
 
 # ___________________________ deleted post______________________________
 deleted_post = "Post has been deleted...🥲 We can't continue upvoting😑 "
-not_enough_bots = f"Not enough bots🫠 to enter the number of votes you specified "
+not_enough_bots = f"Hmm...🤔 \n" \
 
 

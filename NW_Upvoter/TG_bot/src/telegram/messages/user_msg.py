@@ -15,8 +15,6 @@ class Messages(TypedDict):
     reddit_link: str
     error_vote_int: str
     upvote_int: str
-    # error_comments_int: str
-    # comments_int: str
     start_process: str
     finish_process: str
     deleted_post: str
@@ -28,6 +26,7 @@ class Messages(TypedDict):
     not_enough_bots: str
     process_wrong: str
     error_vote_int_2: str
+
 
 MESSAGES: Messages = {
     'start': start_message,
