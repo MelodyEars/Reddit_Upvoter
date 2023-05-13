@@ -27,8 +27,9 @@ if mine_project:
     if not incubator:
         path_certificate = path_to_sertificate()
 
-        set_database = rf'postgresql://doadmin:AVNS_XCxtxUH7rZz8txAxKYO@bots-do-user-11731497-0.b.db.ondigitalocean.com:25061/8-core_start_comp?sslmode=require&sslrootcert={path_certificate}'
+        set_database = rf'postgresql://doadmin:AVNS_KGJBBnK44bbRZLZSWxT@bots-up-do-user-11731497-0.b.db.ondigitalocean.com:25061/db_bots_pool?sslmode=require&sslrootcert={path_certificate}'
         db = CockroachDatabase(set_database)
+
     else:
         set_database = {
             "user": 'postgres',

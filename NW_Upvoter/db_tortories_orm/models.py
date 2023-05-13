@@ -40,6 +40,10 @@ class Cookie(BaseModel):
 
 class RedditLink(BaseModel):
     link = fields.CharField(max_length=255)
+    date = fields.DatetimeField(auto_now_add=True)
+    tg_name = fields.CharField(max_length=255, null=True)
+    subreddit = fields.CharField(max_length=255, null=True)
+    count_upvotes = fields.IntField(default=0)
 
     def __str__(self):
         return self.link

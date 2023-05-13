@@ -17,10 +17,7 @@ COUNT_ACCOUNT = 1
 
 ROOT_DIR = Path(__file__).parent
 WORK_LOGIN = [
-    'antoncazey', 'kirillorlovmae', 'mukhibzhon7wxrk', 'aslanbegbtxs', 'konstantinqkb', 'ldmilalykhin8h4c',
-    'vass-belyakov', 'sergeyfnhburov', 'vakikcn3sayko', 'vadimfszgl', 'antonina-ponomareva', 'zina-semenova',
-    'sveta-sveta-orlova', 'vichka_kalinina', 'raisa_davydo', 'sofiyaguseva1979', 'aleksandra-petukhova',
-    'dasha_dasha_fedorova', 'katerinkafedotova', 'sofa-semenova-'
+
 ]
 
 

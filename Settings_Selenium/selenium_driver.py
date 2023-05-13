@@ -161,7 +161,7 @@ class BaseClass:
         your_options["browser_executable_path"] = browser_executable_path
 
         # if not profile or user_data_dir == incognito
-        self.DRIVER = uc.Chrome(**your_options)
+        self.DRIVER = uc.Chrome(**your_options, user_multi_procs=True)
 
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)

@@ -36,6 +36,6 @@ if you have any questions, please write me👇\n
 
 # ___________________________ deleted post______________________________
 deleted_post = "Post has been deleted...🥲 We can't continue upvoting😑 "
-not_enough_bots = f"Hmm...🤔 \n" \
+not_enough_bots = f"Hmm...🤔 Not enough bots!\n" \
 
 

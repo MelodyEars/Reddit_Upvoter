@@ -6,6 +6,7 @@ from aiogram import types
 from aiogram.fsm.state import State, StatesGroup
 
 from NW_Upvoter.main_UPVOTER import start_reddit_work
+from work_fs import auto_create, path_near_exefile
 
 
 class RunBotStates(StatesGroup):
@@ -23,6 +24,15 @@ async def run_process_and_reply_after(message: types.Message, data: StructData):
 
     reddit_link = data.reddit_link
     upvote_int = data.upvote_int
+
+    logger.add(
+        auto_create(path_near_exefile("logs"), _type="dir") / "BaseReddit.log",
+        format="{time} {level} {message}",
+        level="INFO",
+        rotation="10 MB",
+        compression="zip"
+    )
+
     await start_reddit_work(reddit_link, upvote_int, message)
     # with ProcessPoolExecutor(max_workers=2) as executor:
     #     q = await asyncio.get_running_loop().run_in_executor(executor, start_reddit_work, reddit_link, upvote_int)

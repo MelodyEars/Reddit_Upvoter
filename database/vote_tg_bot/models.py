@@ -1,4 +1,6 @@
-from peewee import Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField
+from datetime import datetime
+
+from peewee import Model, PrimaryKeyField, CharField, ForeignKeyField, BooleanField, DateTimeField, IntegerField
 from SETTINGS import db
 
 
@@ -51,6 +53,10 @@ class Cookie(BaseModel):
 
 class RedditLink(BaseModel):
     link = CharField()
+    date = DateTimeField(default=datetime.now)
+    tg_name = CharField(max_length=255, null=True)
+    subreddit = CharField(max_length=255, null=True)
+    count_upvotes = IntegerField(default=0)
 
     class Meta:
         db_table = "reddit links"

@@ -1,14 +1,13 @@
-import asyncio
-
 from NW_Upvoter.db_tortories_orm.models import RedditLink
-from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db, db_connection_required
+from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
 
 
 # ___________________________________________  create  _________________________________________________________
 @db_connection_required
-async def db_get_or_create_link_obj(link: str):
+async def db_get_or_create_link_obj(link: str, who_posted: str, sub: str, count_upvotes: int):
     """Get or create link id from database"""
-    link_obj, _ = await RedditLink.get_or_create(link=link)
+    link_obj, _ = await RedditLink.get_or_create(link=link, tg_name=who_posted,
+                                                 subreddit=sub, count_upvotes=count_upvotes)
     return link_obj
 
 

@@ -1,10 +1,10 @@
 from SETTINGS import mine_project
-from .models import db, Proxy, WorkAccountWithLink, Cookie, RedditLink, Account
+from .models import db, Proxy, Cookie, Account
 
 
 def create_db() -> None:
     with db:
-        db.create_tables([Proxy, WorkAccountWithLink, RedditLink, Cookie, Account])
+        db.create_tables([Proxy, Cookie, Account])
 
 
 def create_proxy(host, port, user, password):

@@ -1,7 +1,7 @@
-import asyncio
 
-from NW_Upvoter.db_tortories_orm.db_connect import connect_to_db, db_connection_required
+from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
 from NW_Upvoter.db_tortories_orm.models import Cookie
+from tortoise.transactions import in_transaction
 
 
 # ________________________________________ GET BOT ACCOUNTS ________________________________________
@@ -24,12 +24,19 @@ async def get_unlinked_cookies(link_obj) -> list[Cookie]:
     return unlinked_cookies
 
 
-# async def db_work():
-#     await connect_to_db()
-#     result = await get_bot_accounts()
-#     for cookie_db_obj in result:
-#         print(cookie_db_obj.proxy.host)
-#
-#
-# if __name__ == '__main__':
-#     asyncio.run(db_work())
+# ________________________________________ UPDATE BOT ACCOUNTS ________________________________________
+@db_connection_required
+async def db_save_1_by_id(id_cookie):
+    async with in_transaction():
+        await Cookie.filter(id=id_cookie).update(is_selected=1)
+
+
+@db_connection_required
+async def db_update_0_by_id(id_cookie):
+    async with in_transaction():
+        await Cookie.filter(id=id_cookie).update(is_selected=0)
+
+@db_connection_required
+async def db_update_0_all():
+    async with in_transaction():
+        await Cookie.all().update(is_selected=0)

@@ -19,6 +19,7 @@ from NW_Upvoter.TG_bot.src.telegram.middleware.admin_only import AdminOnly
 from NW_Upvoter.TG_bot.src.telegram.middleware.check_users import CheckUser
 from NW_Upvoter.TG_bot.src.telegram.handlers.admin_handlers import admin_router
 from NW_Upvoter.TG_bot.src.telegram.handlers.user_handlers import user_router
+from NW_Upvoter.db_tortories_orm.query.bot_accounts import db_update_0_all
 
 
 async def _start():
@@ -35,6 +36,7 @@ def start_simple():
 
 
 async def on_startup(bot: Bot, base_url: str):
+	await db_update_0_all()
 	await bot.set_webhook(f"{base_url}")
 
 

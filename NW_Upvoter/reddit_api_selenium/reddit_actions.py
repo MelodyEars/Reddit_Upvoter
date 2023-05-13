@@ -79,11 +79,12 @@ class RedditWork(BaseReddit):
 
     def upvote(self, wait=4):
         try:
-            self._baned_account()
             self._deleted_post()
+            self._find_popups()
+            self.subscribing()
             # self.scroll_to_elem('//button[contains(text(), "Comment")]')
             self._previously_upvote(wait)
-            self.subscribing()
+
         except ElementClickInterceptedException:
             logger.error("ElementClickInterceptedException: Клік був перехоплнний коли ставив upvote!")
             self._find_popups()

@@ -7,8 +7,6 @@ from loguru import logger
 from requests import ReadTimeout
 from urllib3.exceptions import ProtocolError
 
-from database import db_get_account_by_id
-
 from auth_reddit import get_cookies
 
 from .reddit_actions import RedditWork
@@ -51,10 +49,14 @@ def work_api(link_reddit: str, dict_proxy: dict, path_cookie: Path, reddit_usern
                 logger.info("Upvote stay on.")
 
             except BanAccountException:
-                logger.error(f'Ban: "{reddit_username}"')
+                api_reddit.client_cookie.save()
+                api_reddit.DRIVER.quit()
+                raise BanAccountException(f'Ban: "{reddit_username}"')
 
             except NotRefrashPageException:
-                logger.critical(f'Not refresh page: "{reddit_username}"')
+                api_reddit.client_cookie.save()
+                api_reddit.DRIVER.quit()
+                raise NotRefrashPageException(f'Not refresh page: "{reddit_username}"')
 
             logger.info("Save cookie!")
             api_reddit.client_cookie.save()

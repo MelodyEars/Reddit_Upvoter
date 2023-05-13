@@ -124,7 +124,7 @@ class BaseReddit(BaseClass):
 			attempt += 1
 
 			# Check if the "Joined" button exists
-			if not self.elem_exists('//span[contains(text(), "Joined")]', wait=1):
+			if not self.elem_exists('//div[@data-testid="no-edit-description-block"]/following-sibling::div//button/span', wait=1):
 				try:
 					# Try to click the "Join" button
 					if self.click_element(
@@ -133,6 +133,7 @@ class BaseReddit(BaseClass):
 					):
 						logger.debug("Підписка оформлена!!!")
 						joined = True
+						break
 					else:
 						logger.debug("Не вдалося натиснути кнопку 'Join', спробуйте ще раз.")
 						self.DRIVER.refresh()
@@ -148,6 +149,7 @@ class BaseReddit(BaseClass):
 		if not joined:
 			logger.error("Не вдалося оформити підписку після максимальної кількості спроб.")
 
+
 		# elif self.elem_exists('//button[contains(text(), "Follow")]', wait=1):
 		#     wait = 0.1
 		#     while not self.elem_exists('//button[contains(text(), "Unfollow")]', wait=wait):
@@ -156,6 +158,7 @@ class BaseReddit(BaseClass):
 		#         time.sleep(2)
 		#     else:
 		#         logger.debug("Підписка оформлена")
+
 
 	def subscribing_main_page_sub(self, wait=1):
 		self.btn_close_interest()
