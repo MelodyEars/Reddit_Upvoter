@@ -15,3 +15,7 @@ class RanOutAccountsForLinkException(RedditException):
 
 class ProxyInvalidException(RedditException):
     """"account hasn't valid proxy"""
+
+
+class ThisLinkIsNotPostException(RedditException):
+    """This link is not post"""

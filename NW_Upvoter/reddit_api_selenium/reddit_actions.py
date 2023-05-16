@@ -2,6 +2,7 @@ import time
 
 from loguru import logger
 from selenium.common import ElementClickInterceptedException
+from selenium.webdriver.common.by import By
 
 from BASE_Reddit.BaseReddit import BaseReddit
 from BASE_Reddit.exceptions import CookieInvalidException, PostDeletedException
@@ -89,3 +90,12 @@ class RedditWork(BaseReddit):
             logger.error("ElementClickInterceptedException: Клік був перехоплнний коли ставив upvote!")
             self._find_popups()
             self.upvote(wait=1)
+
+    def not_remove_post(self, reveddit_link: str):
+        self.DRIVER.get(reveddit_link)
+        self.elem_exists(by=By.TAG_NAME, value='body')
+        if self.elem_exists(f'//a[contains(@href, "{self.link}"', wait=1):
+            logger.info("Post not removed!")
+            return
+        else:
+            raise PostDeletedException("this post has been removed")

@@ -52,7 +52,7 @@ async def collection_info(link_obj: RedditLink):
 	reddit_username = path_cookie.stem  # Path to str
 
 	dict_for_browser = {
-		"link_reddit": reddit_link,
+		"link_obj": link_obj,
 		"dict_proxy": dict_proxy,
 		"path_cookie": path_cookie,
 		"reddit_username": reddit_username,

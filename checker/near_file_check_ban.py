@@ -5,8 +5,8 @@ import aiohttp
 from fake_useragent import UserAgent
 from loguru import logger
 
-from SETTINGS import db
-from database import Cookie
+from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
+from NW_Upvoter.db_tortories_orm.models import Account
 from work_fs.PATH import auto_create
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
@@ -15,13 +15,18 @@ FILE_COUNT = 1
 COUNT_ACCOUNT = 1
 
 
+@db_connection_required
+async def get_accounts_from_db():
+    accounts = await Account.all()
+
+    logins_from_db = [obj.login for obj in accounts]
+    return logins_from_db
+
+
 ROOT_DIR = Path(__file__).parent
-WORK_LOGIN = [
-
-]
 
 
-def get_acc_from_file():
+def get_acc_from_file(WORK_LOGIN):
     # file = input('Enter your filename(without extension): ') + ".txt"
     file = '142_mix_EU.txt'
     file_lins = get_list_file(ROOT_DIR / file)
@@ -58,8 +63,9 @@ async def fetch(session, url):
     global FILE_COUNT
 
     async with session.get(url, headers={'User-Agent': UserAgent().random}) as response:
-        html_to_file = await response.text()
         filepath: Path = auto_create(ROOT_DIR / "responses", _type="dir") / f"output{FILE_COUNT}.html"
+        html_to_file = await response.text()
+
         write_line(filepath, html_to_file)
         html = get_str_file(filepath)
 
@@ -94,7 +100,8 @@ async def get_ban(login: str, password: str):
 
 
 async def create_task():
-    tasks = [asyncio.create_task(get_ban(login, password)) for login, password in get_acc_from_file()]
+    WORK_LOGIN = await get_accounts_from_db()
+    tasks = [asyncio.create_task(get_ban(login, password)) for login, password in get_acc_from_file(WORK_LOGIN)]
     await asyncio.gather(*tasks)
 
 
@@ -107,21 +114,15 @@ def check_ban():
 
 
 # check if account from file in db
-def get_accounts_from_db():
-    with db:
-        cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
-        print(len(cookies_db_objs))
-    logins_from_db = [obj.account.login for obj in cookies_db_objs]
-    return logins_from_db
 
 
-def same_account_from_list():
-    db_accounts = get_accounts_from_db()
-    for login, password in get_acc_from_file():
-        if login in db_accounts:
-            logger.critical(login)
-        else:
-            print(f"{login}:{password}")
+# def same_account_from_list():
+#     db_accounts = get_accounts_from_db()
+#     for login, password in get_acc_from_file():
+#         if login in db_accounts:
+#             logger.critical(login)
+#         else:
+#             print(f"{login}:{password}")
 
 
 if __name__ == '__main__':

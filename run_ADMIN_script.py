@@ -15,7 +15,9 @@ async def db_about_link():
           tg_name: @{link_obj.tg_name}
            subreddit: {link_obj.subreddit}
             count: {link_obj.count_upvotes}
-             link: {link_obj.link} """)
+             username reddit: {link_obj.reveddit_url}             
+              link: {link_obj.link} """
+              )
 
 
 @db_connection_required
@@ -28,7 +30,7 @@ async def db_selected_cookies():
 async def main():
     await db_selected_cookies()
     # await db_update_0_all()
-    # await db_about_link()
+    await db_about_link()
 
 if __name__ == '__main__':
     asyncio.run(main())

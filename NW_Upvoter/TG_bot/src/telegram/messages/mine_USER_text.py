@@ -27,15 +27,18 @@ notif_browser_run = 'Bot work🙂'
 start_process = "Wait Please🧘‍♂️"
 finish_process = "Your request has been processed!💫"
 process_wrong = """
-Server sleeps🤔.\n
-Try again\n
-if you have any questions, please write me👇\n
-@happy_lite_smile
-"""
+                Server sleeps🤔.\n
+                 Try again send your post\n
+                  if you have any questions, please write me👇\n
+                   @happy_lite_smile
+            """
+
+post_is_sent = "Your post already upvoted👍"
+this_link_is_not_post = "This link is not post🤔. Check your link"
 
 
 # ___________________________ deleted post______________________________
-deleted_post = "Post has been deleted...🥲 We can't continue upvoting😑 "
+deleted_post = "Post has been deleted...🥲 \n We can't continue upvoting😑!"
 not_enough_bots = f"Hmm...🤔 Not enough bots!\n" \
 
 

@@ -11,13 +11,18 @@ from auth_reddit import get_cookies
 
 from .reddit_actions import RedditWork
 from BASE_Reddit.exceptions import NotRefrashPageException, BanAccountException, CookieInvalidException
+from ..db_tortories_orm.models import RedditLink
 
 
 # TODO close browser via pid or driver quit
 async def open_browser(dict_for_browser):
     with ProcessPoolExecutor() as executor:
         try:
-            await asyncio.wait_for(asyncio.get_running_loop().run_in_executor(executor, handling_api, dict_for_browser), timeout=180)
+            await asyncio.wait_for(
+                asyncio.get_running_loop().run_in_executor(executor, handling_api, dict_for_browser),
+                timeout=180
+            )
+
         except asyncio.TimeoutError:
             logger.info("Timeout occurred. Restarting process...")
             return await open_browser(dict_for_browser)
@@ -32,9 +37,11 @@ def handling_api(dict_for_browser):
         return handling_api(dict_for_browser)
 
 
-def work_api(link_reddit: str, dict_proxy: dict, path_cookie: Path, reddit_username: str, log_pswd: dict):
+def work_api(link_obj: RedditLink, dict_proxy: dict, path_cookie: Path, reddit_username: str, log_pswd: dict):
     while True:
-        with RedditWork(link=link_reddit, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
+        with RedditWork(link=link_obj.link, proxy=dict_proxy, path_cookie=path_cookie) as api_reddit:
+            api_reddit.not_remove_post(link_obj.reveddit_url)  # check post is deleted raise exception
+
             try:
                 api_reddit.attend_link()
             except CookieInvalidException:

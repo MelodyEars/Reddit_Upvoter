@@ -26,6 +26,8 @@ class Messages(TypedDict):
     not_enough_bots: str
     process_wrong: str
     error_vote_int_2: str
+    post_is_sent: str
+    this_link_is_not_post: str
 
 
 MESSAGES: Messages = {
@@ -34,8 +36,6 @@ MESSAGES: Messages = {
     'reddit_link': reddit_link,
     'error_vote_int': error_vote_int,
     'upvote_int': upvote_int,
-    # 'error_comments_int': error_comments_int,
-    # 'comments_int': comments_int,
     'start_process': start_process,
     'finish_process': finish_process,
     'deleted_post': deleted_post,
@@ -46,5 +46,7 @@ MESSAGES: Messages = {
     'btn_run_work': btn_run_work,
     'not_enough_bots': not_enough_bots,
     'process_wrong': process_wrong,
-    'error_vote_int_2': error_vote_int_2
+    'error_vote_int_2': error_vote_int_2,
+    "post_is_sent": post_is_sent,
+    "this_link_is_not_post": this_link_is_not_post,
 }
