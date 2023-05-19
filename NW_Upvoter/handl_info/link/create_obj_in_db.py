@@ -1,6 +1,5 @@
 import re
 
-from NW_Upvoter.db_tortories_orm.models import RedditLink
 from NW_Upvoter.db_tortories_orm.query.link import db_get_or_create_link_obj
 from NW_Upvoter.handl_info import get_reveddit_link
 from base_exception import ThisLinkIsNotPostException

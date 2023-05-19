@@ -81,7 +81,7 @@ class RedditWork(BaseReddit):
         try:
             self._baned_account()
             self._deleted_post()
-            # self.scroll_to_elem('//button[contains(text(), "Comment")]')
+            self._find_popups()
             self._previously_upvote(wait)
             self.subscribing()
         except ElementClickInterceptedException:

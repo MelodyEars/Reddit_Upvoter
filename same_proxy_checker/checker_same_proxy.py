@@ -31,6 +31,13 @@ def get_proxy_from_file():
         # user = line_in_list[5]
         # password = line_in_list[7]
 
+        # list_like = line.split('//')
+        #
+        # proxy = list_like[1].split(" ")[0]
+        # proxy_list = proxy.replace('@', ':').split(':')
+        # print(f"{proxy_list[2]}:{proxy_list[3]}:{proxy_list[0]}:{proxy_list[1]}")
+
+
         # list ":"
         line_in_list = line.split(':')
         host = line_in_list[0]
@@ -150,4 +157,5 @@ def run():
 
 
 if __name__ == '__main__':
+    # get_proxy_from_file()
     run()

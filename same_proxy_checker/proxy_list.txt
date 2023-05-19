@@ -1,1 +1,1 @@
-185.112.15.135:2831:36060:wc2bbdma
+zproxy.lum-superproxy.io:9222:brd-customer-hl_2ea60b2d-zone-zone6:0vu1g6rkumgj
