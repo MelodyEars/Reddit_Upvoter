@@ -13,7 +13,6 @@ from aiogram.webhook.aiohttp_server import (
 
 import work_fs as wf
 from SETTINGS import mine_project
-# from SWITCHer_window import call_auto_focus
 
 from Uprove_TG_Bot.TG_bot.setup import dp, bot
 from Uprove_TG_Bot.TG_bot.src.database.tables import create_tables
