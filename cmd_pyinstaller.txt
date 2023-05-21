@@ -8,32 +8,32 @@ pyinstaller -y -F -n runner -i H-CAT.ico main.py --collect-all playwright --coll
 
 
 # auth reddit
-pyinstaller -y -F -n AuthReddit.exe -i auth.ico run_AUTH_cookie.py --add-data C:\Users\King\PycharmProjects\Reddit_comment_apruv\work_fs\sertificate_db\ca-certificate.crt;. --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n AuthReddit -i auth.ico run_AUTH_cookie.py --add-data C:\Users\King\PycharmProjects\Reddit_comment_apruv\work_fs\sertificate_db\ca-certificate.crt;. --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # new AUTH
-pyinstaller -y -F -n AuthReddit.exe -i auth.ico run_AUTH_cookie.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n AuthReddit -i auth.ico run_AUTH_cookie.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # reddit upruve comment
-pyinstaller -y -F -n TGBOT.exe -i tg.ico run_TGBOT.py --collect-all magic_filter --hidden-import database --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n TGBOT -i tg.ico run_TGBOT.py --collect-all magic_filter --hidden-import database --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # new update for UPVOTER
-pyinstaller -y -F -n newTGBOT.exe -i tg.ico new_run_TGBOT.py --collect-all magic_filter --add-data C:\Users\King\PycharmProjects\Reddit_comment_apruv\work_fs\sertificate_db\ca-certificate.crt;. --hidden-import tortoise.backends.asyncpg --hidden-import asyncpg.pgproto.pgproto --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n newTGBOT -i tg.ico new_run_TGBOT.py --collect-all magic_filter --add-data C:\Users\King\PycharmProjects\Reddit_comment_apruv\work_fs\sertificate_db\ca-certificate.crt;. --hidden-import tortoise.backends.asyncpg --hidden-import asyncpg.pgproto.pgproto --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # new CHECKBAN 
-pyinstaller -y -F -n CheckBan.exe -i ban.ico run_CHECK_ban.py --hidden-import database --add-data C:\Users\King\PycharmProjects\Reddit_comment_apruv\work_fs\sertificate_db\ca-certificate.crt;. --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n CheckBan -i ban.ico run_CHECK_ban.py --hidden-import database --add-data C:\Users\King\PycharmProjects\Reddit_comment_apruv\work_fs\sertificate_db\ca-certificate.crt;. --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 
 # reddit check_ban
-pyinstaller -y -F -n CheckBan.exe -i ban.ico run_CHECK_ban.py --hidden-import database --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n CheckBan -i ban.ico run_CHECK_ban.py --hidden-import database --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # reddit planning post 
-pyinstaller -y -F -n PlanningPOST.exe -i planning.ico run_PLANNING_post.py --hidden-import database --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n PlanningPOST -i planning.ico run_PLANNING_post.py --hidden-import database --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # redddit creator post
-pyinstaller -y -F -n CreatorPost(open_browser).exe -i reddit.ico run_CREATOR_post.py --hidden-import database --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n CreatorPost(open_browser) -i reddit.ico run_CREATOR_post.py --hidden-import database --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # NAT reddit
-pyinstaller -y -F -n RunReddit.exe -i reddit.ico run.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n RunReddit -i reddit.ico run.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # SPAMPOSTER
-pyinstaller -y -F -n SpamPoster.exe -i spam.ico run_SPAMPOSTER.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n SpamPoster -i spam.ico run_SPAMPOSTER.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
