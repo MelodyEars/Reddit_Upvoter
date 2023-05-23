@@ -129,12 +129,7 @@ def run():
     print(f"different count: {different_count}")
     print(f"same count: {same_count}")
     print(len(DICT_ID_INFO))
-
-
-
-
-
-
+    input("Press Enter to close.")
 
 # {
 #   "ip": "167.179.91.8",

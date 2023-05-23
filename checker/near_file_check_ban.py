@@ -113,7 +113,7 @@ def check_ban():
 
     finally:
         del_all_responses()
-
+        input("Press Enter to close.")
 
 # check if account from file in db
 
