@@ -7,12 +7,14 @@ from loguru import logger
 
 from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
 from NW_Upvoter.db_tortories_orm.models import Account
-from work_fs.PATH import auto_create
+from work_fs.PATH import auto_create, path_near_exefile
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
 
 FILE_COUNT = 1
 COUNT_ACCOUNT = 1
+COUNT_ACCOUNT_BAN = 1
+# ROOT_DIR = Path(__file__).parent
 
 
 @db_connection_required
@@ -23,13 +25,10 @@ async def get_accounts_from_db():
     return logins_from_db
 
 
-ROOT_DIR = Path(__file__).parent
-
-
 def get_acc_from_file(WORK_LOGIN):
     # file = input('Enter your filename(without extension): ') + ".txt"
-    file = '142_mix_EU.txt'
-    file_lins = get_list_file(ROOT_DIR / file)
+    filepath = path_near_exefile('accounts.txt')
+    file_lins = get_list_file(filepath)
     for line in file_lins:
         login = line.split(":")[0]
         password = line.split(":")[1]
@@ -55,7 +54,7 @@ def unpack_ban(html):
 
 
 def del_all_responses():
-    folder_with_resps = ROOT_DIR / "responses"
+    folder_with_resps = path_near_exefile("responses")
     folder_with_resps.unlink()
 
 
@@ -63,7 +62,7 @@ async def fetch(session, url):
     global FILE_COUNT
 
     async with session.get(url, headers={'User-Agent': UserAgent().random}) as response:
-        filepath: Path = auto_create(ROOT_DIR / "responses", _type="dir") / f"output{FILE_COUNT}.html"
+        filepath: Path = auto_create(path_near_exefile("responses"), _type="dir") / f"output{FILE_COUNT}.html"
         html_to_file = await response.text()
 
         write_line(filepath, html_to_file)
@@ -81,7 +80,7 @@ async def fetch(session, url):
 
 
 async def get_ban(login: str, password: str):
-    global COUNT_ACCOUNT
+    global COUNT_ACCOUNT, COUNT_ACCOUNT_BAN
 
     url = f"https://www.reddit.com/user/{login}"
 
@@ -92,8 +91,9 @@ async def get_ban(login: str, password: str):
         if ban is None:
             # print(f"{COUNT_ACCOUNT}: {login}")
             print(f"{login}:{password}")
-            # COUNT_ACCOUNT += 1
-        # else:
+            COUNT_ACCOUNT += 1
+        else:
+            COUNT_ACCOUNT_BAN += 1
         #     logger.critical(f"{COUNT_ACCOUNT}: {login}: {ban}")
         #     COUNT_ACCOUNT += 1
     ##############################################################################
@@ -127,4 +127,6 @@ def check_ban():
 
 if __name__ == '__main__':
     check_ban()
+    print(f"norm: {COUNT_ACCOUNT}")
+    print(f"in ban {COUNT_ACCOUNT_BAN}")
     # same_account_from_list()

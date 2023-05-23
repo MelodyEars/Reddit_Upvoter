@@ -7,13 +7,12 @@ from aiohttp import ClientConnectorError
 from fake_useragent import UserAgent
 from loguru import logger
 
-from work_fs.PATH import auto_create
+from work_fs.PATH import auto_create, path_near_exefile
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
 
 FILE_COUNT = 1
 
-ROOT_DIR = Path(__file__).parent
 DICT_ID_INFO = {}
 
 
@@ -21,8 +20,8 @@ DICT_ID_INFO = {}
 def get_proxy_from_file():
     # 165	"216.73.159.44"	"10047"	"modeler_kDmcKT"	"GFks5gG4KoLV"
     # ['165\t', '216.73.159.44', '\t', '10047', '\t', 'modeler_kDmcKT', '\t', 'GFks5gG4KoLV', '']
-    file = "proxy_list.txt"
-    file_lins = get_list_file(ROOT_DIR / file)
+    filepath = path_near_exefile("proxy_list.txt")
+    file_lins = get_list_file(filepath)
     for line in file_lins:
         # line_in_list = line.split('"')
         # db_id = line_in_list[0].strip()
@@ -71,7 +70,7 @@ async def ipinfo(session: aiohttp.ClientSession, proxy_link: str, auth: aiohttp.
     async with session.get(url, proxy=proxy_link, proxy_auth=auth, headers={'User-Agent': UserAgent().random}) as response:
         # write to file
         html_to_file = await response.text()
-        filepath: Path = auto_create(ROOT_DIR / "responses", _type="dir") / f"output{FILE_COUNT}.html"
+        filepath: Path = auto_create(path_near_exefile("responses"), _type="dir") / f"output{FILE_COUNT}.html"
         write_line(filepath, html_to_file)
         # get from file
         html = get_str_file(filepath)
@@ -100,36 +99,12 @@ async def about_proxy(db_id, proxy_link, auth):
         # print(html)
         try:
             # DICT_ID_INFO[db_id] = json_obj['hostname']
-            print(f"{db_id}: {json_obj['hostname']}")
+            host = json_obj['hostname']
+            # print(f"{db_id}: {json_obj['hostname']}")
+            print(db_id)
         except KeyError:
             # DICT_ID_INFO[db_id] = ""
-            # logger.critical(db_id)
-            pass
-
-# {
-#   "ip": "167.179.91.8",
-#   "hostname": "167.179.91.8.vultrusercontent.com",   ---- uf2
-#   "city": "Ōi",
-#   "region": "Saitama",
-#   "country": "JP",
-#   "loc": "35.6090,139.7302",
-#   "org": "AS20473 The Constant Company, LLC",
-#   "postal": "140-8508",
-#   "timezone": "Asia/Tokyo",
-#   "readme": "https://ipinfo.io/missingauth"
-# }
-
-# {
-#   "ip": "185.33.84.125",
-#   "city": "Chicago",
-#   "region": "Illinois",
-#   "country": "US",
-#   "loc": "41.8798,-87.6285",
-#   "org": "AS202015 HZ Hosting Ltd",
-#   "postal": "60603",
-#   "timezone": "America/Chicago",
-#   "readme": "https://ipinfo.io/missingauth"
-# }
+            logger.critical(f"Bad proxies, write me {db_id}")
 
 
 async def create_task():
@@ -159,3 +134,36 @@ def run():
 if __name__ == '__main__':
     # get_proxy_from_file()
     run()
+
+
+
+
+
+
+# {
+#   "ip": "167.179.91.8",
+#   "hostname": "167.179.91.8.vultrusercontent.com",   ---- uf2
+#   "city": "Ōi",
+#   "region": "Saitama",
+#   "country": "JP",
+#   "loc": "35.6090,139.7302",
+#   "org": "AS20473 The Constant Company, LLC",
+#   "postal": "140-8508",
+#   "timezone": "Asia/Tokyo",
+#   "readme": "https://ipinfo.io/missingauth"
+# }
+
+# {
+#   "ip": "185.33.84.125",
+#   "city": "Chicago",
+#   "region": "Illinois",
+#   "country": "US",
+#   "loc": "41.8798,-87.6285",
+#   "org": "AS202015 HZ Hosting Ltd",
+#   "postal": "60603",
+#   "timezone": "America/Chicago",
+#   "readme": "https://ipinfo.io/missingauth"
+# }
+
+
+
