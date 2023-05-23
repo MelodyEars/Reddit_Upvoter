@@ -131,10 +131,6 @@ def run():
     print(len(DICT_ID_INFO))
 
 
-if __name__ == '__main__':
-    # get_proxy_from_file()
-    run()
-
 
 
 

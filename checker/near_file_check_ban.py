@@ -108,6 +108,8 @@ async def create_task():
 def check_ban():
     try:
         asyncio.run(create_task())
+        print(f"norm: {COUNT_ACCOUNT}")
+        print(f"in ban {COUNT_ACCOUNT_BAN}")
 
     finally:
         del_all_responses()
@@ -125,8 +127,6 @@ def check_ban():
 #             print(f"{login}:{password}")
 
 
-if __name__ == '__main__':
-    check_ban()
-    print(f"norm: {COUNT_ACCOUNT}")
-    print(f"in ban {COUNT_ACCOUNT_BAN}")
+# if __name__ == '__main__':
+#     check_ban()
     # same_account_from_list()

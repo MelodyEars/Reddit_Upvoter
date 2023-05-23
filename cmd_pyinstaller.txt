@@ -39,7 +39,7 @@ pyinstaller -y -F -n RunReddit -i reddit.ico run.py --path C:\Users\Username\Pyc
 pyinstaller -y -F -n SpamPoster -i spam.ico run_SPAMPOSTER.py --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # PROXY check
-pyinstaller -y -F -n PROXYcheck -i proxy.ico C:\Users\Username\PycharmProjects\Reddit_comment_apruv\same_proxy_checker\checker_same_proxy.py --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n PROXYcheck -i proxy.ico run_proxies.py --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
 
 # ACCOUNTS check
-pyinstaller -y -F -n BAN_in_file -i ban.ico C:\Users\Username\PycharmProjects\Reddit_comment_apruv\checker\near_file_check_ban.py --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
+pyinstaller -y -F -n BAN_in_file -i ban.ico run_check_account_in_file.py --collect-all fake_useragent --path C:\Users\Username\PycharmProjects\Reddit_comment_apruv\venv\Lib\site-packages
