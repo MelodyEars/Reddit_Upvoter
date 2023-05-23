@@ -1,1 +1,1 @@
-zproxy.lum-superproxy.io:9222:brd-customer-hl_2ea60b2d-zone-zone6:0vu1g6rkumgj
+193.218.222.97:47983:8eKOhrtQOVGcO13:yNBv8H2Stm8L4qr

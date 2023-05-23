@@ -53,7 +53,6 @@ def indicate_number(text_what_answer: str):
 
 
 def unpack_data(cookie_obj: Cookie):
-	db_id = cookie_obj.id
 	ban = cookie_obj.ban
 	username_acc: str = cookie_obj.account.login
 
@@ -65,7 +64,7 @@ def unpack_data(cookie_obj: Cookie):
 	proxy: Proxy = cookie_obj.proxy
 	info_proxy: str = f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}"
 
-	about_acc = f'id:{db_id} {username_acc}{password_acc} {info_proxy}'
+	about_acc = f'{username_acc}{password_acc} {info_proxy}'
 	return ban, about_acc
 
 

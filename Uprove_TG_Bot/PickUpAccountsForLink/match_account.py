@@ -12,7 +12,7 @@ def pick_up_account_to_link(link_from_file):
 	link_id = db_get_link_id(link_from_file)
 
 	cookies_db_objs = list(db_get_random_account_with_0())
-	shuffle(cookies_db_objs)
+	# shuffle(cookies_db_objs)
 
 	for cookie_db_obj in cookies_db_objs:
 		outcome_created, work_link_account_obj = db_exist_record_link_account(
