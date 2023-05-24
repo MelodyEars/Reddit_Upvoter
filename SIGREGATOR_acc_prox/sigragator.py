@@ -16,8 +16,8 @@ def get_acc_from_file():
         split_line = line.split(" ")
         # accounts.append(split_line[3])
         # proxies.append(split_line[4])
+        # print(split_line[2])
         print(split_line[3])
-        # print(split_line[4])
     # return proxies
 
 
