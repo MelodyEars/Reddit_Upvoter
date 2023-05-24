@@ -27,7 +27,7 @@ def db_exist_record_link_account(link_id, cookie_id) -> (bool, WorkAccountWithLi
 
 def db_get_random_account_with_0() -> list[Cookie]:
     with db:
-        cookies_db_objs = Cookie.select().where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
+        cookies_db_objs = Cookie.select()  # .where((Cookie.is_selected == False) & (Cookie.ban.is_null(True)))
 
     return cookies_db_objs
 
@@ -38,6 +38,7 @@ def db_ban_add(DICT_ACC_BAN: dict):
 
     for acc_path_cookie, ban_cond in DICT_ACC_BAN.items():
         cookie = Cookie.get_or_none(Cookie.cookie_path == acc_path_cookie)
+
         if cookie:
             cookie.ban = ban_cond
             cookies_to_update.append(cookie)

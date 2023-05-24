@@ -1,8 +1,8 @@
-from random import shuffle
+# from random import shuffle
 
 from base_exception import RanOutAccountsForLinkException
 from Uprove_TG_Bot.handl_info import check_proxy
-from database import db_save_1_by_id
+# from database import db_save_1_by_id
 
 from database.vote_tg_bot.actions_in_db import db_get_random_account_with_0, db_exist_record_link_account
 from database.vote_tg_bot.get import db_get_link_id, db_get_cookie_proxy
