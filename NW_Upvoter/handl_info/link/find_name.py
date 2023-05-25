@@ -28,5 +28,8 @@ async def get_reveddit_link(link: str):
 
 
 if __name__ == '__main__':
-    asyncio.run(get_reveddit_link('https://www.reddit.com/r/OnlyCurvyGW/comments/13hxdut/does_this_sexy_enough/'))
+    asyncio.run(get_reveddit_link('https://www.reddit.com/r/OnlyCurvyGW/comments/13qr0yh/with_one_word_define_my_titties/'))
+
+
+
 

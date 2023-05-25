@@ -1,6 +1,6 @@
 from loguru import logger
 
-from SETTINGS import mine_project
+from SETTINGS import mine_project, incubator
 from base_exception import ProxyInvalidException
 from Uprove_TG_Bot.handl_info import get_account_file, file_get_proxy
 from work_fs import write_list_to_file
@@ -19,6 +19,8 @@ def get_cookies(account: dict, proxy_for_api: dict, is_import=True):
 
         if (not is_import) & mine_project:
             api.create_post()
+            if incubator:
+                api.gen_avatar(account['login'])
 
         cookie_path, proxy_for_api = api.get_path_cookie(account['login'])
         api.DRIVER.quit()

@@ -98,3 +98,11 @@ class RedditAuth(BaseReddit):
         cookie.save()
 
         return db_cookie_path, self.proxy
+
+    def gen_avatar(self, login):
+        self.DRIVER.get(f'https://www.reddit.com/user/{login}')
+        self.wait_load_webpage()
+
+        self.click_element('//button[contains(text(), "Style Avatar")]')
+        self.click_element('//button[contains(text(), "Randomize")]')
+        self.click_element('//button[contains(text(), "Save")]')
