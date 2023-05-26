@@ -16,9 +16,9 @@ DATABASE_CONFIG = {
         "default": {
             "engine": "tortoise.backends.asyncpg",
             "credentials": {
-                "database": "db_bots_pool",
+                "database": "bots_up_db",
                 "host": "bots-up-do-user-11731497-0.b.db.ondigitalocean.com",
-                "password": "AVNS_KGJBBnK44bbRZLZSWxT",
+                "password": "AVNS_Dt92kjwtjWY4WQyMMJF",
                 "port": 25061,
                 "user": "doadmin",
                 "statement_cache_size": 0,

@@ -102,6 +102,7 @@ class RedditAuth(BaseReddit):
     def gen_avatar(self, login):
         self.DRIVER.get(f'https://www.reddit.com/user/{login}')
         self.wait_load_webpage()
+        self.select_interests()
 
         self.click_element('//button[contains(text(), "Style Avatar")]')
         self.click_element('//button[contains(text(), "Randomize")]')

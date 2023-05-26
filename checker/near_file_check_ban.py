@@ -5,8 +5,8 @@ import aiohttp
 from fake_useragent import UserAgent
 from loguru import logger
 
-# from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
-# from NW_Upvoter.db_tortories_orm.models import Account
+from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
+from NW_Upvoter.db_tortories_orm.models import Account
 from work_fs.PATH import auto_create, path_near_exefile
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
@@ -14,20 +14,22 @@ from work_fs.read_file import get_str_file, get_list_file
 FILE_COUNT = 1
 COUNT_ACCOUNT = 1
 COUNT_ACCOUNT_BAN = 1
-# ROOT_DIR = Path(__file__).parent
+ROOT_DIR = Path(__file__).parent
 
 
-# @db_connection_required
-# async def get_accounts_from_db():
-#     accounts = await Account.all()
-#
-#     logins_from_db = [obj.login for obj in accounts]
-#     return logins_from_db
+@db_connection_required
+async def get_accounts_from_db():
+    accounts = await Account.all()
+
+    logins_from_db = [obj.login for obj in accounts]
+    return logins_from_db
 
 
 def get_acc_from_file(WORK_LOGIN):
     # file = input('Enter your filename(without extension): ') + ".txt"
-    filepath = path_near_exefile('accounts.txt')
+    # filepath = path_near_exefile('accounts.txt')
+    filepath = ROOT_DIR / 'accounts.txt'
+    print(filepath)
     file_lins = get_list_file(filepath)
     for line in file_lins:
         login = line.split(":")[0]
@@ -62,7 +64,8 @@ async def fetch(session, url):
     global FILE_COUNT
 
     async with session.get(url, headers={'User-Agent': UserAgent().random}) as response:
-        filepath: Path = auto_create(path_near_exefile("responses"), _type="dir") / f"output{FILE_COUNT}.html"
+        # await asyncio.sleep(0.3)
+        filepath: Path = auto_create(ROOT_DIR / "responses", _type="dir") / f"output{FILE_COUNT}.html"
         html_to_file = await response.text()
 
         write_line(filepath, html_to_file)
@@ -100,13 +103,15 @@ async def get_ban(login: str, password: str):
 
 
 async def create_task():
-    # WORK_LOGIN = await get_accounts_from_db()
-    WORK_LOGIN = []
+    WORK_LOGIN = await get_accounts_from_db()
+    # WORK_LOGIN = []
     tasks = [asyncio.create_task(get_ban(login, password)) for login, password in get_acc_from_file(WORK_LOGIN)]
 
-    await asyncio.gather(*tasks)
+    for task in tasks:
+        await task
+    # await asyncio.gather(*tasks)
 
-
+@logger.catch
 def check_ban():
     try:
         asyncio.run(create_task())
@@ -129,6 +134,6 @@ def check_ban():
 #             print(f"{login}:{password}")
 
 
-# if __name__ == '__main__':
-#     check_ban()
+if __name__ == '__main__':
+    check_ban()
     # same_account_from_list()

@@ -22,13 +22,14 @@ async def get_reveddit_link(link: str):
     print(f"username: {username}")
     if username:
         url = f'https://www.reveddit.com/y/{username}/submitted/?showFilters=true&removal_status=not_removed'
+        print(url)
         return url
     else:
         return await get_reveddit_link(link)
 
 
 if __name__ == '__main__':
-    asyncio.run(get_reveddit_link('https://www.reddit.com/r/OnlyCurvyGW/comments/13qr0yh/with_one_word_define_my_titties/'))
+    asyncio.run(get_reveddit_link('https://www.reddit.com/r/OnlyCurvyGW/comments/13r4j8h/ever_fucked_a_busty_girl_with_glasses_do_you_want/'))
 
 
 
