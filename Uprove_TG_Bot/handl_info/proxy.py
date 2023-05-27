@@ -27,9 +27,12 @@ def check_proxy(host, port, user, password):
 def file_get_proxy():
     path_proxies_file = path_near_exefile('proxies.txt')
     list_proxies = get_list_file(path_proxies_file)
+    print(list_proxies)
 
     try:
-        list_line_content = list_proxies.pop(-1).replace(" ", "").split(':')
+        line_content = list_proxies.pop(-1)
+        list_line_content = line_content.replace(" ", "").split(':')
+        logger.info(f"Get proxy {list_line_content}")
     except IndexError:
         raise ProxyInvalidException('Недостатньо проксі!')
 
@@ -44,6 +47,7 @@ def file_get_proxy():
         check_proxy(**proxy_for_api)
         return proxy_for_api, list_proxies, path_proxies_file
     except ProxyInvalidException:
+        list_line_content.insert(0, line_content)
         write_list_to_file(path_proxies_file, list_proxies)
         return file_get_proxy()
 
