@@ -209,23 +209,23 @@ class BaseReddit(BaseClass):
 
 	def select_interests(self):
 		logger.info("Select interests!")
-		if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
-			num = 0
-			if random.randint(0, 4) <= 2:
-				for _ in range(random.randint(3, 5)):
-					num_selected = random.randint(1, 3)
-					num += num_selected
-					interest_button = f'//div[@role="dialog"]//button[@role="button"][{num}]'
-					self.click_element(value=interest_button, scroll_to=True, wait=1, intercepted_click=True)
-
-				self._button_continue()
-
-				# watch element not fill color
-				self.wait_load_webpage()
-
-				return self._select_communities()
-			else:
-				self.btn_close_interest()
+		# if self.elem_exists('//div[@role="dialog" and @aria-modal="true"]', wait=0.2):
+		# 	num = 0
+		# 	if random.randint(0, 4) <= 2:
+		# 		for _ in range(random.randint(3, 5)):
+		# 			num_selected = random.randint(1, 3)
+		# 			num += num_selected
+		# 			interest_button = f'//div[@role="dialog"]//button[@role="button"][{num}]'
+		# 			self.click_element(value=interest_button, scroll_to=True, wait=1, intercepted_click=True)
+		#
+		# 		self._button_continue()
+		#
+		# 		# watch element not fill color
+		# 		self.wait_load_webpage()
+		#
+		# 		return self._select_communities()
+		# 	else:
+		self.btn_close_interest()
 
 	def accept_all_cookie(self):
 		self.click_element(value='//section/form/button[contains(text(), "Accept all")]', wait=1, intercepted_click=True)
