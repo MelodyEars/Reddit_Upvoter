@@ -1,12 +1,12 @@
 from peewee import DoesNotExist
 
-from SETTINGS import mine_project
+from SETTINGS import incubator
 from .models import WorkAccountWithLink, db, Cookie
 
 
 def db_exist_record_link_account(link_id, cookie_id) -> (bool, WorkAccountWithLink):
     # check if id band with id link
-    if mine_project:
+    if not incubator:
         with db:
             obj: WorkAccountWithLink
             try:

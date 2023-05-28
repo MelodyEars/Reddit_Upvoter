@@ -15,9 +15,7 @@ def pick_up_account_to_link(link_from_file):
 	# shuffle(cookies_db_objs)
 
 	for cookie_db_obj in cookies_db_objs:
-		outcome_created, work_link_account_obj = db_exist_record_link_account(
-			link_id=link_id, cookie_id=cookie_db_obj.id
-		)
+		outcome_created, work_link_account_obj = db_exist_record_link_account(link_id=link_id, cookie_id=cookie_db_obj.id)
 
 		if outcome_created:  # if create record return TRUE
 			# db_save_1_by_id(cookie_db_obj.id)  # bot engaged
