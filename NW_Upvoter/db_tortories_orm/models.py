@@ -41,7 +41,7 @@ class Cookie(BaseModel):
 class RedditLink(BaseModel):
     link = fields.CharField(max_length=255)
     date = fields.DatetimeField(auto_now_add=True, timezone=True)
-    # reveddit_url = fields.CharField(max_length=255, null=True)
+    reveddit_url = fields.CharField(max_length=255, null=True)
     tg_name = fields.CharField(max_length=255, null=True)
     subreddit = fields.CharField(max_length=255, null=True)
     count_upvotes = fields.IntField(default=0)
