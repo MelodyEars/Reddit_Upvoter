@@ -94,6 +94,7 @@ class RedditWork(BaseReddit):
     def not_remove_post(self, reveddit_link: str):
         self.DRIVER.get(reveddit_link)
         self.elem_exists(by=By.TAG_NAME, value='body')
+        self.click_element('//div[@id="genericModal"]//a[@class="pointer"]', wait=0.2)
         if self.elem_exists(f'//a[contains(@href, "{self.link}"', wait=1):
             logger.info("Post not removed!")
             return
