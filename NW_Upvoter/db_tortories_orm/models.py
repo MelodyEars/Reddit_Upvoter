@@ -50,7 +50,7 @@ class RedditLink(BaseModel):
         return self.link
 
     class Meta:
-        table = 'reddit links'
+        table = 'reddit_links'
 
 
 class WorkAccountWithLink(BaseModel):
@@ -58,7 +58,7 @@ class WorkAccountWithLink(BaseModel):
     link = fields.ForeignKeyField('models.RedditLink', related_name='work_accounts', null=True)
 
     class Meta:
-        table = 'work account with link'
+        table = 'work_account_with_link'
 
     # cookie = fields.ManyToManyField('models.Cookie', related_name='work_account_links', null=True)
     # link = fields.ManyToManyField('models.RedditLink', related_name='work_account_links', null=True)

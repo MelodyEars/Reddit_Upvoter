@@ -1,4 +1,3 @@
-
 from functools import wraps
 from ssl import create_default_context
 
@@ -56,3 +55,13 @@ def db_connection_required(func):
             await connect_to_db()
         return await func(*args, **kwargs)
     return wrapper
+
+
+# async def run():
+#     await Tortoise.init(config=DATABASE_CONFIG)
+#     await Tortoise.get_connection("default").execute_script('DROP TABLE IF EXISTS "work account with link"')
+#     await Tortoise.get_connection("default").execute_script('DROP TABLE IF EXISTS "reddit links"')
+#
+# if __name__ == '__main__':
+#     import asyncio
+#     asyncio.run(run())
