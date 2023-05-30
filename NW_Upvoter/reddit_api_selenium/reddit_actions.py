@@ -68,8 +68,7 @@ class RedditWork(BaseReddit):
             logger.info("Відбувся клік по апвоуту!")
 
             time.sleep(2)
-            if self.elem_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]',
-                                wait=3):
+            if self.elem_exists('//div[@data-test-id="post-content"]//i[contains(@class, "icon icon-upvote_fill ")]'):
                 logger.info("Клік червоний проходимо далі!")
             else:
                 logger.error("Клік був, але кнопка апвоуту і досі прозора!")
