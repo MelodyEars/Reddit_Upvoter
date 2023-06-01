@@ -34,7 +34,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-
-
-# 'https://www.reddit.com/r/OnlyFansBusty/comments/13utimh/lets_be_honest_do_you_want_to_titfuck_those_small/'
-# 'https://www.reddit.com/r/OnlyFеуіеюзнansBusty/comments/13utimh/lets_be_honest_do_you_want_to_titfuck_those_small/?utm_source=share&utm_medium=web2x&context=3'

@@ -1,3 +1,4 @@
+from SETTINGS import COUNT_BOT
 
 hi_user = 'Welcome Back!👋 '
 
@@ -17,7 +18,7 @@ reddit_link = "🔗 Link to post: "
 
 upvote_int = "Count 🆙vote: "
 error_vote_int = "__Error!🙃 Your number must be a whole number.__ Try again."
-error_vote_int_2 = "You can't enter more than 50 bots🤖. Try again."
+error_vote_int_2 = f"You can't enter more than {COUNT_BOT} bots🤖. Try again."
 # comments_int = "Кількість коментарів (якщо потрібно)"
 # error_comments_int = "Помилка! Ваша відповідь не є цілим числом./Кількість коментарів (якщо потрібно).(тільки ціле число)"
 
