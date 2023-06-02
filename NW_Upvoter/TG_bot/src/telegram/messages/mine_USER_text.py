@@ -22,7 +22,6 @@ error_vote_int_2 = f"You can't enter more than {COUNT_BOT} bots🤖. Try again."
 # comments_int = "Кількість коментарів (якщо потрібно)"
 # error_comments_int = "Помилка! Ваша відповідь не є цілим числом./Кількість коментарів (якщо потрібно).(тільки ціле число)"
 
-
 # ___________________________ message for notification about finsh process ______________________ #
 notif_browser_run = 'Bot work🙂'
 start_process = "Wait Please🧘‍♂️"
