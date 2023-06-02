@@ -190,7 +190,7 @@ class BaseClass:
             return self.run_driver(browser_executable_path, user_data_dir,
                                 download_path, proxy, headless, detection_location)
 
-    def elem_exists(self, value, by=By.XPATH, wait=30, return_xpath=False, scroll_to=False):
+    def elem_exists(self, value, by=By.XPATH, wait=120, return_xpath=False, scroll_to=False):
         try:
             ignored_exceptions = (NoSuchElementException, StaleElementReferenceException)
             take_xpath = WebDriverWait(self.DRIVER,
