@@ -116,6 +116,7 @@ class RedditAuth(BaseReddit):
 
             logger.info("Click btn randomize")
             self.click_element('//button[contains(text(), "Randomize")]')
+            time.sleep(6)
 
             logger.info("Save avatar")
             self.click_element('//button[contains(text(), "Save")]')
