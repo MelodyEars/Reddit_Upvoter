@@ -112,7 +112,7 @@ class RedditAuth(BaseReddit):
         self.select_interests()
 
         logger.info("Click btn edit avatar")
-        if self.click_element('//button[contains(text(), "Style Avatar")]', wait=10):
+        if self.click_element('//button[contains(text(), "Create Avatar")]', wait=10):
 
             logger.info("Click btn randomize")
             self.click_element('//button[contains(text(), "Randomize")]')
