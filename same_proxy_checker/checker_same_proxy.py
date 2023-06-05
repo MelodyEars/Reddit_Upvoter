@@ -1,5 +1,6 @@
 import asyncio
 import json
+import sys
 from pathlib import Path
 
 import aiohttp
@@ -7,7 +8,7 @@ from aiohttp import ClientConnectorError
 from fake_useragent import UserAgent
 from loguru import logger
 
-from work_fs.PATH import auto_create, path_near_exefile
+from work_fs.PATH import auto_create
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
 
@@ -15,6 +16,22 @@ FILE_COUNT = 1
 
 DICT_ID_INFO = {}
 
+def path_near_exefile(filename: str = ".") -> Path:
+    """
+    create=visible :create folder or file is visible for users
+    create=hidden :create folder or file is hidden for users
+
+    return path to file near executable file
+    """
+
+    if getattr(sys, 'frozen', False):
+        path = Path(sys.executable).parent / filename
+
+    # get path from this file
+    else:
+        path = Path(__file__).parent / filename
+
+    return path
 
 # _______________________________________________________________________ from file
 def get_proxy_from_file():
@@ -90,7 +107,7 @@ async def about_proxy(db_id, proxy_link, auth):
         try:
 
             html = await ipinfo(session, proxy_link, auth)
-            print(html)
+            # print(html)
         except ClientConnectorError:
             return await about_proxy(db_id, proxy_link, auth)
         # ip_info = IpInfo.parse_raw(html)
@@ -98,12 +115,12 @@ async def about_proxy(db_id, proxy_link, auth):
         # print(f"{db_id}: {json_obj['loc']}")
         # print(html)
         try:
-            # DICT_ID_INFO[db_id] = json_obj['hostname']
-            host = json_obj['hostname']
+            DICT_ID_INFO[db_id] = json_obj['loc']
+            # host = json_obj['hostname']
             # print(f"{db_id}: {json_obj['hostname']}")
-            print(db_id)
+            # print(db_id)
         except KeyError:
-            # DICT_ID_INFO[db_id] = ""
+            DICT_ID_INFO[db_id] = ""
             logger.critical(f"Bad proxies, write me {db_id}")
 
 
@@ -120,16 +137,16 @@ def run():
     for id_db, location in DICT_ID_INFO.items():
         if location:
         # if list(DICT_ID_INFO.values()).count(location) > 1 or location is not None:
-            logger.critical(f"{id_db}: {location}")
-            same_count += 1
-        else:
             print(f"{id_db}: {location}")
             different_count += 1
+        else:
+            logger.critical(f"{id_db}: {location}")
+            same_count += 1
 
     print(f"different count: {different_count}")
     print(f"same count: {same_count}")
-    print(len(DICT_ID_INFO))
-    input("Press Enter to close.")
+    print(len(DICT_ID_INFO.items()))
+    # input("Press Enter to close.")
 
 # {
 #   "ip": "167.179.91.8",
@@ -156,5 +173,9 @@ def run():
 #   "readme": "https://ipinfo.io/missingauth"
 # }
 
+
+if __name__ == '__main__':
+    # get_proxy_from_file()
+    run()
 
 

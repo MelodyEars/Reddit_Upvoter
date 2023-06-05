@@ -6,7 +6,7 @@ from fake_useragent import UserAgent
 from loguru import logger
 
 from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
-from NW_Upvoter.db_tortories_orm.models import Account
+from NW_Upvoter.db_tortories_orm.models import Account, Proxy
 from work_fs.PATH import auto_create, path_near_exefile
 from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
@@ -133,7 +133,19 @@ def check_ban():
 #         else:
 #             print(f"{login}:{password}")
 
+@db_connection_required
+async def get_account_pwd():
+    # accounts = await Account.all()
+    # for obj in accounts:
+    #     print(f"{obj.id}:{obj.login}:{obj.password}")
+
+    proxy = await Proxy.get(id=60)
+    print(f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}")
+
 
 if __name__ == '__main__':
-    check_ban()
+    # check_ban()
     # same_account_from_list()
+    asyncio.run(get_account_pwd())
+'Fit_Light2443:kqdg155ssx'
+'193.218.222.3:41998:ZOgDZf9F51QeoUu:WbV0eOxClVLhep4'
