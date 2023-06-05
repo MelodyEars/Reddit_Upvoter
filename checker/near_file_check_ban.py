@@ -56,7 +56,8 @@ def unpack_ban(html):
 
 
 def del_all_responses():
-    folder_with_resps = path_near_exefile("responses")
+    # folder_with_resps = path_near_exefile("responses")
+    folder_with_resps = ROOT_DIR / "responses"
     folder_with_resps.unlink()
 
 
@@ -133,19 +134,17 @@ def check_ban():
 #         else:
 #             print(f"{login}:{password}")
 
-@db_connection_required
-async def get_account_pwd():
-    # accounts = await Account.all()
-    # for obj in accounts:
-    #     print(f"{obj.id}:{obj.login}:{obj.password}")
-
-    proxy = await Proxy.get(id=60)
-    print(f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}")
+# @db_connection_required
+# async def get_account_pwd():
+#     # accounts = await Account.all()
+#     # for obj in accounts:
+#     #     print(f"{obj.id}:{obj.login}:{obj.password}")
+#
+#     proxy = await Proxy.get(id=60)
+#     print(f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}")
 
 
 if __name__ == '__main__':
-    # check_ban()
+    check_ban()
     # same_account_from_list()
-    asyncio.run(get_account_pwd())
-'Fit_Light2443:kqdg155ssx'
-'193.218.222.3:41998:ZOgDZf9F51QeoUu:WbV0eOxClVLhep4'
+    # asyncio.run(get_account_pwd())
