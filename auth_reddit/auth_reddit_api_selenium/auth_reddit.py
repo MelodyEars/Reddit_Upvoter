@@ -82,14 +82,20 @@ class RedditAuth(BaseReddit):
         self._btn_send_post()
 
     def create_post(self):
+        logger.info("Create post")
         self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
         self.wait_load_webpage()
         self.btn_close_interest()
+        logger.info("Close interest")
         self.subscribing_main_page_sub()
+        logger.info("Subscribing main page sub")
         self._btn_create_post()
+        logger.info("Click btn create post")
         self._shadow_ban()
+        logger.info("Write Shadow ban")
 
     def get_path_cookie(self, login):
+        logger.info("Get path cookie")
         root_folder = work_fs.path_near_exefile()
         path_cookie = work_fs.auto_create(work_fs.path_near_exefile('cookies'), _type='dir') / f'{login}.pkl'
         db_cookie_path = path_cookie.relative_to(root_folder)
@@ -100,10 +106,16 @@ class RedditAuth(BaseReddit):
         return db_cookie_path, self.proxy
 
     def gen_avatar(self, login):
+        logger.debug("Start gen avatar")
         self.DRIVER.get(f'https://www.reddit.com/user/{login}')
         self.wait_load_webpage()
         self.select_interests()
 
-        self.click_element('//button[contains(text(), "Style Avatar")]')
-        self.click_element('//button[contains(text(), "Randomize")]')
-        self.click_element('//button[contains(text(), "Save")]')
+        logger.info("Click btn edit avatar")
+        if self.click_element('//button[contains(text(), "Style Avatar")]', wait=10):
+
+            logger.info("Click btn randomize")
+            self.click_element('//button[contains(text(), "Randomize")]')
+
+            logger.info("Save avatar")
+            self.click_element('//button[contains(text(), "Save")]')
