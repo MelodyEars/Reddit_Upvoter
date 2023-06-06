@@ -94,7 +94,7 @@ class RedditWork(BaseReddit):
         self.DRIVER.get(reveddit_link)
         self.elem_exists(by=By.TAG_NAME, value='body')
         self.click_element('//div[@id="genericModal"]//a[@class="pointer"]', wait=5)
-        if self.elem_exists(f'//a[contains(@href, "{self.link}")]'):
+        if self.elem_exists(f'//a[contains(@href, "{self.link}")]', wait=5):
             logger.info("Post not removed!")
             if self.elem_exists(f'//div[@class="post thread"]//a[contains(@href, "{self.link}")]', wait=1):
                 return
@@ -104,6 +104,5 @@ class RedditWork(BaseReddit):
 
         else:
             logger.error("Post not found!")
-            time.sleep(5)
             return self.not_remove_post(reveddit_link)
 
