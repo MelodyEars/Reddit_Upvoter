@@ -96,6 +96,14 @@ class RedditWork(BaseReddit):
         self.click_element('//div[@id="genericModal"]//a[@class="pointer"]', wait=5)
         if self.elem_exists(f'//a[contains(@href, "{self.link}")]'):
             logger.info("Post not removed!")
-            return
+            if self.elem_exists(f'//div[@class="post thread"]//a[contains(@href, "{self.link}")]', wait=1):
+                return
+            else:
+                logger.error("Post has been removed!")
+                raise PostDeletedException("this post has been removed")
+
         else:
-            raise PostDeletedException("this post has been removed")
+            logger.error("Post not found!")
+            time.sleep(5)
+            return self.not_remove_post(reveddit_link)
+

@@ -21,8 +21,9 @@ async def get_reveddit_link(link: str):
     username = await get_username(link)
     print(f"username: {username}")
     if username:
-        url = f'https://www.reveddit.com/y/{username}/submitted/?showFilters=true&removal_status=not_removed'
-        print(url)
+        url = f'https://www.reveddit.com/y/{username}/submitted/?showFilters=true&removal_status=all'
+        # url = f'https://www.reveddit.com/y/{username}/submitted/?showFilters=true&removal_status=not_removed'
+        # print(url)
         return url
     else:
         return await get_reveddit_link(link)

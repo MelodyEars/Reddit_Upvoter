@@ -29,8 +29,11 @@ async def db_selected_cookies():
 
 @db_connection_required
 async def db_delete_link():
-    link_obj = await RedditLink.get(id=226)
-    await link_obj.delete()
+    # link_obj = await RedditLink.get(link='https://www.reddit.com/r/titposting/comments/142gzc7/some_boobs_for_your_good_day_hah/?utm_source=share&utm_medium=web2x&context=3')
+    link_objs = await RedditLink.all()
+    for link_obj in link_objs:
+        print(f"id {link_obj.id} link {link_obj.link}")
+    # await link_obj.delete()
 
 
 async def main():
