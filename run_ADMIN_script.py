@@ -27,10 +27,18 @@ async def db_selected_cookies():
     print(f"cookies is NOT selected: {len(await Cookie.filter(is_selected=False))}")
 
 
+@db_connection_required
+async def db_delete_link():
+    link_obj = await RedditLink.get(id=226)
+    await link_obj.delete()
+
+
 async def main():
     await db_selected_cookies()
     await db_update_0_all()
     await db_about_link()
+    # await db_delete_link()
+
 
 if __name__ == '__main__':
     asyncio.run(main())
