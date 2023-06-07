@@ -177,5 +177,3 @@ def run():
 if __name__ == '__main__':
     # get_proxy_from_file()
     run()
-
-
