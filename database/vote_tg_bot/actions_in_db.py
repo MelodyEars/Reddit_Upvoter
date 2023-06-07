@@ -44,7 +44,7 @@ def db_ban_add(DICT_ACC_BAN: dict):
             cookies_to_update.append(cookie)
 
     # Виконати оновлення списку об'єктів за допомогою bulk_update
-    if mine_project:
+    if not incubator:
         with db.transaction():
             for i in range(0, len(cookies_to_update), 1000):
                 Cookie.bulk_update(cookies_to_update[i:i + 1000], fields=['ban'])

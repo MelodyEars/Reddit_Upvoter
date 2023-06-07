@@ -7,8 +7,8 @@ from work_fs.PATH import path_near_exefile
 from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
 mine_project = True
-incubator = False
-COUNT_BOT = 30
+incubator = True
+COUNT_BOT = 35
 
 
 # ____________________________________________________________________ DATABASE
