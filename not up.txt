@@ -10,7 +10,7 @@ Fit_Light2443:kqdg155ssx (N)
 Grouchy-Fun-8280:5whdouc5ud (R)             193.218.222.123:46773:YRTwKxoRmXG9eTr:g2e4gb7AKom7SgM (R)
 
 VariationEmergency96:prxrs3ns0q (R)         87.248.158.199:42883:X52NHkvID6u0Qe3:rtIuOtBSmsi5AYt (R)
-Feisty-Cut-6900:xavxqzynp9 (R)              193.218.222.74:47651:XMdi7O2e01jYN8X:eZI2tI9litVH4GO (R)
+Feisty-Cut-6900:xavxqzynp9 (R)              193.218.222.74:47651:XMdi7O2e01jYN8X:eZI2tI9litVH4GO (R)(Shadow)
 Far-Chef9170:9gnbxamc5v (2N)                185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (R)
 
 Kindly_Tackle_6367:8z2ic1fp2l (N)
@@ -32,3 +32,10 @@ Interesting_Tower492:kgictv4wll (R)         139.28.39.193:2831:38106:Cde1RwcB (2
 Complex-Ad-6577:xpyxmspesk (R)              176.107.182.175:2831:38106:Cde1RwcB (R)
 Adventurous-Lie-8619:r2druodrnl (R)         193.22.97.126:2831:38106:Cde1RwcB (2N)
 Charming-Resource202:7jhqv6ebu2 (2N)         45.9.237.187:2831:38106:Cde1RwcB (3N)
+
+                                            CelebrationFar667:obv2zj6ips 176.57.57.22:48732:5zxEdyEzN0FU7Ds:NoFk2TW30DEAus1 (W)
+                                            Hefty-Bake-6236:u97dgwxq2h 176.107.182.175:2831:38106:Cde1RwcB(N)
+                                            Affectionate_Cap_120:uexssjdfm7 185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (N)
+                                            Apart_Blacksmith_720:y77g0pbypb 87.248.158.199:42883:X52NHkvID6u0Qe3:rtIuOtBSmsi5AYt (W)
+Conscious-Gap3415:kzlugc5sr0 193.218.222.123:46773:YRTwKxoRmXG9eTr:g2e4gb7AKom7SgM (N)
+Rich_Construction504:me4og9p3gp 193.218.222.3:41998:ZOgDZf9F51QeoUu:WbV0eOxClVLhep4 (W)

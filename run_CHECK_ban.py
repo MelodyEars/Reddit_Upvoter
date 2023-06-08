@@ -35,8 +35,3 @@ if __name__ == '__main__':
         main()
     finally:
         input("Press Enter:")
-
-
-
-
-
