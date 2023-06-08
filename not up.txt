@@ -1,21 +1,16 @@
-                                            176.57.57.22:48732:5zxEdyEzN0FU7Ds:NoFk2TW30DEAus1 (R)
-
-                                            192.142.29.199:41555:fpk0hIeIMcSaGhQ:59fzJChDSfTtidr (R)
-
 Far-Chef9170:9gnbxamc5v (N)
 Old_Choice_4248:626goapckf (R)
 Fit_Light2443:kqdg155ssx (N)
 
-                                            193.218.222.3:41998:ZOgDZf9F51QeoUu:WbV0eOxClVLhep4 (R)
 Grouchy-Fun-8280:5whdouc5ud (R)             193.218.222.123:46773:YRTwKxoRmXG9eTr:g2e4gb7AKom7SgM (R)
 
-VariationEmergency96:prxrs3ns0q (R)         87.248.158.199:42883:X52NHkvID6u0Qe3:rtIuOtBSmsi5AYt (R)
+VariationEmergency96:prxrs3ns0q (R)
 Feisty-Cut-6900:xavxqzynp9 (R)              193.218.222.74:47651:XMdi7O2e01jYN8X:eZI2tI9litVH4GO (R)(Shadow)
-Far-Chef9170:9gnbxamc5v (2N)                185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (R)
+Far-Chef9170:9gnbxamc5v (2N)                185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (2N)
 
 Kindly_Tackle_6367:8z2ic1fp2l (N)
 Far_Ad_2796:a5pr5elvcc (R)                  193.22.97.126:2831:38106:Cde1RwcB (2N)
-Fit_Light2443:kqdg155ssx (R)                176.107.182.175:2831:38106:Cde1RwcB (R)
+Fit_Light2443:kqdg155ssx (R)                176.107.182.175:2831:38106:Cde1RwcB (3N)
 Civil-Teaching-3560:s7ykzuifoj (R)          139.28.39.193:2831:38106:Cde1RwcB (2N)
 NiceLiterature6550:7muiqnhbh0 (R)           45.9.238.124:2831:38106:Cde1RwcB (2N)
 Illustrious_Rip2266:q75uip02l2 (R)          45.9.237.213:2831:38106:Cde1RwcB (2N)
@@ -29,13 +24,27 @@ Living-Ad-5770:nomc30y56k (R)               45.9.237.187:2831:38106:Cde1RwcB (3N
 Queasy-Wall7202:ftgpi49ogn (R)              45.9.237.213:2831:38106:Cde1RwcB (2N)
 Regular-Surprise-657:6yyzn0b5ki (R)         45.9.238.124:2831:38106:Cde1RwcB (2N)
 Interesting_Tower492:kgictv4wll (R)         139.28.39.193:2831:38106:Cde1RwcB (2N)
-Complex-Ad-6577:xpyxmspesk (R)              176.107.182.175:2831:38106:Cde1RwcB (R)
+Complex-Ad-6577:xpyxmspesk (R)              176.107.182.175:2831:38106:Cde1RwcB (3N)
 Adventurous-Lie-8619:r2druodrnl (R)         193.22.97.126:2831:38106:Cde1RwcB (2N)
-Charming-Resource202:7jhqv6ebu2 (2N)         45.9.237.187:2831:38106:Cde1RwcB (3N)
+Charming-Resource202:7jhqv6ebu2 (2N)        45.9.237.187:2831:38106:Cde1RwcB (3N)
 
-                                            CelebrationFar667:obv2zj6ips 176.57.57.22:48732:5zxEdyEzN0FU7Ds:NoFk2TW30DEAus1 (W)
-                                            Hefty-Bake-6236:u97dgwxq2h 176.107.182.175:2831:38106:Cde1RwcB(N)
-                                            Affectionate_Cap_120:uexssjdfm7 185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (N)
-                                            Apart_Blacksmith_720:y77g0pbypb 87.248.158.199:42883:X52NHkvID6u0Qe3:rtIuOtBSmsi5AYt (W)
-Conscious-Gap3415:kzlugc5sr0 193.218.222.123:46773:YRTwKxoRmXG9eTr:g2e4gb7AKom7SgM (N)
-Rich_Construction504:me4og9p3gp 193.218.222.3:41998:ZOgDZf9F51QeoUu:WbV0eOxClVLhep4 (W)
+Hefty-Bake-6236:u97dgwxq2h (R)              176.107.182.175:2831:38106:Cde1RwcB(3N)
+Affectionate_Cap_120:uexssjdfm7 (R)         185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (2N)
+Conscious-Gap3415:kzlugc5sr0 (R)            193.218.222.123:46773:YRTwKxoRmXG9eTr:g2e4gb7AKom7SgM (N)
+
+# proxy not up in ukr support
+13/20 working
+7/20 not working
+45.9.236.20
+45.9.237.187
+45.9.237.213
+45.9.238.124
+139.28.39.193
+176.107.182.175
+193.22.97.126
+
+# proxy cheap
+1/46 no run
+192.142.29.199:41555:fpk0hIeIMcSaGhQ:59fzJChDSfTtidr (NOT WORKING)
+28/46 working
+17/46 not working
