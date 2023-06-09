@@ -37,12 +37,30 @@ async def db_delete_link():
     #     print(f"id {link_obj.id} link {link_obj.link}")
     await link_obj.delete()
 
+
+@db_connection_required
+async def db_print_selected_accounts():
+    selected_objs = await Cookie.filter(is_selected=True).prefetch_related("proxy",  "work_accounts", "account")
+    for obj in selected_objs:
+        print(f"""
+        id: {obj.id}
+         is_selected: {obj.is_selected}
+          proxy: {obj.proxy.host}:{obj.proxy.port}:{obj.proxy.user}:{obj.proxy.password}
+            host {obj.proxy.host}
+            port {obj.proxy.port}
+            
+           account: {obj.account.login}:{obj.account.password}
+             ban: {obj.ban} 
+              """)
+
+
 @logger.catch
 async def main():
+    await db_print_selected_accounts()
     await db_selected_cookies()
-    await db_update_0_all()
+    # await db_update_0_all()
     # await db_about_link()
-    await db_delete_link()
+    # await db_delete_link()
 
 
 if __name__ == '__main__':

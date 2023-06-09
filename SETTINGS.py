@@ -8,7 +8,7 @@ from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
 mine_project = True
 incubator = True
-COUNT_BOT = 35
+COUNT_BOT = 20
 
 
 # ____________________________________________________________________ DATABASE
@@ -53,7 +53,7 @@ else:
 
 # ______________________________________________________________________ TG BOT
 if mine_project:
-    admins_id = [487950394, ]
+    admins_id = [487950394, 6227551882]
 else:
     # get from file
     admins_id = [
