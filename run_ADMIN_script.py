@@ -1,5 +1,7 @@
 import asyncio
 
+from loguru import logger
+
 from NW_Upvoter.db_tortories_orm.db_connect import db_connection_required
 from NW_Upvoter.db_tortories_orm.models import Cookie, RedditLink
 from NW_Upvoter.db_tortories_orm.query.bot_accounts import db_update_0_all
@@ -29,18 +31,18 @@ async def db_selected_cookies():
 
 @db_connection_required
 async def db_delete_link():
-    # link_obj = await RedditLink.get(link='https://www.reddit.com/r/titposting/comments/142gzc7/some_boobs_for_your_good_day_hah/?utm_source=share&utm_medium=web2x&context=3')
-    link_objs = await RedditLink.all()
-    for link_obj in link_objs:
-        print(f"id {link_obj.id} link {link_obj.link}")
-    # await link_obj.delete()
+    link_obj = await RedditLink.get(link='https://www.reddit.com/r/SFWNextDoorGirls/comments/144w6lg/an_air_kiss_to_make_your_mood_better/')
+    # link_objs = await RedditLink.all()
+    # for link_obj in link_objs:
+    #     print(f"id {link_obj.id} link {link_obj.link}")
+    await link_obj.delete()
 
-
+@logger.catch
 async def main():
     await db_selected_cookies()
     await db_update_0_all()
-    await db_about_link()
-    # await db_delete_link()
+    # await db_about_link()
+    await db_delete_link()
 
 
 if __name__ == '__main__':
