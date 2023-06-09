@@ -114,6 +114,10 @@ class RedditAuth(BaseReddit):
         logger.info("Click btn edit avatar")
         if self.click_element('//button[contains(text(), "Create Avatar")]', wait=10):
 
+            logger.info("Click btn explore")
+            self.click_element('//div[@data-testid="nav:category nav:category:EXPLORE"]')
+            time.sleep(2)
+
             logger.info("Click btn randomize")
             self.click_element('//button[contains(text(), "Randomize")]')
             time.sleep(6)

@@ -31,7 +31,7 @@ async def db_selected_cookies():
 
 @db_connection_required
 async def db_delete_link():
-    link_obj = await RedditLink.get(link='https://www.reddit.com/r/SFWNextDoorGirls/comments/144w6lg/an_air_kiss_to_make_your_mood_better/')
+    link_obj = await RedditLink.get(link='https://www.reddit.com/r/fuckdoll/comments/1453umr/i_dream_to_be_your_fuckdoll_247/')
     # link_objs = await RedditLink.all()
     # for link_obj in link_objs:
     #     print(f"id {link_obj.id} link {link_obj.link}")
@@ -56,10 +56,10 @@ async def db_print_selected_accounts():
 
 @logger.catch
 async def main():
-    await db_print_selected_accounts()
+    # await db_print_selected_accounts()
     await db_selected_cookies()
-    # await db_update_0_all()
-    # await db_about_link()
+    await db_update_0_all()
+    # await db_about_🪖🇺🇦link()
     # await db_delete_link()
 
 
