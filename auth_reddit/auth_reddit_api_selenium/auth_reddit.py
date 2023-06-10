@@ -125,4 +125,3 @@ class RedditAuth(BaseReddit):
             logger.info("Save avatar")
             self.click_element('//button[contains(text(), "Save")]')
             time.sleep(2)
-            
