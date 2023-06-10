@@ -28,7 +28,10 @@ Adventurous-Lie-8619:r2druodrnl (R)         193.22.97.126:2831:38106:Cde1RwcB (2
 Charming-Resource202:7jhqv6ebu2 (2N)        45.9.237.187:2831:38106:Cde1RwcB (3N)
 
 Hefty-Bake-6236:u97dgwxq2h (R)              176.107.182.175:2831:38106:Cde1RwcB(3N)
-Affectionate_Cap_120:uexssjdfm7 (R)         185.173.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (2N)
+Affectionate_Cap_120:uexssjdfm7 (R)         185.1
+
+
+73.26.57:49658:JWzw2uUPgFUCDre:XnUpS4YbTk91pvm (2N)
 Conscious-Gap3415:kzlugc5sr0 (R)            193.218.222.123:46773:YRTwKxoRmXG9eTr:g2e4gb7AKom7SgM (N)
 
 # proxy not up in ukr support
@@ -47,22 +50,17 @@ Conscious-Gap3415:kzlugc5sr0 (R)            193.218.222.123:46773:YRTwKxoRmXG9eT
 192.142.29.199:41555:fpk0hIeIMcSaGhQ:59fzJChDSfTtidr (NOT WORKING)
 28/46 working
 17/46 not working
-74.50.6.78:42060:YcjZYCEycgsXnvf:6pAg9cDfzGECusK
-185.238.214.234:44768:QjvbYJsS1HgDQDL:FvP779qsK3i2Y0h
-206.206.70.140:48638:Ze61LRbNMa9Gv9V:NfyXxClDyAvzNZp
-205.234.189.51:48313:KfHELINqDSxCc2A:V0p9eertBbRAvaG
-89.35.93.162:44984:hYRArPRPOLyKqLF:0USgQ5Opo8D7lTf
-89.35.93.114:42867:QtPLDXvFeodgYtr:8s9M7wPShz2uGrx
-89.35.93.64:42508:0E02gbTaWo0ztfb:Ir74pneEPPeA91w
-88.216.186.86:44916:30gdGhTMoauJdvb:88PFkxpjSLVtSpF
-88.216.186.194:42911:GaJIdhmfemmRrf7:bctYk7FvkCpIvjR
-5.252.79.167:46581:wKWNgH7vhIQrWa9:ZSkIYDBpMU02LKP
+
+185.238.214.234:44768:QjvbYJsS1HgDQDL:FvP779qsK3i2Y0h (2N)
+205.234.189.51:48313:KfHELINqDSxCc2A:V0p9eertBbRAvaG (2N)
+88.216.186.86:44916:30gdGhTMoauJdvb:88PFkxpjSLVtSpF (2N)
+88.216.186.194:42911:GaJIdhmfemmRrf7:bctYk7FvkCpIvjR (2N)
 192.142.29.69:42548:0Cbln3ryecjTaBW:VQbVBrPsenJD1FF
 192.142.29.120:41988:CyaMllM9nLVyxVc:VeOvcH9oqr9GIpu
 192.142.29.83:45876:sG4BxXFiKAgASry:CduVyCyq25puEbZ
 192.142.29.219:47316:XLIHP3bEbaiqcWi:LG9JrjAt4HSRKiM
 192.142.29.153:44656:17OTBFWIGHYPW3r:3mMaBsPRzVO8jnt
-185.173.26.163:45344:k5UTkFdbdSuhk67:jVcIJKIAr4rYKfQ
+185.173.26.163:45344:k5UTkFdbdSuhk67:jVcIJKIAr4rYKfQ (2N)
 
 
 # 09.06.2023 ukr proxy
@@ -89,15 +87,7 @@ Conscious-Gap3415:kzlugc5sr0 (R)            193.218.222.123:46773:YRTwKxoRmXG9eT
 193.22.99.169:2831:38500:7ms1i82a (W)
 
 
-
-1 : Which_Ganache_5962:jjhew9bc10 185.173.26.163:45344:k5UTkFdbdSuhk67:jVcIJKIAr4rYKfQ
-2 : Ancient_Back_6817:c7taxofe6o 5.252.79.167:46581:wKWNgH7vhIQrWa9:ZSkIYDBpMU02LKP
-3 : Regular_Ordinary4744:tcylubrdmg 88.216.186.194:42911:GaJIdhmfemmRrf7:bctYk7FvkCpIvjR
-4 : Dramatic-Range-9373:321wpdu0qu 89.35.93.64:42508:0E02gbTaWo0ztfb:Ir74pneEPPeA91w
-5 : Ok_Objective_8923:cpm61dy43r 89.35.93.114:42867:QtPLDXvFeodgYtr:8s9M7wPShz2uGrx
-6 : Royal_Worldliness_94:dpaf2f6ytt 89.35.93.162:44984:hYRArPRPOLyKqLF:0USgQ5Opo8D7lTf
-7 : Pristine_Data9718:13itvbtpxh 205.234.189.51:48313:KfHELINqDSxCc2A:V0p9eertBbRAvaG
-8 : Fit_Alarm2022:fkz579eu3k 185.238.214.234:44768:QjvbYJsS1HgDQDL:FvP779qsK3i2Y0h
-9 : Individual_Cat9329:cyi06un0t4 74.50.6.78:42060:YcjZYCEycgsXnvf:6pAg9cDfzGECusK
-10 : Old_Choice_4248:626goapckf 206.206.70.140:48638:Ze61LRbNMa9Gv9V:NfyXxClDyAvzNZp
-11 : Repulsive-Bobcat6648:mt6figvsim 88.216.186.86:44916:30gdGhTMoauJdvb:88PFkxpjSLVtSpF
+Regular_Ordinary4744:tcylubrdmg (N) 88.216.186.194:42911:GaJIdhmfemmRrf7:bctYk7FvkCpIvjR (N)
+Pristine_Data9718:13itvbtpxh (N) 205.234.189.51:48313:KfHELINqDSxCc2A:V0p9eertBbRAvaG (N)
+Fit_Alarm2022:fkz579eu3k (N) 185.238.214.234:44768:QjvbYJsS1HgDQDL:FvP779qsK3i2Y0h (N)
+Repulsive-Bobcat6648:mt6figvsim (N) 88.216.186.86:44916:30gdGhTMoauJdvb:88PFkxpjSLVtSpF (N)
