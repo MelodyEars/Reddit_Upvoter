@@ -12,13 +12,19 @@ from work_fs.write_to_file import write_line
 from work_fs.read_file import get_str_file, get_list_file
 
 FILE_COUNT = 1
-COUNT_ACCOUNT = 1
-COUNT_ACCOUNT_BAN = 1
+COUNT_ACCOUNT = 0
+COUNT_ACCOUNT_BAN = 0
 ROOT_DIR = Path(__file__).parent
 
+NOT_UPVOTED = [
+    'Charming-Resource202',
+    'Far-Chef9170',
+    'Kindly_Tackle_6367',
+
+]
 
 @db_connection_required
-async def get_accounts_from_db():
+async def get_accounts_from_db() -> list:
     accounts = await Account.all()
 
     logins_from_db = [obj.login for obj in accounts]
@@ -104,7 +110,7 @@ async def get_ban(login: str, password: str):
 
 
 async def create_task():
-    WORK_LOGIN = await get_accounts_from_db()
+    WORK_LOGIN = await get_accounts_from_db() + NOT_UPVOTED
     # WORK_LOGIN = []
     tasks = [asyncio.create_task(get_ban(login, password)) for login, password in get_acc_from_file(WORK_LOGIN)]
 
@@ -143,8 +149,19 @@ def check_ban():
 #     proxy = await Proxy.get(id=60)
 #     print(f"{proxy.host}:{proxy.port}:{proxy.user}:{proxy.password}")
 
+def sort_same_account():
+    filepath = ROOT_DIR / 'accounts.txt'
+    file_lins = get_list_file(filepath)
+
+    print(f'before: {len(file_lins)}')
+    file_lins = list(set(file_lins))
+    print(f'after: {len(file_lins)}')
+
+    write_line(filepath, file_lins)
+
 
 if __name__ == '__main__':
     check_ban()
+    # sort_same_account()
     # same_account_from_list()
     # asyncio.run(get_account_pwd())
