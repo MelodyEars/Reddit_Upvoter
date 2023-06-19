@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Активуємо віртуальне середовище Python
+source <path_to_venv>/bin/activate
+
+# Оновлюємо pip
+pip install --upgrade pip
+
+# Отримуємо список застарілих пакетів
+outdated_packages=$(pip list --outdated | awk '{print $1}')
+
+# Оновлюємо кожен пакет зі списку
+for package in $outdated_packages
+do
+    pip install --upgrade $package
+done
+
+# Виводимо список оновлених пакетів
+pip list

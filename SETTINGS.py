@@ -75,3 +75,7 @@ if mine_project:
     commands = ["add", "del"]
 else:
     commands = ["del"]
+
+
+# _______________________________________________________________________ CHROME
+executable_path = r'C:\Users\Administrator\AppData\Local\Chromium\Application\chrome.exe'

@@ -18,11 +18,32 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from urllib3.exceptions import ProtocolError
 
 from base_exception import ProxyInvalidException
+from SETTINGS import executable_path
+
 from .SeleniumExtension import EnhancedActionChains, ProxyExtension
 
 
-executable_path = None  # default chrome
+def removeCDC(driver):
+    cdc_props: list[str] = driver.execute_script(  # type: ignore
+        """
+        let objectToInspect = window,
+            result = [];
+        while(objectToInspect !== null)
+        { result = result.concat(Object.getOwnPropertyNames(objectToInspect));
+          objectToInspect = Object.getPrototypeOf(objectToInspect); }
+        return result.filter(i => i.match(/^[a-z]{3}_[a-z]{22}_.*/i))
+        """
+    )
+    if len(cdc_props) < 1:
+        return
+    cdc_props_js_array = "[" + ", ".join('"' + p + '"' for p in cdc_props) + "]"
+    driver.execute_cdp_cmd(
+        cmd="Page.addScriptToEvaluateOnNewDocument",
+        cmd_args={"source": f"{cdc_props_js_array}.forEach(p => delete window[p] && console.log('removed', p));"},
+    )
 
+    # file_bin = re.sub(rb"\$cdc_[a-zA-Z0-9]{22}_", lambda m: bytes(
+    #     random.choices((string.ascii_letters + string.digits).encode("ascii"), k=len(m.group()))), file_bin)
 
 def geolocation(loc_value_JSON: str):
     data = loc_value_JSON.split(",")
@@ -99,6 +120,8 @@ class Chrome(uc.Chrome):
         # this is only needed once per session, is it ?
         self.get = super().get
 
+        # driver.execute_script("""setTimeout(() => window.location.href="https://www.bet365.com", 100)""");
+
 
 class BaseClass:
 
@@ -128,11 +151,10 @@ class BaseClass:
         --disable-renderer-backgrounding
         --disable-backgrounding-occluded-windows
         --disable-software-rasterizer
-        --disable-dev-shm-usage
-        --disable-setuid-sandbox
-        --disable-popup-blocking
-        --disable-notifications
         """)  # 2 arg in  the end need for working on the backgrounding
+        # --disable-popup-blocking
+        # --disable-notifications
+        # --disable-reading-from-canvas
 
         if proxy is not None:
             # proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake
@@ -161,7 +183,7 @@ class BaseClass:
         your_options["browser_executable_path"] = browser_executable_path
 
         # if not profile or user_data_dir == incognito
-        self.DRIVER = uc.Chrome(**your_options, user_multi_procs=True)
+        self.DRIVER = uc.Chrome(**your_options, user_multi_procs=True, use_subprocess=False)
 
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)
@@ -173,6 +195,7 @@ class BaseClass:
 
         # if you need download to your folder
         if download_path == "default":
+            removeCDC(self.DRIVER)
             return self.DRIVER
 
         else:
