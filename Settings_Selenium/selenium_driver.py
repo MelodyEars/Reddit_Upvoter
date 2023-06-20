@@ -4,7 +4,10 @@ import random
 from http.client import RemoteDisconnected
 
 import requests
+
 import undetected_chromedriver as uc
+from selenium_stealth import stealth
+
 from loguru import logger
 from requests import JSONDecodeError, ReadTimeout
 from requests.exceptions import ProxyError, ConnectTimeout
@@ -45,11 +48,11 @@ def removeCDC(driver):
     # file_bin = re.sub(rb"\$cdc_[a-zA-Z0-9]{22}_", lambda m: bytes(
     #     random.choices((string.ascii_letters + string.digits).encode("ascii"), k=len(m.group()))), file_bin)
 
+
 def geolocation(loc_value_JSON: str):
     data = loc_value_JSON.split(",")
     latitude = float(data[0])
     longitude = float(data[1])
-
     capabilities = DesiredCapabilities.CHROME.copy()
     capabilities['locationContextEnabled'] = True
     capabilities['locationContextDefaultZoomLevel'] = 13
@@ -147,7 +150,6 @@ class BaseClass:
         your_options = {}
         options = uc.ChromeOptions()
         options.add_argument("""
-        --lang=en-US
         --disable-renderer-backgrounding
         --disable-backgrounding-occluded-windows
         --disable-software-rasterizer
@@ -185,8 +187,16 @@ class BaseClass:
         # if not profile or user_data_dir == incognito
         self.DRIVER = uc.Chrome(**your_options, user_multi_procs=True, use_subprocess=False)
 
+        removeCDC(self.DRIVER)
+        stealth(self.DRIVER,
+                webgl_vendor="Intel Inc.",
+                renderer="ANGLE (Intel(R) HD Graphics 630 Direct3D11 vs_5_0 ps_5_0)",
+                fix_hairline=False,
+                )
+
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)
+
 
         # __________________________________ timezone _________________________________
         if proxy is not None:
@@ -195,7 +205,6 @@ class BaseClass:
 
         # if you need download to your folder
         if download_path == "default":
-            removeCDC(self.DRIVER)
             return self.DRIVER
 
         else:

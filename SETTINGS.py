@@ -78,4 +78,5 @@ else:
 
 
 # _______________________________________________________________________ CHROME
-executable_path = r'C:\Users\Administrator\AppData\Local\Chromium\Application\chrome.exe'
+# executable_path = r'C:\Users\Administrator\AppData\Local\Chromium\Application\chrome.exe'
+executable_path = None
