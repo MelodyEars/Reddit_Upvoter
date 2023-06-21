@@ -24,3 +24,4 @@ def user_agent_override(
         override = {"userAgent": ua}
 
     driver.execute_cdp_cmd('Network.setUserAgentOverride', override)
+
