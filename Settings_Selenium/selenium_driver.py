@@ -149,11 +149,17 @@ class BaseClass:
 
         your_options = {}
         options = uc.ChromeOptions()
-        options.add_argument("""
-        --disable-renderer-backgrounding
-        --disable-backgrounding-occluded-windows
-        --disable-software-rasterizer
-        """)  # 2 arg in  the end need for working on the backgrounding
+
+        options.add_argument(
+            """
+            --lang=en-US
+            --disable-renderer-backgrounding 
+            --disable-backgrounding-occluded-windows
+            --disable-software-rasterizer
+            """
+        )
+        # 2 arg in  the end need for working on the backgrounding
+
         # --disable-popup-blocking
         # --disable-notifications
         # --disable-reading-from-canvas
