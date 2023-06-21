@@ -1,9 +1,10 @@
-from pathlib import Path
+from work_fs import path_in_exefile
 from .wrapper import evaluateOnNewDocument
 from selenium.webdriver import Chrome as Driver
 
 
 def navigator_permissions(driver: Driver, **kwargs) -> None:
-    evaluateOnNewDocument(
-        driver, Path(__file__).parent.joinpath("js/navigator.permissions.js").read_text()
-    )
+    js_path = path_in_exefile()
+    file_js_path = js_path / "js" / "navigator.permissions.js"
+
+    evaluateOnNewDocument(driver, file_js_path.read_text())
