@@ -10,6 +10,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
 from BASE_Reddit.BaseReddit import BaseReddit
+from SETTINGS import mine_project
 from Settings_Selenium import BrowserCookie
 
 
@@ -40,7 +41,7 @@ class RedditAuth(BaseReddit):
             return self.__button_login()
 
     def goto_login_form(self):
-        self.DRIVER.get('https://www.reddit.com/')
+        self.DRIVER.get('https://www.reddit.com/login/')
         self.wait_load_webpage()
 
         # self.DRIVER.current_url() <- url
@@ -49,14 +50,14 @@ class RedditAuth(BaseReddit):
         self.accept_all_cookie()
 
     def fill_login_form(self, login, password):
-        if self.switch_iframe_xpath("//iframe[contains(@src, 'https://www.reddit.com/login/')]"):
-            self.send_text_by_elem(value='loginUsername', by=By.ID, text_or_key=login)
-            self.send_text_by_elem(value='loginPassword', by=By.ID, text_or_key=password)
+        # if self.switch_iframe_xpath("//iframe[contains(@src, 'https://www.reddit.com/login/')]"):
+        self.send_text_by_elem(value='loginUsername', by=By.ID, text_or_key=login)
+        self.send_text_by_elem(value='loginPassword', by=By.ID, text_or_key=password)
 
-            self.click_element('//button[contains(text(), "Log In")]')
-        else:
-            logger.error("Not ok iframe")
-            return self.goto_login_form()  # refresh auth reddit
+        self.click_element('//button[contains(text(), "Log In")]')
+        # else:
+        #     logger.error("Not ok iframe")
+        #     return self.goto_login_form()  # refresh auth reddit
 
     def skip_popups(self):
         self.wait_load_webpage()
@@ -82,17 +83,18 @@ class RedditAuth(BaseReddit):
         self._btn_send_post()
 
     def create_post(self):
-        logger.info("Create post")
-        self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
-        self.wait_load_webpage()
-        self.btn_close_interest()
-        logger.info("Close interest")
-        self.subscribing_main_page_sub()
-        logger.info("Subscribing main page sub")
-        self._btn_create_post()
-        logger.info("Click btn create post")
-        self._shadow_ban()
-        logger.info("Write Shadow ban")
+        if mine_project:
+            logger.info("Create post")
+            self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
+            self.wait_load_webpage()
+            self.btn_close_interest()
+            logger.info("Close interest")
+            self.subscribing_main_page_sub()
+            logger.info("Subscribing main page sub")
+            self._btn_create_post()
+            logger.info("Click btn create post")
+            self._shadow_ban()
+            logger.info("Write Shadow ban")
 
     def get_path_cookie(self, login):
         logger.info("Get path cookie")
@@ -106,22 +108,23 @@ class RedditAuth(BaseReddit):
         return db_cookie_path, self.proxy
 
     def gen_avatar(self, login):
-        logger.debug("Start gen avatar")
-        self.DRIVER.get(f'https://www.reddit.com/user/{login}')
-        self.wait_load_webpage()
-        self.select_interests()
+        if mine_project:
+            logger.debug("Start gen avatar")
+            self.DRIVER.get(f'https://www.reddit.com/user/{login}')
+            self.wait_load_webpage()
+            self.select_interests()
 
-        logger.info("Click btn edit avatar")
-        if self.click_element('//button[contains(text(), "Create Avatar")]', wait=10):
+            logger.info("Click btn edit avatar")
+            if self.click_element('//button[contains(text(), "Create Avatar")]', wait=10):
 
-            logger.info("Click btn explore")
-            self.click_element('//div[@data-testid="nav:category nav:category:EXPLORE"]')
-            time.sleep(2)
+                logger.info("Click btn explore")
+                self.click_element('//div[@data-testid="nav:category nav:category:EXPLORE"]')
+                time.sleep(2)
 
-            logger.info("Click btn randomize")
-            self.click_element('//button[contains(text(), "Randomize")]')
-            time.sleep(6)
+                logger.info("Click btn randomize")
+                self.click_element('//button[contains(text(), "Randomize")]')
+                time.sleep(6)
 
-            logger.info("Save avatar")
-            self.click_element('//button[contains(text(), "Save")]')
-            time.sleep(2)
+                logger.info("Save avatar")
+                self.click_element('//button[contains(text(), "Save")]')
+                time.sleep(2)
