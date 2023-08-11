@@ -83,18 +83,17 @@ class RedditAuth(BaseReddit):
         self._btn_send_post()
 
     def create_post(self):
-        if mine_project:
-            logger.info("Create post")
-            self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
-            self.wait_load_webpage()
-            self.btn_close_interest()
-            logger.info("Close interest")
-            self.subscribing_main_page_sub()
-            logger.info("Subscribing main page sub")
-            self._btn_create_post()
-            logger.info("Click btn create post")
-            self._shadow_ban()
-            logger.info("Write Shadow ban")
+        logger.info("Create post")
+        self.DRIVER.get('https://www.reddit.com/r/ShadowBan/')
+        self.wait_load_webpage()
+        self.btn_close_interest()
+        logger.info("Close interest")
+        self.subscribing_main_page_sub()
+        logger.info("Subscribing main page sub")
+        self._btn_create_post()
+        logger.info("Click btn create post")
+        self._shadow_ban()
+        logger.info("Write Shadow ban")
 
     def get_path_cookie(self, login):
         logger.info("Get path cookie")
