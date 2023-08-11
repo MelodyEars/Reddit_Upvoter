@@ -6,7 +6,7 @@ from work_fs.chack_info_and_write_to_file import get_or_create_info
 from work_fs.PATH import path_near_exefile
 from work_fs.sertificate_db.path_to_sertificate import path_to_sertificate
 
-mine_project = True
+mine_project = False
 incubator = True
 COUNT_BOT = 20
 
