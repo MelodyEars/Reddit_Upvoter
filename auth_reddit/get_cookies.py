@@ -17,7 +17,7 @@ def get_cookies(account: dict, proxy_for_api: dict, is_import=True):
         api.fill_login_form(**account)
         api.skip_popups()
 
-        if (not is_import) & incubator & (not mine_project):
+        if (not is_import) & incubator & mine_project:
             api.create_post()
             if incubator:
                 api.gen_avatar(account['login'])
