@@ -44,9 +44,6 @@ def removeCDC(driver):
         cmd_args={"source": f"{cdc_props_js_array}.forEach(p => delete window[p] && console.log('removed', p));"},
     )
 
-    # file_bin = re.sub(rb"\$cdc_[a-zA-Z0-9]{22}_", lambda m: bytes(
-    #     random.choices((string.ascii_letters + string.digits).encode("ascii"), k=len(m.group()))), file_bin)
-
 
 def geolocation(loc_value_JSON: str):
     data = loc_value_JSON.split(",")
@@ -80,34 +77,9 @@ def proxy_data(proxy: dict):
 
 
 class Chrome(uc.Chrome):
-    def __init__(
-            self,
-            options=None,
-            user_data_dir=None,
-            driver_executable_path=None,
-            browser_executable_path=None,
-            port=0,
-            enable_cdp_events=False,
-            service_args=None,
-            service_creationflags=None,
-            desired_capabilities=None,
-            advanced_elements=False,
-            service_log_path=None,
-            keep_alive=True,
-            log_level=0,
-            headless=False,
-            version_main=None,
-            patcher_force_close=False,
-            suppress_welcome=True,
-            use_subprocess=True,
-            debug=False,
-            no_sandbox=True,
-            **kw,
-    ):
-        super().__init__(options, user_data_dir, driver_executable_path, browser_executable_path, port,
-                         enable_cdp_events, service_args, service_creationflags, desired_capabilities,
-                         advanced_elements, service_log_path, keep_alive, log_level, headless, version_main,
-                         patcher_force_close, suppress_welcome, use_subprocess, debug, no_sandbox, **kw)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self.get = None
 
     def get(self, url):
@@ -157,11 +129,6 @@ class BaseClass:
             --disable-software-rasterizer
             """
         )
-        # 2 arg in  the end need for working on the backgrounding
-
-        # --disable-popup-blocking
-        # --disable-notifications
-        # --disable-reading-from-canvas
 
         if proxy is not None:
             # proxy = ("64.32.16.8", 8080, "username", "password")  # your proxy with auth, this one is obviously fake
@@ -178,13 +145,6 @@ class BaseClass:
                 except JSONDecodeError:
                     raise Exception("Щось не так з проксі. Було залучено останній з файлу 'proxies.txt'")
 
-        #     your_options["user_data_dir"] = user_data_dir
-        #
-        # elif profile is not None:
-        #     # match on windows 10
-        #     options.add_argument(fr"--user-data-dir={os.environ['USERPROFILE']}\AppData\Local\Google\Chrome\User Data")
-        #     options.add_argument(f"--profile-directory={profile}")
-
         your_options["headless"] = headless
         your_options["options"] = options
         your_options["browser_executable_path"] = browser_executable_path
@@ -194,10 +154,8 @@ class BaseClass:
 
         removeCDC(self.DRIVER)
 
-
         self.DRIVER.maximize_window()
         self.action = EnhancedActionChains(self.DRIVER)
-
 
         # __________________________________ timezone _________________________________
         if proxy is not None:
@@ -211,17 +169,21 @@ class BaseClass:
         else:
             return self.__set_new_download_path(download_path)
 
-    def run_driver(self, browser_executable_path=executable_path, user_data_dir=None,
-                   download_path="default", proxy=None, headless=False, detection_location=True):
-        try:
-            return self._set_up_driver(browser_executable_path, user_data_dir,
-                                download_path, proxy, headless, detection_location)
+    def run_driver(self, *args, **kwargs):
+        max_retries = 3  # Максимальна кількість спроб
 
-        except (ConnectionResetError, ProtocolError, TimeoutError, ReadTimeout,
-                ConnectionError, RemoteDisconnected) as e:
-            logger.error(f'{type(e).__name__} in selenium_driver.py')
-            return self.run_driver(browser_executable_path, user_data_dir,
-                                download_path, proxy, headless, detection_location)
+        for retry in range(max_retries):
+            try:
+                return self._set_up_driver(*args, **kwargs)
+
+            except (ConnectionResetError, ProtocolError, TimeoutError, ReadTimeout,
+                    ConnectionError, RemoteDisconnected) as e:
+                logger.error(f'{type(e).__name__} in selenium_driver.py: {e}')
+                logger.error(f'Retrying... Attempt {retry + 1}/{max_retries}')
+
+                if retry == max_retries - 1:
+                    logger.error("Max retries reached. Giving up.")
+                    raise  # Переповідомляємо помилку, якщо максимальна кількість спроб вичерпана
 
     def elem_exists(self, value, by=By.XPATH, wait=120, return_xpath=False, scroll_to=False):
         try:
@@ -238,7 +200,6 @@ class BaseClass:
             if not return_xpath:
                 exist = True
             else:
-                # retrurn
                 return take_xpath
 
         except TimeoutException:
